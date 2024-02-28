@@ -16,14 +16,20 @@ public class Enemy : MonoBehaviour
     private Transform fleetTransform;
     private GameObject fleet;
     private GridManager gridManagerInstance;
+    ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
-
+    SpriteRenderer spriteRenderer;
     public bool allDead;
 
     void Awake()
     {
         alive = true;
         dead = false;
+        color = "";
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        colorManager = ColorManager.Instance;
+        colorCounts = colorManager.colorCounts;
+        // colorManager.SetColor(this.gameObject);
         SetColor();
         special = false;
         super = false;
@@ -33,7 +39,8 @@ public class Enemy : MonoBehaviour
         fleetTransform = cellTransform.parent;
         fleet = fleetTransform.gameObject;
         gridManagerInstance = fleet.GetComponent<GridManager>();
-        colorCounts = gridManagerInstance.colorCounts;
+        colorManager = ColorManager.Instance;
+        colorCounts = colorManager.colorCounts;
 
     }
 
@@ -160,7 +167,7 @@ public class Enemy : MonoBehaviour
             // Set dead to true to prevent multiple runs in same frame
             dead = true;
             // Subtract color from colorCounts dictionary instance
-            colorCounts = gridManagerInstance.colorCounts;
+            colorCounts = colorManager.colorCounts;
             colorCounts[color] -= 1;
 
             // Check if current color count is 0
@@ -177,7 +184,8 @@ public class Enemy : MonoBehaviour
             // Check if all color counts are 0
             // Give magic bullet
             // Update colorCounts dictionary
-            fleet.GetComponent<GridManager>().colorCounts = colorCounts;
+            // fleet.GetComponent<GridManager>().colorCounts = colorCounts;
+            // colorManager.UpdateColorCounts(colorCounts);
             // Destroy gameObject
             Destroy(this.gameObject);
 

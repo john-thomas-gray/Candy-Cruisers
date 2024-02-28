@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private GameObject fleet;
     private GridManager gridManagerInstance;
     private Dictionary<string, int> colorCounts;
+    ColorManager colorManager;
     private bool wipedOut;
 
 
@@ -27,8 +28,10 @@ public class PlayerController : MonoBehaviour
         // Get fleet GO and Grid script
         GameObject fleet = GameObject.Find("Fleet");
         gridManagerInstance = fleet.GetComponent<GridManager>();
+        // Get ColorManager instance
+        colorManager = ColorManager.Instance;
         // Create a reference to the colorCounts dictionary
-        colorCounts = gridManagerInstance.colorCounts;
+        colorCounts = colorManager.colorCounts;
         // Create a reference to the wipedOut int
         wipedOut = gridManagerInstance.wipedOut;
 
@@ -67,7 +70,7 @@ public class PlayerController : MonoBehaviour
         {
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
-            colorCounts = gridManagerInstance.colorCounts;
+            colorCounts = colorManager.colorCounts;
             if (colorSet)
             {
                 // Set independent shotColor variable, so missile can reference it once player changes colors
@@ -89,7 +92,7 @@ public class PlayerController : MonoBehaviour
         List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
         List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
         // Set colorCounts to current values
-        colorCounts = gridManagerInstance.colorCounts;
+        colorCounts = colorManager.colorCounts;
 
         //loop to set color
         colorSet = false;

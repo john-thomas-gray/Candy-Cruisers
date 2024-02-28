@@ -22,6 +22,8 @@ public class GridManager : MonoBehaviour
     private List<GameObject> shift = new List<GameObject>();
     // Color dictionary
     public Dictionary<string, int> colorCounts = new Dictionary<string, int>();
+    // Color Manager
+    ColorManager colorManager;
 
     // Set gameOver
     public bool gameOver;
@@ -32,8 +34,13 @@ public class GridManager : MonoBehaviour
     void Awake()
     {
         gameOver = false;
+        colorManager = ColorManager.Instance;
         InitializeFleetGrid();
         PopulateFleet(24);
+    }
+    void Start()
+    {
+        
     }
 
     void Update()
@@ -96,14 +103,8 @@ public class GridManager : MonoBehaviour
 
     public void FleetStatus()
     {
-        colorCounts = new Dictionary<string, int>
-            {
-                { "Red", 0 },
-                { "Yellow", 0 },
-                { "Blue", 0 },
-                { "Green", 0 },
-                { "Purple", 0 }
-            };
+        colorCounts = colorManager.colorCounts;
+
         // Iterate through the cells in the grid
         for (int i = 0; i < grid.Count; i++)
         {
@@ -184,6 +185,7 @@ public class GridManager : MonoBehaviour
                 {
 
                 }
+
             }
         }
     }
