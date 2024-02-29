@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public bool special;
     public bool super;
     public bool isChecked;
+    public bool colorCounted;
 
     private Transform cellTransform;
     private Transform fleetTransform;
@@ -19,7 +20,7 @@ public class Enemy : MonoBehaviour
 
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
-    
+
     public bool allDead;
 
     void Awake()
@@ -81,10 +82,10 @@ public class Enemy : MonoBehaviour
             List<GameObject> grid = gridManagerInstance.grid;
             // Get instance of cell holding this enemy
             Transform cellTransform = transform.parent;
-
             // Get the cell number
             int cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
             // Debug.Log("Checking Cell " + cellNumber + "'s neighbors");
+
             // Check the neighboring cells
             List<GameObject> neighbors = new List<GameObject>();
 
@@ -112,23 +113,42 @@ public class Enemy : MonoBehaviour
                 GameObject down = grid[cellNumber + 6];
                 neighbors.Add(down);
             }
+
             // List enemies with matching colors
-                List<GameObject> matches = new List<GameObject>();
-                for (int j = 0; j < neighbors.Count; j++)
+            List<GameObject> matches = new List<GameObject>();
+            for (int j = 0; j < neighbors.Count; j++)
+            {
+                GameObject neighbor = neighbors[j];
+                if (neighbor.GetComponent<Cell>().enemy)
                 {
-                    GameObject neighbor = neighbors[j];
-                    if (neighbor.GetComponent<Cell>().enemy)
+                    GameObject neighborEnemy = neighbor.GetComponent<Cell>().enemy;
+                    string neighborColor = neighborEnemy.GetComponent<Enemy>().color;
+                    // If neighbor is a like color add it to list of matches
+                    if (neighborColor == color)
                     {
-                        GameObject neighborEnemy = neighbor.GetComponent<Cell>().enemy;
-                        string neighborColor = neighborEnemy.GetComponent<Enemy>().color;
-                        // If neighbor is a like color add it to list of matches
-                        if (neighborColor == color)
-                        {
-                            matches.Add(neighborEnemy);
-                        }
+                        matches.Add(neighborEnemy);
                     }
                 }
-                // Set matches to !alive
+            }
+            // Set Special
+            if (matches.Count >= 2)
+            {
+                // Turn on currentEnemy's special
+                if (!special)
+                {
+                    gameObject.GetComponent<Enemy>().special = true;
+                }
+                // Turn on the neighbor's specials
+                for (int k = 0; k < matches.Count; k++)
+                {
+                    GameObject match = matches[k];
+                    match.GetComponent<Enemy>().special = true;
+                }
+            }
+
+            // Kill protocol -- If current enemy !alive set matches to !alive
+            if(!alive)
+            {
                 for (int k = 0; k < matches.Count; k++)
                 {
                     GameObject match = matches[k];
@@ -136,6 +156,7 @@ public class Enemy : MonoBehaviour
                     isChecked = true;
                     match.GetComponent<Enemy>().CheckNeighbors();
                 }
+            }
         }
         // Call death to kill current enemy
         Death();

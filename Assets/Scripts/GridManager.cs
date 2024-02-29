@@ -40,7 +40,7 @@ public class GridManager : MonoBehaviour
     }
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -49,11 +49,11 @@ public class GridManager : MonoBehaviour
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
-            TotalEnemyCount();
+            colorManager.TotalEnemyCount();
         }
         if(Input.GetKeyDown(KeyCode.S))
         {
-            FleetStatus();
+            // FleetStatus();
         }
         // FleetWipe
         if(wipedOut)
@@ -190,23 +190,23 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void TotalEnemyCount()
-    {
-        int enemyTotal = 0;
+    // void TotalEnemyCount()
+    // {
+    //     int enemyTotal = 0;
 
-        Debug.Log("ALL ENEMIES:");
-        foreach (var kvp in colorCounts)
-        {
-            Debug.Log($"{kvp.Key}: {kvp.Value}");
-        }
-        foreach (var kvp in colorCounts)
-        {
-            enemyTotal += kvp.Value;
-            // Log color totals
+    //     Debug.Log("ALL ENEMIES:");
+    //     foreach (var kvp in colorCounts)
+    //     {
+    //         Debug.Log($"{kvp.Key}: {kvp.Value}");
+    //     }
+    //     foreach (var kvp in colorCounts)
+    //     {
+    //         enemyTotal += kvp.Value;
+    //         // Log color totals
 
-        }
-        Debug.Log("total enemies: " + enemyTotal);
-    }
+    //     }
+    //     Debug.Log("total enemies: " + enemyTotal);
+    // }
 
     public void FleetWipeCheck()
     {
@@ -242,7 +242,7 @@ public class GridManager : MonoBehaviour
 
         }
 
-        FleetStatus();
+        // FleetStatus();
     }
 
     public void FleetShift()
@@ -319,7 +319,7 @@ public class GridManager : MonoBehaviour
     {
         if (turnInterval < 10)
         {
-            if (timer < moveTime / colorCounts["Green"])
+            if (timer < moveTime / colorManager.colorCounts["Green"])
             {
                 timer += Time.deltaTime;
             }
@@ -338,7 +338,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            if (timer < moveTime / colorCounts["Green"])
+            if (timer < moveTime / colorManager.colorCounts["Green"])
             {
                 timer += Time.deltaTime;
             }

@@ -78,6 +78,7 @@ public class ColorManager : MonoBehaviour
             if(targetObject.GetComponent<Enemy>())
             {
                 targetObject.GetComponent<Enemy>().color = color;
+                colorCounts[color] += 1;
             }
             else
             {
@@ -135,5 +136,23 @@ public class ColorManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         colorManager = null;
+    }
+
+    public void TotalEnemyCount()
+    {
+        int enemyTotal = 0;
+
+        Debug.Log("ALL ENEMIES:");
+        foreach (var kvp in colorCounts)
+        {
+            Debug.Log($"{kvp.Key}: {kvp.Value}");
+        }
+        foreach (var kvp in colorCounts)
+        {
+            enemyTotal += kvp.Value;
+            // Log color totals
+
+        }
+        Debug.Log("total enemies: " + enemyTotal);
     }
 }
