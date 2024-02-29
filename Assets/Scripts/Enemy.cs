@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
 
+    public Sprite specialSkin;
+
     public bool allDead;
 
     void Awake()
@@ -42,6 +44,8 @@ public class Enemy : MonoBehaviour
         fleetTransform = cellTransform.parent;
         fleet = fleetTransform.gameObject;
         gridManagerInstance = fleet.GetComponent<GridManager>();
+
+        CheckNeighbors();
 
     }
 
@@ -137,12 +141,14 @@ public class Enemy : MonoBehaviour
                 if (!special)
                 {
                     gameObject.GetComponent<Enemy>().special = true;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = specialSkin;
                 }
                 // Turn on the neighbor's specials
                 for (int k = 0; k < matches.Count; k++)
                 {
                     GameObject match = matches[k];
                     match.GetComponent<Enemy>().special = true;
+                    match.GetComponent<SpriteRenderer>().sprite = specialSkin;
                 }
             }
 

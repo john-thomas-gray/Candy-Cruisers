@@ -5,22 +5,27 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     static System.Random random = new System.Random();
-    public bool colorSet;
-    public string shotColor;
-    public string color;
     public bool alive;
+    // Movement
     public float tankSpeed;
     private float screenBoundLeft = -2.45f;
     private float screenBoundRight = 2.45f;
-    public GameObject laserPrefab;
-
+    // GridManager
     private GameObject fleet;
     private GridManager gridManagerInstance;
     private bool wipedOut;
 
-    // Color Manager
+    // ColorManager
     private Dictionary<string, int> colorCounts;
     ColorManager colorManager;
+    public bool colorSet;
+    public string shotColor;
+    public string color;
+
+    // Laser
+    public GameObject laserPrefab;
+    private float shotCoolDown = 0.4f;
+    private float timeSinceLastShot = 0.0f;
 
     void Awake()
     {
@@ -67,7 +72,9 @@ public class PlayerController : MonoBehaviour
 }
     void fireLaser()
     {
-        if(Input.GetKey(KeyCode.F) || Input.GetKeyDown(KeyCode.Space))
+        timeSinceLastShot += Time.deltaTime;
+
+        if(Input.GetKey(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) && timeSinceLastShot >= shotCoolDown)
         {
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
@@ -82,6 +89,8 @@ public class PlayerController : MonoBehaviour
                 Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
                 // Make player a different color
                 colorManager.SetColor(this.gameObject);
+                // Reset cooldown
+                timeSinceLastShot = 0.0f;
             }
         }
     }

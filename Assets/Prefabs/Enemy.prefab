@@ -100,8 +100,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: 
   alive: 1
+  dead: 0
   special: 0
   super: 0
+  isChecked: 0
+  colorCounted: 0
+  specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
+  allDead: 0
 --- !u!61 &-8168576666604565902
 BoxCollider2D:
   m_ObjectHideFlags: 0

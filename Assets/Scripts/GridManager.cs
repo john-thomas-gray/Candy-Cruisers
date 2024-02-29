@@ -51,10 +51,6 @@ public class GridManager : MonoBehaviour
         {
             colorManager.TotalEnemyCount();
         }
-        if(Input.GetKeyDown(KeyCode.S))
-        {
-            // FleetStatus();
-        }
         // FleetWipe
         if(wipedOut)
         {
@@ -115,98 +111,11 @@ public class GridManager : MonoBehaviour
             {
                 // Set currentEnemy to the enemy in the cell
                 GameObject currentEnemy = currentCell.GetComponent<Cell>().enemy;
-                // Get the currentEnemyColor
-                string currentEnemyColor = currentEnemy.GetComponent<Enemy>().color;
-                colorCounts[currentEnemyColor] += 1;
-                // Get currentEnemySpecial and currentEnemySuper
-                bool currentEnemySpecial = currentEnemy.GetComponent<Enemy>().special;
-                bool currentEnemySuper = currentEnemy.GetComponent<Enemy>().super;
 
-                // Check if currentEnemySpecial is false
-                if (!currentEnemySpecial)
-                {
-                    // Check the neighboring cells
-                    List<GameObject> neighbors = new List<GameObject>();
-
-                    // Check up if not bot row
-                    if (i > 6)
-                    {
-                    GameObject up = grid[i - 6];
-                    neighbors.Add(up);
-                    }
-                    // Check left if not left column
-                    if (i % 6 != 0)
-                    {
-                    GameObject left = grid[i - 1];
-                    neighbors.Add(left);
-                    }
-                    // Check right if not right column
-                    if ((i + 1) % 6 != 0)
-                    {
-                    GameObject right = grid[i + 1];
-                    neighbors.Add(right);
-                    }
-                    // Check down if not bot row
-                    if (i < 66)
-                    {
-                    GameObject down = grid[i + 6];
-                    neighbors.Add(down);
-                    }
-                    // List enemies with matching colors
-                    List<GameObject> matches = new List<GameObject>();
-                    for (int j = 0; j < neighbors.Count; j++)
-                    {
-                        GameObject neighbor = neighbors[j];
-                        if (neighbor.GetComponent<Cell>().enemy)
-                        {
-                            GameObject neighborEnemy = neighbor.GetComponent<Cell>().enemy;
-                            string neighborColor = neighborEnemy.GetComponent<Enemy>().color;
-                            // If neighbor is a like color add it to list of matches
-                            if (neighborColor == currentEnemyColor)
-                            {
-                                matches.Add(neighborEnemy);
-                            }
-                        }
-                    }
-                    // If matches holds 2 or more enemies
-                    if (matches.Count >= 2)
-                    {
-                        // Turn on currentEnemy's special
-                        currentEnemy.GetComponent<Enemy>().special = true;
-                        // Turn on the neighbor's specials
-                        for (int k = 0; k < matches.Count; k++)
-                        {
-                            GameObject match = matches[k];
-                            match.GetComponent<Enemy>().special = true;
-                        }
-                    }
-                }
-                else if (!currentEnemySuper)
-                {
-
-                }
-
+                currentEnemy.GetComponent<Enemy>().CheckNeighbors();
             }
         }
     }
-
-    // void TotalEnemyCount()
-    // {
-    //     int enemyTotal = 0;
-
-    //     Debug.Log("ALL ENEMIES:");
-    //     foreach (var kvp in colorCounts)
-    //     {
-    //         Debug.Log($"{kvp.Key}: {kvp.Value}");
-    //     }
-    //     foreach (var kvp in colorCounts)
-    //     {
-    //         enemyTotal += kvp.Value;
-    //         // Log color totals
-
-    //     }
-    //     Debug.Log("total enemies: " + enemyTotal);
-    // }
 
     public void FleetWipeCheck()
     {
@@ -242,7 +151,7 @@ public class GridManager : MonoBehaviour
 
         }
 
-        // FleetStatus();
+        FleetStatus();
     }
 
     public void FleetShift()
