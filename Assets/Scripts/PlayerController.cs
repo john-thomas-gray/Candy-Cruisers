@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        // colorManager.SetColor(this.gameObject);
         SetColor();
     }
     // Update is called once per frame
@@ -71,13 +72,14 @@ public class PlayerController : MonoBehaviour
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
             colorCounts = colorManager.colorCounts;
-            if (colorSet)
+            if (colorManager.colorSet)
             {
                 // Set independent shotColor variable, so missile can reference it once player changes colors
                 shotColor = color;
                 // Spawn laser in front of player
                 Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
                 // Make player a different color
+                // colorManager.SetColor(this.gameObject);
                 SetColor();
             }
         }
@@ -114,14 +116,14 @@ public class PlayerController : MonoBehaviour
                 // Set sprite color to skin
                 spriteRenderer.color = skin;
                 colorSet = true;
-                Debug.Log("Color set: " + color);
+                // Debug.Log("Color set: " + color);
             }
             else
             {
                 // Remove the used color
                 skins.Remove(skin);
                 colors.Remove(color);
-                Debug.Log(color + " not found");
+                // Debug.Log(color + " not found");
             }
             recursionLimit--;
             if(recursionLimit == 0)

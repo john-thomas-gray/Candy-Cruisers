@@ -6,6 +6,7 @@ public class ColorManager : MonoBehaviour
 {
     static System.Random random = new System.Random();
     private static ColorManager colorManager;
+    public bool colorSet;
 
     public static ColorManager Instance
     {
@@ -46,33 +47,69 @@ public class ColorManager : MonoBehaviour
 
     public void SetColor(GameObject targetObject, string color = null)
     {
-        // Color purple = new Color(1f, 0f, 1f, 1f);
-        // List<Color> skins = new List<Color> { Color.red, Color.yellow, Color.blue, Color.green, purple };
-        // List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
+        Color purple = new Color(1f, 0f, 1f, 1f);
+        List<Color> skins = new List<Color> { Color.red, Color.yellow, Color.blue, Color.green, purple };
+        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
 
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
 
-        if (color == null)
-        {
-            // Set color string to a random "color"
-            int randomIndex = random.Next(colors.Count);
-            color = colors[randomIndex];
-        }
-
-
-        // Set the object's tag to the appropriate color
-        // THIS CURRENTLY DOESN'T WORK 2.28.24
+        // Check if the object is not the player
         if (targetObject.tag != "Player")
         {
+
+            if (color == null)
+            {
+                // Set color string to a random "color"
+                int randomIndex = random.Next(colors.Count);
+                color = colors[randomIndex];
+            }
+
             targetObject.tag = color;
+
+
+            // Get index of item in list
+            int colorInx = colors.IndexOf(color);
+
+            // Set the target sprite's color
+            Color spriteColor = skins[colorInx];
+            spriteRenderer.color = spriteColor;
         }
+        else
+        {
+            colorSet = false;
+            int recursionLimit = 5;
+            // Randomly iterate through all possible colors
+            while(colorSet == false && recursionLimit > 0)
+                {
+                    // Get a random num
+                    int randomIndex = random.Next(colors.Count);
+                    // Index skins for a random color value
+                    Color skin = skins[randomIndex];
+                    // Index colors list for a random color
+                    color = colors[randomIndex];
 
-        // Get index of item in list
-        int colorInx = colors.IndexOf(color);
-
-        // Set the target sprite's color
-        Color spriteColor = skins[colorInx];
-        spriteRenderer.color = spriteColor;
+                    // If color shares an onscreen enemy's color
+                    if (colorCounts[color] > 0)
+                    {
+                        // Set sprite color to skin
+                        spriteRenderer.color = skin;
+                        colorSet = true;
+                        // Debug.Log("Color set: " + color);
+                    }
+                    else
+                    {
+                        // Remove the used color
+                        skins.Remove(skin);
+                        colors.Remove(color);
+                        // Debug.Log(color + " not found");
+                    }
+                    recursionLimit--;
+                    if(recursionLimit == 0)
+                    {
+                        Debug.Log("SetColor() timed out!");
+                    }
+                }
+        }
     }
 
     public void UpdateColorCounts(Dictionary<string, int> updateDictionary)
