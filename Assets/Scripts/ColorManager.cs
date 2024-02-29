@@ -7,6 +7,7 @@ public class ColorManager : MonoBehaviour
     static System.Random random = new System.Random();
     private static ColorManager colorManager;
     public bool colorSet;
+    public string shotColor;
 
     public static ColorManager Instance
     {
@@ -66,13 +67,22 @@ public class ColorManager : MonoBehaviour
 
             targetObject.tag = color;
 
-
             // Get index of item in list
             int colorInx = colors.IndexOf(color);
 
             // Set the target sprite's color
             Color spriteColor = skins[colorInx];
             spriteRenderer.color = spriteColor;
+
+            // Set color property
+            if(targetObject.GetComponent<Enemy>())
+            {
+                targetObject.GetComponent<Enemy>().color = color;
+            }
+            else
+            {
+                targetObject.GetComponent<LaserController>().color = color;
+            }
         }
         else
         {
@@ -109,6 +119,8 @@ public class ColorManager : MonoBehaviour
                         Debug.Log("SetColor() timed out!");
                     }
                 }
+            shotColor = color;
+            targetObject.GetComponent<PlayerController>().color = color;
         }
     }
 

@@ -29,8 +29,8 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
-        // colorManager.SetColor(this.gameObject);
-        SetColor();
+        colorManager.SetColor(this.gameObject);
+        // SetColor();
         special = false;
         super = false;
         isChecked = false;

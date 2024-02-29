@@ -20,8 +20,10 @@ public class LaserController : MonoBehaviour
         GameObject player = GameObject.Find("Player");
         shotColor = player.GetComponent<PlayerController>().shotColor;
         colorManager = ColorManager.Instance;
-        // colorManager.SetColor(this.gameObject, shotColor);
-        SetColor();
+        colorManager.SetColor(this.gameObject, shotColor);
+        // !BANDAID!
+        // color = gameObject.tag;
+        // SetColor();
 
     }
 
@@ -43,23 +45,23 @@ public class LaserController : MonoBehaviour
         }
     }
 
-    void SetColor()
-    {
-        Color purple = new Color(1f, 0f, 1f, 1f);
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
-        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
-        // // Get color of last shot
-        // color = player.GetComponent<PlayerController>().shotColor;
-        // Set the laser's tag to the appropriate color
-        color = shotColor;
-        this.gameObject.tag = color;
-        // Get index of item in list
-        int colorInx = colors.IndexOf(color);
-        // Set the sprite's color
-        Color spriteColor = skins[colorInx];
-        spriteRenderer.color = spriteColor;
-    }
+    // void SetColor()
+    // {
+    //     Color purple = new Color(1f, 0f, 1f, 1f);
+    //     SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+    //     List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
+    //     List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
+    //     // // Get color of last shot
+    //     // color = player.GetComponent<PlayerController>().shotColor;
+    //     // Set the laser's tag to the appropriate color
+    //     color = shotColor;
+    //     this.gameObject.tag = color;
+    //     // Get index of item in list
+    //     int colorInx = colors.IndexOf(color);
+    //     // Set the sprite's color
+    //     Color spriteColor = skins[colorInx];
+    //     spriteRenderer.color = spriteColor;
+    // }
 
 
     private void OnTriggerEnter2D(Collider2D collision)

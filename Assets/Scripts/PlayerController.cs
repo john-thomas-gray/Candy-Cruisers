@@ -39,8 +39,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // colorManager.SetColor(this.gameObject);
-        SetColor();
+        colorManager.SetColor(this.gameObject);
+        // SetColor();
     }
     // Update is called once per frame
     void Update()
@@ -72,15 +72,17 @@ public class PlayerController : MonoBehaviour
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
             colorCounts = colorManager.colorCounts;
+
+            Debug.Log("COLORSET: " + colorManager.colorSet);
             if (colorManager.colorSet)
             {
                 // Set independent shotColor variable, so missile can reference it once player changes colors
-                shotColor = color;
+                shotColor = colorManager.shotColor;
                 // Spawn laser in front of player
                 Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
                 // Make player a different color
-                // colorManager.SetColor(this.gameObject);
-                SetColor();
+                colorManager.SetColor(this.gameObject);
+                // SetColor();
             }
         }
     }
