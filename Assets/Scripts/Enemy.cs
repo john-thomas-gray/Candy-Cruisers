@@ -23,8 +23,6 @@ public class Enemy : MonoBehaviour
 
     public Sprite specialSkin;
 
-    public bool allDead;
-
     void Awake()
     {
         alive = true;
@@ -183,19 +181,13 @@ public class Enemy : MonoBehaviour
             if (colorCounts[color] == 0)
             {
                 gridManagerInstance.FleetWipeCheck();
-                // gridManagerInstance.allDead = true;
                 if (!gridManagerInstance.wipedOut)
                 {
-                    Debug.Log("magic bullet");
+                    colorManager.magicLaser = true;
+                    Debug.Log("MAGIC LASER");
                 }
             }
 
-            // Check if all color counts are 0
-            // Give magic bullet
-            // Update colorCounts dictionary
-            // fleet.GetComponent<GridManager>().colorCounts = colorCounts;
-            // colorManager.UpdateColorCounts(colorCounts);
-            // Destroy gameObject
             Destroy(this.gameObject);
 
         }

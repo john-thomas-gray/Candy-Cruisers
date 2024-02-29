@@ -55,6 +55,10 @@ public class PlayerController : MonoBehaviour
             playerMovement();
             fireLaser();
         }
+        if(colorManager.magicLaser)
+        {
+            colorManager.Multicolor(this.gameObject);
+        }
     }
 
     void playerMovement()
@@ -80,7 +84,6 @@ public class PlayerController : MonoBehaviour
                 // Debug.Log("color: " + color);
             colorCounts = colorManager.colorCounts;
 
-            Debug.Log("COLORSET: " + colorManager.colorSet);
             if (colorManager.colorSet)
             {
                 // Set independent shotColor variable, so missile can reference it once player changes colors

@@ -9,6 +9,11 @@ public class ColorManager : MonoBehaviour
     public bool colorSet;
     public string shotColor;
 
+    // Multicolor
+    public bool magicLaser = false;
+    private float multicolorTimer = 0.0f;
+    private float multicolorCooldown = 0.05f;
+
     public static ColorManager Instance
     {
         get
@@ -131,13 +136,6 @@ public class ColorManager : MonoBehaviour
         colorCounts = updateDictionary;
     }
 
-
-    // Ensure the colorManager is destroyed when the application quits
-    private void OnApplicationQuit()
-    {
-        colorManager = null;
-    }
-
     public void TotalEnemyCount()
     {
         int enemyTotal = 0;
@@ -155,4 +153,59 @@ public class ColorManager : MonoBehaviour
         }
         Debug.Log("total enemies: " + enemyTotal);
     }
+
+    public void Multicolor(GameObject targetObject)
+    {
+        SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
+
+        string color = null;
+
+        // Check if the object is not the player
+        if (targetObject.tag != "Player")
+        {
+            multicolorTimer += Time.deltaTime;
+            if (multicolorTimer >= multicolorCooldown)
+            {
+                // Set color string to a random "color"
+                int randomIndex = random.Next(colors.Count);
+                color = colors[randomIndex];
+                multicolorTimer = 0.0f;
+            }
+
+            // targetObject.tag = 'Multicolor';
+
+            // Get index of item in list
+            int colorInx = colors.IndexOf(color);
+
+            // Set the target sprite's color
+            Color spriteColor = skins[colorInx];
+            spriteRenderer.color = spriteColor;
+
+            // Set color property
+            targetObject.GetComponent<LaserController>().color = "Multicolor";
+
+        }
+        else
+        {
+
+            multicolorTimer += Time.deltaTime;
+            if (multicolorTimer >= multicolorCooldown)
+            {
+                // Set color string to a random "color"
+                int randomIndex = random.Next(colors.Count);
+                color = colors[randomIndex];
+                Color skin = skins[randomIndex];
+                multicolorTimer = 0.0f;
+                spriteRenderer.color = skin;
+            }
+
+        }
+
+    }
+    // Ensure the colorManager is destroyed when the application quits
+    private void OnApplicationQuit()
+    {
+        colorManager = null;
+    }
+
 }
