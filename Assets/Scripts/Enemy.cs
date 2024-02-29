@@ -16,21 +16,23 @@ public class Enemy : MonoBehaviour
     private Transform fleetTransform;
     private GameObject fleet;
     private GridManager gridManagerInstance;
+
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
-    SpriteRenderer spriteRenderer;
+    
     public bool allDead;
 
     void Awake()
     {
         alive = true;
         dead = false;
+
+        // Color
         color = "";
-        spriteRenderer = GetComponent<SpriteRenderer>();
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
         colorManager.SetColor(this.gameObject);
-        // SetColor();
+
         special = false;
         super = false;
         isChecked = false;
@@ -40,27 +42,6 @@ public class Enemy : MonoBehaviour
         fleet = fleetTransform.gameObject;
         gridManagerInstance = fleet.GetComponent<GridManager>();
 
-        colorManager = ColorManager.Instance;
-        colorCounts = colorManager.colorCounts;
-
-    }
-
-
-    private void SetColor()
-    {
-        Color purple = new Color(1f, 0f, 1f, 1f);
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        // !! MIGHT NEED TO CHANGE THE SCOPE OF THESE !!
-        List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
-        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
-        // Set color string to a random "color"
-        int randomIndex = random.Next(colors.Count);
-        color = colors[randomIndex];
-        // Set the enemy's tag to the appropriate color
-        this.gameObject.tag = color;
-        // Set the sprite's color
-        Color spriteColor = skins[randomIndex];
-        spriteRenderer.color = spriteColor;
     }
 
     void Abilities()

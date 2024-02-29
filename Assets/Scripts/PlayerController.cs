@@ -16,10 +16,11 @@ public class PlayerController : MonoBehaviour
 
     private GameObject fleet;
     private GridManager gridManagerInstance;
-    private Dictionary<string, int> colorCounts;
-    ColorManager colorManager;
     private bool wipedOut;
 
+    // Color Manager
+    private Dictionary<string, int> colorCounts;
+    ColorManager colorManager;
 
     void Awake()
     {
@@ -40,7 +41,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         colorManager.SetColor(this.gameObject);
-        // SetColor();
     }
     // Update is called once per frame
     void Update()
@@ -82,57 +82,7 @@ public class PlayerController : MonoBehaviour
                 Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
                 // Make player a different color
                 colorManager.SetColor(this.gameObject);
-                // SetColor();
             }
         }
-    }
-
-    public void SetColor()
-    {
-        // Reference the player object's SpriteRenderer
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        // Initialize color reference list and a list of color strings
-        Color purple = new Color(1f, 0f, 1f, 1f);
-        List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
-        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
-        // Set colorCounts to current values
-        colorCounts = colorManager.colorCounts;
-
-        //loop to set color
-        colorSet = false;
-        int recursionLimit = 5;
-
-        // Randomly iterate through all possible colors
-        while(colorSet == false && recursionLimit > 0)
-        {
-            // Get a random num
-            int randomIndex = random.Next(colors.Count);
-            // Index skins for a random color value
-            Color skin = skins[randomIndex];
-            // Index colors list for a random color
-            color = colors[randomIndex];
-
-            // If color shares an onscreen enemy's color
-            if (colorCounts[color] > 0)
-            {
-                // Set sprite color to skin
-                spriteRenderer.color = skin;
-                colorSet = true;
-                // Debug.Log("Color set: " + color);
-            }
-            else
-            {
-                // Remove the used color
-                skins.Remove(skin);
-                colors.Remove(color);
-                // Debug.Log(color + " not found");
-            }
-            recursionLimit--;
-            if(recursionLimit == 0)
-            {
-                Debug.Log("SetColor() timed out!");
-            }
-        }
-
     }
 }
