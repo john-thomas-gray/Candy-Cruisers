@@ -5,26 +5,23 @@ using UnityEngine;
 public class LaserController : MonoBehaviour
 {
     // Laser color
-    public string color = "Green";
+    public string color;
     public string shotColor;
     public GameObject player;
     // Laser movement
     private float deletePlain = 5.3f;
     private float laserSpeed = 20f;
-    // Destruction
-    // private GridManager gridManagerInstance;
-    // private GameObject fleet;
+    // ColorManager
     ColorManager colorManager;
-    SpriteRenderer spriteRenderer;
+
 
     void Start()
     {
         GameObject player = GameObject.Find("Player");
         shotColor = player.GetComponent<PlayerController>().shotColor;
-        // gridManagerInstance = fleet.GetComponent<GridManager>();
         colorManager = ColorManager.Instance;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        colorManager.SetColor(this.gameObject, shotColor);
+        // colorManager.SetColor(this.gameObject, shotColor);
+        SetColor();
 
     }
 
@@ -46,23 +43,23 @@ public class LaserController : MonoBehaviour
         }
     }
 
-    // void SetColor()
-    // {
-    //     Color purple = new Color(1f, 0f, 1f, 1f);
-    //     SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-    //     List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
-    //     List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
-    //     // // Get color of last shot
-    //     // color = player.GetComponent<PlayerController>().shotColor;
-    //     // Set the laser's tag to the appropriate color
-    //     color = shotColor;
-    //     this.gameObject.tag = color;
-    //     // Get index of item in list
-    //     int colorInx = colors.IndexOf(color);
-    //     // Set the sprite's color
-    //     Color spriteColor = skins[colorInx];
-    //     spriteRenderer.color = spriteColor;
-    // }
+    void SetColor()
+    {
+        Color purple = new Color(1f, 0f, 1f, 1f);
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        List<Color> skins = new List<Color> {Color.red, Color.yellow, Color.blue, Color.green, purple};
+        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
+        // // Get color of last shot
+        // color = player.GetComponent<PlayerController>().shotColor;
+        // Set the laser's tag to the appropriate color
+        color = shotColor;
+        this.gameObject.tag = color;
+        // Get index of item in list
+        int colorInx = colors.IndexOf(color);
+        // Set the sprite's color
+        Color spriteColor = skins[colorInx];
+        spriteRenderer.color = spriteColor;
+    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)

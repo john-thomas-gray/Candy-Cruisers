@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
         fleetTransform = cellTransform.parent;
         fleet = fleetTransform.gameObject;
         gridManagerInstance = fleet.GetComponent<GridManager>();
+
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
 

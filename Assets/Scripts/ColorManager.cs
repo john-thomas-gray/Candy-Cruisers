@@ -62,9 +62,9 @@ public class ColorManager : MonoBehaviour
 
         // Set the object's tag to the appropriate color
         // THIS CURRENTLY DOESN'T WORK 2.28.24
-        if (this.gameObject.tag != "Player")
+        if (targetObject.tag != "Player")
         {
-            this.gameObject.tag = color;
+            targetObject.tag = color;
         }
 
         // Get index of item in list
