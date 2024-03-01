@@ -106,7 +106,7 @@ MonoBehaviour:
   isChecked: 0
   colorCounted: 0
   specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
-  allDead: 0
+  missilePrefab: {fileID: 434374807148448463, guid: 3f78ebf9b30224d63bc70182d4235b85, type: 3}
 --- !u!61 &-8168576666604565902
 BoxCollider2D:
   m_ObjectHideFlags: 0

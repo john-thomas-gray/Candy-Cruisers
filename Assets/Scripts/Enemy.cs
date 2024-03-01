@@ -23,6 +23,13 @@ public class Enemy : MonoBehaviour
 
     public Sprite specialSkin;
 
+    // RED ABILITIES
+    private float timeSinceLastShot = 0;
+    private double shotCoolDown;
+    private float[] shotCoolDownRange = {6, 14};
+    private bool onCoolDown = false;
+    public GameObject missilePrefab;
+
     void Awake()
     {
         alive = true;
@@ -47,6 +54,11 @@ public class Enemy : MonoBehaviour
 
     }
 
+    void Update()
+    {
+        Abilities();
+    }
+
     void Abilities()
     {
         // Check color
@@ -55,7 +67,7 @@ public class Enemy : MonoBehaviour
             // Base ability
             if (!special)
             {
-
+                fireMissile();
             }
             // Special ability
             else if (special)
@@ -163,10 +175,43 @@ public class Enemy : MonoBehaviour
             }
         }
         // Call death to kill current enemy
-        Death();
+        death();
     }
 
-    public void Death()
+    // ||| ABILITIES |||
+
+    // RED
+
+    // BASIC
+    void fireMissile()
+    {
+        if(!onCoolDown)
+        {
+            shotCoolDown = random.NextDouble() * (shotCoolDownRange[1] - shotCoolDownRange[0]) + shotCoolDownRange[0];
+            onCoolDown = true;
+        }
+
+        timeSinceLastShot += Time.deltaTime;
+
+        if(timeSinceLastShot >= shotCoolDown)
+        {
+                // Debug.Log("shotColor: " + shotColor);
+                // Debug.Log("color: " + color);
+            colorCounts = colorManager.colorCounts;
+
+            if (colorManager.colorSet)
+            {
+                // Spawn missile in front of enemy
+                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+                // Reset cooldown
+                timeSinceLastShot = 0.0f;
+                onCoolDown = false;
+            }
+        }
+    }
+
+
+    public void death()
     {
         if(alive == false && dead == false)
         {

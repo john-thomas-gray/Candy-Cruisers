@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     static System.Random random = new System.Random();
     public bool alive;
     // Movement
-    public float tankSpeed;
+    private float tankSpeed = 4f;
     private float screenBoundLeft = -2.45f;
     private float screenBoundRight = 2.45f;
     // GridManager
@@ -96,5 +96,9 @@ public class PlayerController : MonoBehaviour
                 timeSinceLastShot = 0.0f;
             }
         }
+    }
+    void death()
+    {
+        
     }
 }
