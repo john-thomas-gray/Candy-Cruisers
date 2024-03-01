@@ -62,7 +62,6 @@ public class ColorManager : MonoBehaviour
         // Check if the object is not the player
         if (targetObject.tag != "Player")
         {
-
             if (color == null)
             {
                 // Set color string to a random "color"
@@ -71,7 +70,6 @@ public class ColorManager : MonoBehaviour
             }
 
             targetObject.tag = color;
-
             // Get index of item in list
             int colorInx = colors.IndexOf(color);
 
@@ -158,7 +156,8 @@ public class ColorManager : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
 
-        string color = null;
+        // Set initial color value so IndexOf doesn't throw error
+        string color = "Green";
 
         // Check if the object is not the player
         if (targetObject.tag != "Player")
