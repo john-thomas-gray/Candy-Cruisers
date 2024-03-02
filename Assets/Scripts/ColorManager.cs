@@ -201,6 +201,15 @@ public class ColorManager : MonoBehaviour
         }
 
     }
+
+    public void turnWhite(GameObject targetObject)
+    {
+        SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
+        targetObject.GetComponent<LaserController>().color = "White";
+        spriteRenderer.color = Color.white;
+    }
+
+
     // Ensure the colorManager is destroyed when the application quits
     private void OnApplicationQuit()
     {

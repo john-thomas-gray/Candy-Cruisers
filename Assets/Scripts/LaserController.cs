@@ -54,6 +54,7 @@ public class LaserController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+            // Hitting an enemy
             if(collision.gameObject.layer == 8)
             {
                 GameObject collided = collision.gameObject;
@@ -72,6 +73,27 @@ public class LaserController : MonoBehaviour
                 }
 
             }
+            // Hitting a shield
+            if (collision.gameObject.layer == 10)
+            {
+                GameObject collided = collision.gameObject;
+                Shield shieldScript = collided.GetComponent<Shield>();
+                float reflectRotation = 180f;
+                if (color != "Blue")
+                {
+                    colorManager.turnWhite(this.gameObject);
+                    // BASIC ABSORB
+                    if (!shieldScript.special)
+                    {
+                        shieldScript.absorb();
+                        Destroy(this.gameObject);
+                    }
 
+                    if (shieldScript.special)
+                    {
+                        transform.Rotate(new Vector3(0f, 0f, reflectRotation));
+                    }
+                }
+            }
     }
 }

@@ -30,6 +30,9 @@ public class Enemy : MonoBehaviour
     private bool onCoolDown = false;
     public GameObject missilePrefab;
 
+    // BLUE ABILITIES
+    public GameObject shieldPrefab;
+
     void Awake()
     {
         alive = true;
@@ -52,6 +55,14 @@ public class Enemy : MonoBehaviour
 
         CheckNeighbors();
 
+    }
+
+    void Start()
+    {
+        if (color == "Blue")
+        {
+            activateShield();
+        }
     }
 
     void Update()
@@ -208,6 +219,17 @@ public class Enemy : MonoBehaviour
                 onCoolDown = false;
             }
         }
+    }
+
+    // BLUE
+
+    // BASIC
+    void activateShield()
+    {
+
+        // Spawn a shield object around enemy
+        GameObject shield = Instantiate(shieldPrefab, gameObject.transform);
+
     }
 
 
