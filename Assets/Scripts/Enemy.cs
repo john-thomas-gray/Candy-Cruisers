@@ -11,12 +11,12 @@ public class Enemy : MonoBehaviour
     public bool special;
     public bool super;
     public bool isChecked;
-    public bool colorCounted;
+    public bool specialGreenCounted;
 
     private Transform cellTransform;
     private Transform fleetTransform;
     private GameObject fleet;
-    private GridManager gridManagerInstance;
+    private GridManager gridManageScript;
 
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
@@ -32,6 +32,9 @@ public class Enemy : MonoBehaviour
 
     // BLUE ABILITIES
     public GameObject shieldPrefab;
+
+    // GREEN ABILITIES
+    public float specialMultiplier;
 
     void Awake()
     {
@@ -51,7 +54,7 @@ public class Enemy : MonoBehaviour
         cellTransform = transform.parent;
         fleetTransform = cellTransform.parent;
         fleet = fleetTransform.gameObject;
-        gridManagerInstance = fleet.GetComponent<GridManager>();
+        gridManageScript = fleet.GetComponent<GridManager>();
 
         CheckNeighbors();
 
@@ -85,11 +88,21 @@ public class Enemy : MonoBehaviour
             {
 
             }
-            else if (super)
-            {
 
+        }
+        else if(color == "Green")
+        {
+            // Special ability
+            if (special)
+            {
+                if(specialGreenCounted == false)
+                {
+                    gridManageScript.specialGreenCount++;
+                    specialGreenCounted = true;
+                }
             }
         }
+
         // for each
         // Base abilities
 
@@ -104,7 +117,7 @@ public class Enemy : MonoBehaviour
         if(isChecked == false)
         {
             // Get instance of current grid
-            List<GameObject> grid = gridManagerInstance.grid;
+            List<GameObject> grid = gridManageScript.grid;
             // Get instance of cell holding this enemy
             Transform cellTransform = transform.parent;
             // Get the cell number
@@ -247,17 +260,32 @@ public class Enemy : MonoBehaviour
             // Check if current color count is 0
             if (colorCounts[color] == 0)
             {
-                gridManagerInstance.FleetWipeCheck();
-                if (!gridManagerInstance.wipedOut)
+                gridManageScript.FleetWipeCheck();
+                if (!gridManageScript.wipedOut)
                 {
                     colorManager.magicLaser = true;
                     Debug.Log("MAGIC LASER");
                 }
             }
 
+            // Subract special green count
+            if (specialGreenCounted)
+            {
+                gridManageScript.specialGreenCount--;
+                specialGreenCounted = false;
+            }
+
             Destroy(this.gameObject);
 
         }
+    }
+
+    private void retreat()
+    {
+        // Gets triggered by CheckNeighbors
+        // If has no neighbor above
+        // Check if has neighbor left and right
+        // If they have no neighbor above, move up
     }
 
 }

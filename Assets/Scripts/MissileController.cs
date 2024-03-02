@@ -7,9 +7,10 @@ public class MissileController : MonoBehaviour
     // Missile color
     public GameObject player;
     // Missile movement
-    private float deletePlain = -5.3f;
+    private float destroyPlain = 5.3f;
     private float missileSpeed = 5.0f;
-    // ColorManager
+    // Destroy Timer
+    private float destroyTimer = 0;
 
     void Start()
     {
@@ -22,6 +23,13 @@ public class MissileController : MonoBehaviour
     {
         MoveMissile();
 
+        // Destroy missile if onscreen too long
+        destroyTimer += Time.deltaTime;
+        if(destroyTimer > 2f)
+        {
+            Destroy(this.gameObject);
+        }
+
     }
 
     void MoveMissile()
@@ -30,7 +38,7 @@ public class MissileController : MonoBehaviour
         transform.Translate(Vector3.up * missileSpeed * Time.deltaTime);
 
         // Delete offscreen missile
-        if(transform.position.y < deletePlain)
+        if(Mathf.Abs(transform.position.y) > destroyPlain)
         {
             Destroy(this.gameObject);
         }

@@ -9,6 +9,9 @@ public class GridManager : MonoBehaviour
     // Enemy prefab
     public GameObject enemyPrefab;
 
+    // Enemy specials
+    public int specialGreenCount = 0;
+
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
     public GameObject cellPrefab;
@@ -36,7 +39,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         InitializeFleetGrid();
-        PopulateFleet(24);
+        PopulateFleet(30);
     }
     void Start()
     {
@@ -228,7 +231,7 @@ public class GridManager : MonoBehaviour
     {
         if (turnInterval < 10)
         {
-            if (timer < moveTime / colorManager.colorCounts["Green"])
+            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
             {
                 timer += Time.deltaTime;
             }
@@ -247,7 +250,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            if (timer < moveTime / colorManager.colorCounts["Green"])
+            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
             {
                 timer += Time.deltaTime;
             }

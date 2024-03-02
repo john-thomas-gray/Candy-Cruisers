@@ -10,11 +10,14 @@ public class LaserController : MonoBehaviour
     public GameObject player;
     private bool magicLaser = false;
     // Laser movement
-    private float deletePlain = 5.3f;
+    private float destroyPlain = 5.3f;
     private float laserSpeed = 20f;
     // ColorManager
     ColorManager colorManager;
-
+    // Deflector
+    private bool deflected = false;
+    // Max time on screen
+    private float destroyTimer = 0;
 
     void Start()
     {
@@ -38,6 +41,12 @@ public class LaserController : MonoBehaviour
         {
             colorManager.Multicolor(this.gameObject);
         }
+        // Destroy laser if onscreen too long
+        destroyTimer += Time.deltaTime;
+        if(destroyTimer > 1.5)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     void MoveLaser()
@@ -45,8 +54,8 @@ public class LaserController : MonoBehaviour
 
         transform.Translate(Vector3.up * laserSpeed * Time.deltaTime);
 
-        // Delete offscreen laser
-        if(Mathf.Abs(transform.position.y) > deletePlain)
+        // Destroy offscreen laser
+        if(Mathf.Abs(transform.position.y) > destroyPlain)
         {
             Destroy(this.gameObject);
         }
@@ -74,26 +83,37 @@ public class LaserController : MonoBehaviour
 
             }
             // Hitting a shield
-            if (collision.gameObject.layer == 10)
+            if (magicLaser == false && collision.gameObject.layer == 10)
             {
                 GameObject collided = collision.gameObject;
                 Shield shieldScript = collided.GetComponent<Shield>();
                 float reflectRotation = 180f;
-                if (color != "Blue")
+                if (color != shieldScript.shieldEnemyColor)
                 {
-                    colorManager.turnWhite(this.gameObject);
                     // BASIC ABSORB
                     if (!shieldScript.special)
                     {
                         shieldScript.absorb();
                         Destroy(this.gameObject);
                     }
-
+                    // SPECIAL DEFLECT
                     if (shieldScript.special)
                     {
+                        colorManager.turnWhite(this.gameObject);
                         transform.Rotate(new Vector3(0f, 0f, reflectRotation));
+                        laserSpeed = laserSpeed * 0.5f;
+                        deflected = true;
                     }
                 }
             }
+            // Hitting the player
+            if (deflected && collision.gameObject.layer == 9)
+            {
+                GameObject collided = collision.gameObject;
+                PlayerController playerScript = collided.GetComponent<PlayerController>();
+                playerScript.alive = false;
+                Destroy(this.gameObject);
+            }
+
     }
 }
