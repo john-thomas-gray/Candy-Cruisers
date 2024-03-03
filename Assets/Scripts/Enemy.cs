@@ -13,11 +13,13 @@ public class Enemy : MonoBehaviour
     public bool isChecked;
     public bool specialGreenCounted;
 
+    // GridManager
     private Transform cellTransform;
     private Transform fleetTransform;
     private GameObject fleet;
     private GridManager gridManageScript;
 
+    // Color
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
 
@@ -132,6 +134,7 @@ public class Enemy : MonoBehaviour
             {
                 GameObject up = grid[cellNumber - 6];
                 neighbors.Add(up);
+
             }
             // Check left if not left column
             if (cellNumber % 6 != 0)
@@ -151,6 +154,30 @@ public class Enemy : MonoBehaviour
                 GameObject down = grid[cellNumber + 6];
                 neighbors.Add(down);
             }
+            //FIX SCOPE
+            // // Retreat
+            // if (up == null)
+            // {
+            //     // If left neighbor null
+            //     if (left == null)
+            //     {
+            //         // If left and right neighbors null
+            //         if (right == null)
+            //         {
+            //             // Move enemy up one cell
+            //         }
+            //         // If left is null and right is occupied
+            //         else
+            //         {
+            //             // Run retreat check on rightside neighbor
+            //         }
+            //     }
+            //     // If right is null and left is occupied
+            //     else if (right == null)
+            //     {
+            //         // Run retreat check on leftside neighbor
+            //     }
+            // }
 
             // List enemies with matching colors
             List<GameObject> matches = new List<GameObject>();
