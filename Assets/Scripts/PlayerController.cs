@@ -27,6 +27,10 @@ public class PlayerController : MonoBehaviour
     private float shotCoolDown = 0.4f;
     private float timeSinceLastShot = 0.0f;
 
+    // GameMaster
+    GameMaster gameMaster;
+    public bool spawnProtection = false;
+
     void Awake()
     {
         alive = true;
@@ -40,6 +44,8 @@ public class PlayerController : MonoBehaviour
         colorCounts = colorManager.colorCounts;
         // Create a reference to the wipedOut int
         wipedOut = gridManagerInstance.wipedOut;
+        // Get Game Master instance
+        gameMaster = GameMaster.Instance;
 
     }
 
@@ -55,10 +61,12 @@ public class PlayerController : MonoBehaviour
             playerMovement();
             fireLaser();
         }
+
         if(colorManager.magicLaser)
         {
             colorManager.Multicolor(this.gameObject);
         }
+        Debug.Log(spawnProtection);
     }
 
     void playerMovement()
@@ -99,6 +107,18 @@ public class PlayerController : MonoBehaviour
     }
     void death()
     {
-        
+        this.gameObject.transform.position = new Vector3(-6f, -4.69f, -2f);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+            if(collision.gameObject.layer == 11 && spawnProtection == false)
+            {
+                GameObject collided = collision.gameObject;
+                Debug.Log("Ouch!");
+                alive = false;
+                death();
+            }
+
     }
 }

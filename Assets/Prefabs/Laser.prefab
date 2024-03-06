@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: Green
-  lastShotColor: 
+  shotColor: 
   player: {fileID: 629551758658613140, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
 --- !u!61 &1823667747720782917
 BoxCollider2D:

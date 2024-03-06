@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1823667747720782917}
   - component: {fileID: 4633887884792124278}
   - component: {fileID: 2798307870607022426}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Missile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,3 +171,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f168404b2bfc04aa2b3c8c32465baf3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}

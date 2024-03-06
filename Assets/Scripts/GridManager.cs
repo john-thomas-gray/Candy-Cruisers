@@ -39,7 +39,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         InitializeFleetGrid();
-        PopulateFleet(30);
+        PopulateFleet(24);
     }
     void Start()
     {

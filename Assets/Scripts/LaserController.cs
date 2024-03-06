@@ -103,17 +103,18 @@ public class LaserController : MonoBehaviour
                         transform.Rotate(new Vector3(0f, 0f, reflectRotation));
                         laserSpeed = laserSpeed * 0.5f;
                         deflected = true;
+                        this.gameObject.layer = 11;
                     }
                 }
             }
             // Hitting the player
-            if (deflected && collision.gameObject.layer == 9)
-            {
-                GameObject collided = collision.gameObject;
-                PlayerController playerScript = collided.GetComponent<PlayerController>();
-                playerScript.alive = false;
-                Destroy(this.gameObject);
-            }
+            // if (deflected && collision.gameObject.layer == 9)
+            // {
+            //     GameObject collided = collision.gameObject;
+            //     PlayerController playerScript = collided.GetComponent<PlayerController>();
+            //     playerScript.alive = false;
+            //     Destroy(this.gameObject);
+            // }
 
     }
 }

@@ -44,17 +44,17 @@ public class MissileController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-            if(collision.gameObject.layer == 9)
-            {
-                GameObject collided = collision.gameObject;
-                PlayerController playerScript = collided.GetComponent<PlayerController>();
-                Debug.Log("Ouch!");
-                playerScript.alive = false;
-                Destroy(this.gameObject);
+    // private void OnTriggerEnter2D(Collider2D collision)
+    // {
+    //         if(collision.gameObject.layer == 9)
+    //         {
+    //             GameObject collided = collision.gameObject;
+    //             PlayerController playerScript = collided.GetComponent<PlayerController>();
+    //             Debug.Log("Ouch!");
+    //             playerScript.alive = false;
+    //             Destroy(this.gameObject);
 
-            }
+    //         }
 
-    }
+    // }
 }
