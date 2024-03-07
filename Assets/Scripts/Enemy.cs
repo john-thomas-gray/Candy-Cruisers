@@ -118,6 +118,10 @@ public class Enemy : MonoBehaviour
     {
         if(isChecked == false)
         {
+            GameObject up = null;
+            GameObject down = null;
+            GameObject left = null;
+            GameObject right = null;
             // Get instance of current grid
             List<GameObject> grid = gridManageScript.grid;
             // Get instance of cell holding this enemy
@@ -132,52 +136,52 @@ public class Enemy : MonoBehaviour
             // Check up if not bot row
             if (cellNumber > 5)
             {
-                GameObject up = grid[cellNumber - 6];
+                up = grid[cellNumber - 6];
                 neighbors.Add(up);
 
             }
             // Check left if not left column
             if (cellNumber % 6 != 0)
             {
-                GameObject left = grid[cellNumber - 1];
+                left = grid[cellNumber - 1];
                 neighbors.Add(left);
             }
             // Check right if not right column
             if ((cellNumber + 1) % 6 != 0)
             {
-                GameObject right = grid[cellNumber + 1];
+                right = grid[cellNumber + 1];
                 neighbors.Add(right);
             }
             // Check down if not bot row
             if (cellNumber < 66)
             {
-                GameObject down = grid[cellNumber + 6];
+                down = grid[cellNumber + 6];
                 neighbors.Add(down);
             }
-            //FIX SCOPE
-            // // Retreat
-            // if (up == null)
-            // {
-            //     // If left neighbor null
-            //     if (left == null)
-            //     {
-            //         // If left and right neighbors null
-            //         if (right == null)
-            //         {
-            //             // Move enemy up one cell
-            //         }
-            //         // If left is null and right is occupied
-            //         else
-            //         {
-            //             // Run retreat check on rightside neighbor
-            //         }
-            //     }
-            //     // If right is null and left is occupied
-            //     else if (right == null)
-            //     {
-            //         // Run retreat check on leftside neighbor
-            //     }
-            // }
+            // Retreat
+            if (up == null)
+            {
+                gridManageScript.retreat(cellNumber);
+                // // If left neighbor null
+                // if (left == null)
+                // {
+                //     // If left and right neighbors null
+                //     if (right == null)
+                //     {
+                //         // Move enemy up one cell
+                //     }
+                //     // If left is null and right is occupied
+                //     else
+                //     {
+                //         // Run retreat check on rightside neighbor
+                //     }
+                // }
+                // // If right is null and left is occupied
+                // else if (right == null)
+                // {
+                //     // Run retreat check on leftside neighbor
+                // }
+            }
 
             // List enemies with matching colors
             List<GameObject> matches = new List<GameObject>();
@@ -253,7 +257,7 @@ public class Enemy : MonoBehaviour
             if (colorManager.colorSet)
             {
                 // Spawn missile in front of enemy
-                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .25f, transform.position.z), transform.rotation);
                 // Reset cooldown
                 timeSinceLastShot = 0.0f;
                 onCoolDown = false;
@@ -287,7 +291,7 @@ public class Enemy : MonoBehaviour
             // Check if current color count is 0
             if (colorCounts[color] == 0)
             {
-                gridManageScript.FleetWipeCheck();
+                gridManageScript.fleetWipeCheck();
                 if (!gridManageScript.wipedOut)
                 {
                     colorManager.magicLaser = true;

@@ -38,8 +38,8 @@ public class GridManager : MonoBehaviour
     {
         gameOver = false;
         colorManager = ColorManager.Instance;
-        InitializeFleetGrid();
-        PopulateFleet(24);
+        initializeFleetGrid();
+        populateFleet(24);
     }
     void Start()
     {
@@ -48,7 +48,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        FleetMovement(.5f);
+        fleetMovement(.5f);
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
@@ -57,12 +57,12 @@ public class GridManager : MonoBehaviour
         // FleetWipe
         if(wipedOut)
         {
-            PopulateFleet(24);
+            populateFleet(24);
             wipedOut = false;
         }
     }
 
-    void InitializeFleetGrid()
+    void initializeFleetGrid()
     {
         int cellInx = 0;
         int rows = 12;
@@ -100,7 +100,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void FleetStatus()
+    public void fleetStatus()
     {
         colorCounts = colorManager.colorCounts;
 
@@ -120,7 +120,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void FleetWipeCheck()
+    public void fleetWipeCheck()
     {
         int emptyKeyCount = 0;
         foreach (var kvp in colorCounts)
@@ -136,7 +136,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void PopulateFleet(int end, int start = 0)
+    void populateFleet(int end, int start = 0)
     {
 
         // Iterate through the selected number of rows
@@ -154,10 +154,10 @@ public class GridManager : MonoBehaviour
 
         }
 
-        FleetStatus();
+        fleetStatus();
     }
 
-    public void FleetShift()
+    public void fleetShift()
     {
             shift = new List<GameObject>(new GameObject[72]);
             // Create list to hold enemies at indexes offset one row
@@ -182,9 +182,9 @@ public class GridManager : MonoBehaviour
             }
     }
 
-    public void Advance()
+    public void advance()
     {
-            // Debug.Log("Advance");
+            // Debug.Log("advance");
             for(int i = 0; i < 72; i++)
             {
                 // Get the cell to update
@@ -218,11 +218,37 @@ public class GridManager : MonoBehaviour
                     currentCell.GetComponent<Cell>().enemy = null;
                 }
             }
-            PopulateFleet(6);
+            populateFleet(6);
 
     }
 
-    public void FleetMovement(float moveSpeed)
+    public void retreat(int cellNumber)
+    {
+        // Get the cell to update
+        GameObject currentCell = grid[cellNumber];
+        Transform currentCellTransform = currentCell.transform;
+
+        // Get the current enemy
+        GameObject currentEnemy = currentCell.GetComponent<Cell>().enemy;;
+
+        // Detach the children from the current cell
+        currentCellTransform.DetachChildren();
+
+        // Get above cell
+        GameObject aboveCell = grid[cellNumber - 6];
+        Transform aboveCellTransform = aboveCell.transform;
+
+        // Set the current enemy as the occupant of the above cell
+        currentEnemy.transform.SetParent(aboveCellTransform);
+
+        // Update the current enemy's position
+        currentEnemy.transform.localPosition = Vector3.zero;
+
+        // Update cell's enemy info
+        currentCell.GetComponent<Cell>().enemy = null;
+    }
+
+    public void fleetMovement(float moveSpeed)
 {
     float moveTime = 5.0f;
     float moveIncrement = 0.10f;
@@ -243,7 +269,7 @@ public class GridManager : MonoBehaviour
                 // Check if the descent should occur
                 if (turnInterval == 10 && !hasDescended)
                 {
-                    Descend();
+                    descend();
                     hasDescended = true;
                 }
             }
@@ -263,7 +289,7 @@ public class GridManager : MonoBehaviour
                 // Check if the descent should occur
                 if (turnInterval == 20 && !hasDescended)
                 {
-                    Descend();
+                    descend();
                     hasDescended = true;
                 }
             }
@@ -282,7 +308,7 @@ public class GridManager : MonoBehaviour
     }
 }
 
-    public void Descend()
+    public void descend()
     {
         // Game Over
             for (int i = 66; i < 72; i++)
@@ -295,8 +321,8 @@ public class GridManager : MonoBehaviour
                 }
             if(!gameOver)
             {
-                FleetShift();
-                Advance();
+                fleetShift();
+                advance();
             }
     }
 
