@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         {
             colorManager.Multicolor(this.gameObject);
         }
-        Debug.Log(spawnProtection);
+        // Debug.Log(spawnProtection);
     }
 
     void playerMovement()
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
             if(collision.gameObject.layer == 11 && spawnProtection == false)
             {
                 GameObject collided = collision.gameObject;
-                Debug.Log("Ouch!");
+                // Debug.Log("Ouch!");
                 alive = false;
                 death();
             }

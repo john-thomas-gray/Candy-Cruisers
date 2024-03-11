@@ -30,6 +30,7 @@ public class GameMaster : MonoBehaviour
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<PlayerController>();
     }
 
@@ -60,7 +61,7 @@ public class GameMaster : MonoBehaviour
 
    public void respawnPlayer()
    {
-    Debug.Log("respawn");
+    // Debug.Log("respawn");
     float respawnTime = 1f;
     float iFrames = 5f;
     respawnTimer += Time.deltaTime;

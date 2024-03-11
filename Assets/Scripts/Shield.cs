@@ -87,7 +87,7 @@ public class Shield : MonoBehaviour
 
     public void deflector()
     {
-        Debug.Log("DEFLECTOR");
+        // Debug.Log("DEFLECTOR");
         // spriteRenderer.sprite = specialSprite;
         // StartCoroutine(ShieldSize (1.5f, .1f));
 

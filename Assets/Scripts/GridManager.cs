@@ -22,7 +22,7 @@ public class GridManager : MonoBehaviour
     private bool hasDescended = false;
 
     // List of enemies shifted one row down with the top row cleared
-    private List<GameObject> shift = new List<GameObject>();
+    public List<GameObject> shift = new List<GameObject>();
     // Color dictionary
     public Dictionary<string, int> colorCounts = new Dictionary<string, int>();
     // Color Manager
@@ -38,8 +38,9 @@ public class GridManager : MonoBehaviour
     {
         gameOver = false;
         colorManager = ColorManager.Instance;
-        InitializeFleetGrid();
-        PopulateFleet(24);
+        initializeFleetGrid();
+        populateFleet(24);
+        fleetShift();
     }
     void Start()
     {
@@ -52,17 +53,22 @@ public class GridManager : MonoBehaviour
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
-            colorManager.TotalEnemyCount();
+            // colorManager.TotalEnemyCount();
+            retreat(12);
+        }
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            descend();
         }
         // FleetWipe
         if(wipedOut)
         {
-            PopulateFleet(24);
+            populateFleet(24);
             wipedOut = false;
         }
     }
 
-    void InitializeFleetGrid()
+    void initializeFleetGrid()
     {
         int cellInx = 0;
         int rows = 12;
@@ -100,7 +106,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void FleetStatus()
+    public void fleetStatus()
     {
         colorCounts = colorManager.colorCounts;
 
@@ -115,7 +121,7 @@ public class GridManager : MonoBehaviour
                 // Set currentEnemy to the enemy in the cell
                 GameObject currentEnemy = currentCell.GetComponent<Cell>().enemy;
 
-                currentEnemy.GetComponent<Enemy>().CheckNeighbors();
+                currentEnemy.GetComponent<Enemy>().checkNeighbors();
             }
         }
     }
@@ -136,7 +142,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void PopulateFleet(int end, int start = 0)
+    void populateFleet(int end, int start = 0)
     {
 
         // Iterate through the selected number of rows
@@ -154,10 +160,10 @@ public class GridManager : MonoBehaviour
 
         }
 
-        FleetStatus();
+        fleetStatus();
     }
 
-    public void FleetShift()
+    public void fleetShift()
     {
             shift = new List<GameObject>(new GameObject[72]);
             // Create list to hold enemies at indexes offset one row
@@ -182,16 +188,13 @@ public class GridManager : MonoBehaviour
             }
     }
 
-    public void Advance()
+    public void advance()
     {
-            // Debug.Log("Advance");
             for(int i = 0; i < 72; i++)
             {
                 // Get the cell to update
                 GameObject currentCell = grid[i];
                 Transform currentCellTransform = currentCell.transform;
-                // Detach the children
-                Transform cellTransform = currentCell.transform;
 
                 // Get the enemy/null to be placed
                 GameObject newOccupant = shift[i];
@@ -218,7 +221,7 @@ public class GridManager : MonoBehaviour
                     currentCell.GetComponent<Cell>().enemy = null;
                 }
             }
-            PopulateFleet(6);
+            populateFleet(6);
 
     }
 
@@ -243,7 +246,7 @@ public class GridManager : MonoBehaviour
                 // Check if the descent should occur
                 if (turnInterval == 10 && !hasDescended)
                 {
-                    Descend();
+                    descend();
                     hasDescended = true;
                 }
             }
@@ -263,7 +266,7 @@ public class GridManager : MonoBehaviour
                 // Check if the descent should occur
                 if (turnInterval == 20 && !hasDescended)
                 {
-                    Descend();
+                    descend();
                     hasDescended = true;
                 }
             }
@@ -282,7 +285,7 @@ public class GridManager : MonoBehaviour
     }
 }
 
-    public void Descend()
+    public void descend()
     {
         // Game Over
             for (int i = 66; i < 72; i++)
@@ -295,11 +298,48 @@ public class GridManager : MonoBehaviour
                 }
             if(!gameOver)
             {
-                FleetShift();
-                Advance();
+                fleetShift();
+                advance();
             }
     }
 
+    public void retreat(int cellNumber)
+    {
+        // Get the cell to update
+        GameObject currentCell = grid[cellNumber];
+        Transform currentCellTransform = currentCell.transform;
+        // Get the enemy/null to be placed
+        GameObject currentOccupant = currentCell.GetComponent<Cell>().enemy;
+        // Debug.Log(currentOccupant);
+        // Debug.Log("currentCell: " + currentCell);
+        // Debug.Log("currentTransform: " + currentCellTransform);
+
+        // Get above cell info
+        GameObject aboveCell = grid[cellNumber - 6];
+        Transform aboveCellTransform = aboveCell.transform;
+        GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
+
+        // Debug.Log("aboveCell: " + aboveCell);
+        // Debug.Log("aboveTransform: " + aboveCellTransform);
+
+        if (aboveCell.GetComponent<Cell>().enemy == null)
+        {
+            // Debug.Log("reassign");
+            // Detach the children from the current cell
+            currentCellTransform.DetachChildren();
+            // Set current occupant as child of above cell
+            currentOccupant.transform.SetParent(aboveCellTransform);
+            // Set current occupant position to above cell
+            currentOccupant.transform.localPosition = Vector3.zero;
+            // Update current cell's enemy info
+            currentCell.GetComponent<Cell>().enemy = null;
+            currentCell.GetComponent<Cell>().color = null;
+            // Update above cell's enemy info
+            aboveCell.GetComponent<Cell>().enemy = currentOccupant;
+            aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
+
+        }
+    }
     public void GameOver()
     {
         Debug.Log("GAME OVER");

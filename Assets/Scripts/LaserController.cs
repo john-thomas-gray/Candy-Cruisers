@@ -14,8 +14,6 @@ public class LaserController : MonoBehaviour
     private float laserSpeed = 20f;
     // ColorManager
     ColorManager colorManager;
-    // Deflector
-    private bool deflected = false;
     // Max time on screen
     private float destroyTimer = 0;
 
@@ -72,12 +70,12 @@ public class LaserController : MonoBehaviour
                 if(enemy != null && magicLaser)
                 {
                     enemy.alive = false;
-                    enemy.CheckNeighbors();
+                    enemy.checkNeighbors();
                 }
                 else if(enemy != null && enemyColor == color)
                 {
                     enemy.alive = false;
-                    enemy.CheckNeighbors();
+                    enemy.checkNeighbors();
                     Destroy(this.gameObject);
                 }
 
@@ -102,19 +100,10 @@ public class LaserController : MonoBehaviour
                         colorManager.turnWhite(this.gameObject);
                         transform.Rotate(new Vector3(0f, 0f, reflectRotation));
                         laserSpeed = laserSpeed * 0.5f;
-                        deflected = true;
                         this.gameObject.layer = 11;
                     }
                 }
             }
-            // Hitting the player
-            // if (deflected && collision.gameObject.layer == 9)
-            // {
-            //     GameObject collided = collision.gameObject;
-            //     PlayerController playerScript = collided.GetComponent<PlayerController>();
-            //     playerScript.alive = false;
-            //     Destroy(this.gameObject);
-            // }
 
     }
 }

@@ -8,7 +8,7 @@ public class Cell : MonoBehaviour
     public int number;
     public bool occupied = false;
     public string color = null;
-    public GameObject enemy;
+    public GameObject enemy = null;
 
     // Property to get and set the name
     new public string name
