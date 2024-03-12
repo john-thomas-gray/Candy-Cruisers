@@ -25,6 +25,16 @@ public class Enemy : MonoBehaviour
 
     public Sprite specialSkin;
 
+    // Neighbors
+    private GameObject up = null;
+    private GameObject left = null;
+    private GameObject right = null;
+    private GameObject down = null; 
+
+    // Retreat
+    public bool retreat = false;
+    List<GameObject> retreating = new List<GameObject> {};
+
     // RED ABILITIES
     private float timeSinceLastShot = 0;
     private double shotCoolDown;
@@ -75,7 +85,8 @@ public class Enemy : MonoBehaviour
         Abilities();
         if(Input.GetKeyDown(KeyCode.A))
         {
-            checkNeighbors();
+            // checkNeighbors();
+            gridManagerScript.retreat(13);
         }
 
     }
@@ -118,7 +129,46 @@ public class Enemy : MonoBehaviour
         // Super abilities
     }
 
+     public void checkRetreat()
+    {
+        Debug.Log("checkretreat");
+        if (up.GetComponent<Cell>().enemy != null && up.GetComponent<Cell>().enemy.GetComponent<Enemy>().dead)
+            {
+                retreat = true;
+            }
 
+        if(kill == false && retreat == true)
+        {
+            // Get instance of current grid
+            List<GameObject> grid = gridManagerScript.grid;
+            // Get instance of cell holding this enemy
+            Transform cellTransform = transform.parent;
+            // Get the cell number
+            int cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
+
+            // Check left if not left column
+            if (cellNumber % 6 != 0)
+            {
+                left = grid[cellNumber - 1].GetComponent<Cell>().enemy;
+                if (left != null && left.GetComponent<Enemy>().retreat == false)
+                {
+                    left.GetComponent<Enemy>().checkRetreat();
+                }
+            }
+            // Check right if not right column
+            if ((cellNumber + 1) % 6 != 0)
+            {
+                right = grid[cellNumber + 1].GetComponent<Cell>().enemy;
+                if (right != null && right.GetComponent<Enemy>().retreat == false)
+                {
+                    right.GetComponent<Enemy>().checkRetreat();
+                }
+            }
+            gridManagerScript.retreat(cellNumber);
+            retreat = false;
+
+        }
+    }
     public void checkNeighbors()
     {
         if(kill == false)
@@ -133,64 +183,33 @@ public class Enemy : MonoBehaviour
 
             // Check the neighboring cells
             List<GameObject> neighbors = new List<GameObject>();
-            GameObject up = null;
-            GameObject left = null;
-            GameObject right = null;
-            GameObject down = null;
 
-            Debug.Log("Cell: " + cellNumber + ", " + "Color: " + color);
-
-            // Retreat
-            bool checkRetreat = false;
+            // Debug.Log("Cell: " + cellNumber + ", " + "Color: " + color);
 
             // Check up if not bot row
             if (cellNumber > 5)
             {
                 up = grid[cellNumber - 6];
                 neighbors.Add(up);
-                if (up.GetComponent<Cell>().enemy == null)
-                {
-                    checkRetreat = true;
-                }
+
             }
             // Check left if not left column
             if (cellNumber % 6 != 0)
             {
                 left = grid[cellNumber - 1];
                 neighbors.Add(left);
-            } else {
-                left = null;
             }
             // Check right if not right column
             if ((cellNumber + 1) % 6 != 0)
             {
                 right = grid[cellNumber + 1];
                 neighbors.Add(right);
-            } else {
-                right = null;
             }
             // Check down if not bot row
             if (cellNumber < 66)
             {
                 down = grid[cellNumber + 6];
                 neighbors.Add(down);
-            }
-
-            // Retreat
-            if (checkRetreat && gridManagerScript.shift.Count >= cellNumber)
-            {
-                gridManagerScript.retreat(cellNumber);
-                // If left neighbor null
-                if (left == null && right == null)
-                {
-
-                }
-                // If right is null and left is occupied
-                else if (right == null)
-                {
-                    // Run retreat check on leftside neighbor
-                }
-
             }
 
             // List for matching colored neighbors
@@ -249,6 +268,7 @@ public class Enemy : MonoBehaviour
         death();
     }
 
+
     // ||| ABILITIES |||
 
     // RED
@@ -286,7 +306,6 @@ public class Enemy : MonoBehaviour
     // BASIC
     void activateShield()
     {
-
         // Spawn a shield object around enemy
         GameObject shield = Instantiate(shieldPrefab, gameObject.transform);
 
@@ -312,7 +331,6 @@ public class Enemy : MonoBehaviour
                 if (!gridManagerScript.wipedOut)
                 {
                     colorManager.magicLaser = true;
-                    Debug.Log("MAGIC LASER");
                 }
             }
 
@@ -321,6 +339,12 @@ public class Enemy : MonoBehaviour
             {
                 gridManagerScript.specialGreenCount--;
                 specialGreenCounted = false;
+            }
+
+            // Tell enemy below dying enemy to run retreat check (if they're alive?)
+            if (down.GetComponent<Cell>().enemy != null)
+            {
+                down.GetComponent<Cell>().enemy.GetComponent<Enemy>().checkRetreat();
             }
 
             Destroy(this.gameObject);

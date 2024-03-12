@@ -39,7 +39,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(24);
+        populateFleet(24, 12);
         fleetShift();
     }
     void Start()
@@ -322,7 +322,9 @@ public class GridManager : MonoBehaviour
         // Debug.Log("aboveCell: " + aboveCell);
         // Debug.Log("aboveTransform: " + aboveCellTransform);
 
-        if (aboveCell.GetComponent<Cell>().enemy == null)
+        // I'd like to add in some kind of delay so I can run this if check
+        // if (aboveCell.GetComponent<Cell>().enemy == null)
+        if (true)
         {
             // Debug.Log("reassign");
             // Detach the children from the current cell
@@ -338,6 +340,16 @@ public class GridManager : MonoBehaviour
             aboveCell.GetComponent<Cell>().enemy = currentOccupant;
             aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
 
+            Debug.Log(currentOccupant.GetComponent<Enemy>().color + " enemy in cell " + cellNumber + " retreating");
+        }
+
+        if(cellNumber < 66)
+        {
+            GameObject belowOccupant = grid[cellNumber + 6].GetComponent<Cell>().enemy;
+            if (belowOccupant != null)
+            {
+                belowOccupant.GetComponent<Enemy>().checkRetreat();
+            }
         }
     }
     public void GameOver()
