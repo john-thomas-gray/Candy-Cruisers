@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     // RED ABILITIES
     private float timeSinceLastShot = 0;
     private double shotCoolDown;
-    private float[] shotCoolDownRange = {6, 14};
+    private float[] shotCoolDownRange = {4, 7};
     private bool onCoolDown = false;
     public GameObject missilePrefab;
 
@@ -132,11 +132,12 @@ public class Enemy : MonoBehaviour
      public void checkRetreat()
     {
         Debug.Log("checkretreat");
+        // Check if there is no enemy in the above cell and the current enemy could retreat
         if (up.GetComponent<Cell>().enemy != null && up.GetComponent<Cell>().enemy.GetComponent<Enemy>().dead)
             {
                 retreat = true;
             }
-
+        // If enemy is not set to be killed and could retreat
         if(kill == false && retreat == true)
         {
             // Get instance of current grid
@@ -164,8 +165,17 @@ public class Enemy : MonoBehaviour
                     right.GetComponent<Enemy>().checkRetreat();
                 }
             }
+            // Check down if not in bottom row
+            if (cellNumber < 66)
+            {
+                down = grid[cellNumber + 6];
+            }
             gridManagerScript.retreat(cellNumber);
             retreat = false;
+            if (cellNumber > 5)
+            {
+                checkRetreat();
+            }
 
         }
     }
@@ -344,7 +354,7 @@ public class Enemy : MonoBehaviour
             // Tell enemy below dying enemy to run retreat check (if they're alive?)
             if (down.GetComponent<Cell>().enemy != null)
             {
-                down.GetComponent<Cell>().enemy.GetComponent<Enemy>().checkRetreat();
+                // down.GetComponent<Cell>().enemy.GetComponent<Enemy>().checkRetreat();
             }
 
             Destroy(this.gameObject);

@@ -34,13 +34,16 @@ public class GridManager : MonoBehaviour
     // Fleet empty
     public bool wipedOut;
 
+    private Vector3 initialGridPos;
+
     void Awake()
     {
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(24, 12);
+        populateFleet(6);
         fleetShift();
+        initialGridPos = transform.position;
     }
     void Start()
     {
@@ -63,7 +66,9 @@ public class GridManager : MonoBehaviour
         // FleetWipe
         if(wipedOut)
         {
-            populateFleet(24);
+            transform.position = initialGridPos;
+            turnInterval = 0;
+            populateFleet(6);
             wipedOut = false;
         }
     }

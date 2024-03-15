@@ -134,7 +134,7 @@ public class ColorManager : MonoBehaviour
         colorCounts = updateDictionary;
     }
 
-    public void TotalEnemyCount()
+    public int totalEnemyCount()
     {
         int enemyTotal = 0;
 
@@ -150,6 +150,8 @@ public class ColorManager : MonoBehaviour
 
         }
         Debug.Log("total enemies: " + enemyTotal);
+
+        return enemyTotal;
     }
 
     public void Multicolor(GameObject targetObject)
