@@ -308,6 +308,23 @@ public class GridManager : MonoBehaviour
             }
     }
 
+    public void checkRetreat()
+    {
+        // Make fresh connected component list
+        private List<GameObject> connectedComponents;
+        // Set fresh group variable
+        int group = 0;
+        // Iterate through the grid list
+        for (i = 0; i < grid.Count; i++)
+        {
+            // If an enemy has not been labelled
+            GameObject enemy = grid[i].GetComponent<Cell>().enemy.GetComponent<Enemy>().group;
+                // Label him group, check his neighbors and label all of them group
+                // group++
+        }
+        // If a connected component list does not contain an enemy with index 0-5, run check retreat again
+
+    }
     public void retreat(int cellNumber)
     {
         // Get the cell to update

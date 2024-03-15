@@ -33,6 +33,7 @@ public class Enemy : MonoBehaviour
 
     // Retreat
     public bool retreat = false;
+    public int group = 0;
     List<GameObject> retreating = new List<GameObject> {};
 
     // RED ABILITIES
