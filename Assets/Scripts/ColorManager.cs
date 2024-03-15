@@ -90,39 +90,20 @@ public class ColorManager : MonoBehaviour
         }
         else
         {
-            colorSet = false;
-            int recursionLimit = 5;
-            // Randomly iterate through all possible colors
-            while(colorSet == false && recursionLimit > 0)
+            List<string> onScreenColors = new List<string> {};
+            foreach (var kvp in colorCounts)
                 {
-                    // Get a random num
-                    int randomIndex = random.Next(colors.Count);
-                    // Index skins for a random color value
-                    Color skin = skins[randomIndex];
-                    // Index colors list for a random color
-                    color = colors[randomIndex];
-
-                    // If color shares an onscreen enemy's color
-                    if (colorCounts[color] > 0)
-                    {
-                        // Set sprite color to skin
-                        spriteRenderer.color = skin;
-                        colorSet = true;
-                        // Debug.Log("Color set: " + color);
-                    }
-                    else
-                    {
-                        // Remove the used color
-                        skins.Remove(skin);
-                        colors.Remove(color);
-                        // Debug.Log(color + " not found");
-                    }
-                    recursionLimit--;
-                    if(recursionLimit == 0)
-                    {
-                        Debug.Log("SetColor() timed out!");
-                    }
+                     if (kvp.Value > 0)
+                        {
+                            onScreenColors.Add(kvp.Key);
+                        }
                 }
+            int randomIndex = random.Next(onScreenColors.Count);
+            // Set sprite color to skin
+            spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
+            color = onScreenColors[randomIndex];
+            colorSet = true;
+
             shotColor = color;
             targetObject.GetComponent<PlayerController>().color = color;
         }
