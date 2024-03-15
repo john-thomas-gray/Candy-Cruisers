@@ -99,7 +99,7 @@ public class Shield : MonoBehaviour
                 // Change shield shape and color
                 spriteRenderer.sprite = specialSprite;
                 // Grow shield
-                StartCoroutine(ShieldSize (1.5f, .25f));
+                StartCoroutine(ShieldSize (1.5f, .3f));
                 deflectorUp = true;
             }
         }
