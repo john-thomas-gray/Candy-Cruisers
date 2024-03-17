@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     static System.Random random = new System.Random();
     public string color;
+    public int cellNumber;
     public bool alive;
     public bool dead;
     public bool special;
@@ -33,7 +34,7 @@ public class Enemy : MonoBehaviour
 
     // Retreat
     public bool retreat = false;
-    public int group = 0;
+    public int group = 1;
     List<GameObject> retreating = new List<GameObject> {};
 
     // RED ABILITIES
@@ -89,7 +90,6 @@ public class Enemy : MonoBehaviour
             // checkNeighbors();
             gridManagerScript.retreat(13);
         }
-
     }
 
     void Abilities()
@@ -146,7 +146,7 @@ public class Enemy : MonoBehaviour
             // Get instance of cell holding this enemy
             Transform cellTransform = transform.parent;
             // Get the cell number
-            int cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
+            cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
 
             // Check left if not left column
             if (cellNumber % 6 != 0)
@@ -189,7 +189,7 @@ public class Enemy : MonoBehaviour
             // Get instance of cell holding this enemy
             Transform cellTransform = transform.parent;
             // Get the cell number
-            int cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
+            cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
             // Debug.Log("Checking Cell " + cellNumber + "'s neighbors");
 
             // Check the neighboring cells
@@ -351,13 +351,7 @@ public class Enemy : MonoBehaviour
                 gridManagerScript.specialGreenCount--;
                 specialGreenCounted = false;
             }
-
-            // Tell enemy below dying enemy to run retreat check (if they're alive?)
-            if (down.GetComponent<Cell>().enemy != null)
-            {
-                // down.GetComponent<Cell>().enemy.GetComponent<Enemy>().checkRetreat();
-            }
-
+            
             Destroy(this.gameObject);
 
         }

@@ -6,7 +6,6 @@ public class Cell : MonoBehaviour
 {
     private string _name = "";
     public int number;
-    public bool occupied = false;
     public string color = null;
     public GameObject enemy = null;
 

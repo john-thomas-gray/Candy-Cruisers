@@ -36,12 +36,19 @@ public class GridManager : MonoBehaviour
 
     private Vector3 initialGridPos;
 
+    // Retreat
+    private List<GameObject> queue = new List<GameObject>();
+
     void Awake()
     {
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(18);
+        populateFleet(16, 10);
+        populateFleet(26, 21);
+        populateFleet(6);
+        populateFleet(66, 54);
+
         fleetShift();
         initialGridPos = transform.position;
     }
@@ -56,12 +63,15 @@ public class GridManager : MonoBehaviour
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
-            // colorManager.TotalEnemyCount();
-            retreat(12);
+            colorManager.totalEnemyCount();
         }
         if(Input.GetKeyDown(KeyCode.D))
         {
             descend();
+        }
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            checkRetreat();
         }
         // FleetWipe
         if(wipedOut)
@@ -71,6 +81,8 @@ public class GridManager : MonoBehaviour
             populateFleet(24);
             wipedOut = false;
         }
+        checkRetreat();
+
     }
 
     void initializeFleetGrid()
@@ -310,20 +322,119 @@ public class GridManager : MonoBehaviour
 
     public void checkRetreat()
     {
-        // Make fresh connected component list
-        private List<GameObject> connectedComponents;
+        Debug.Log("Checking retreat");
+        // Empty out the queue
+        queue.Clear();
+        // Reset enemy group numbers
+        for (int i = 0; i < grid.Count; i++)
+        {
+            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            if(enemy != null)
+            {
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                enemyScript.group = 0;
+            }
+        }
         // Set fresh group variable
         int group = 0;
         // Iterate through the grid list
-        for (i = 0; i < grid.Count; i++)
+        for (int i = 0; i < grid.Count; i++)
         {
-            // If an enemy has not been labelled
-            GameObject enemy = grid[i].GetComponent<Cell>().enemy.GetComponent<Enemy>().group;
-                // Label him group, check his neighbors and label all of them group
-                // group++
+            // Get enemy
+            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            if(enemy != null)
+            {
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                // If an enemy has not been grouped
+                if (enemyScript.group == 0 && enemyScript.alive)
+                {
+                    // Iterate group number
+                    group++;
+                    // Label him group number
+                    enemyScript.group = group;
+                    // Have enemy run neighbor checks until all connected enemies are labelled group number (coroutine?)
+                    checkNeighborRetreat(grid[i].GetComponent<Cell>().number, group);
+                    // Add to check queue
+                    queue.Add(enemy);
+                }
+                Debug.Log("Enemy number " + grid[i].GetComponent<Cell>().number + " is in group " + group);
+            }
         }
-        // If a connected component list does not contain an enemy with index 0-5, run check retreat again
+        // Iterate through each group
+        for (int j = 1; j <= group; j++)
+        {
+            // Set initial retreat to true
+            bool shouldRetreat = true;
+            // Iterate through the queue
+            for (int i = 0; i < queue.Count; i++)
+            {
+                GameObject enemy = queue[i];
 
+                // If queued enemy is in the current group
+                if(enemy != null && enemy.GetComponent<Enemy>().group == j)
+                {
+                    if(enemy.GetComponent<Enemy>().cellNumber < 6)
+                    {
+                        shouldRetreat = false;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldRetreat)
+            {
+
+                for (int i = 0; i < queue.Count; i++)
+                {
+                    GameObject enemy = queue[i];
+                    if(enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
+                    {
+                        // retreat(enemy.GetComponent<Enemy>().cellNumber);
+                    }
+                }
+            }
+        }
+        Debug.Log(group);
+    }
+    public void checkNeighborRetreat(int cellNumber, int group)
+    {
+
+        if(cellNumber > 5)
+        {
+            if(grid[cellNumber - 6].GetComponent<Cell>().enemy != null && grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            {
+                grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(grid[cellNumber - 6].GetComponent<Cell>().enemy);
+                checkNeighborRetreat(cellNumber - 6, group);
+            }
+        }
+        if(cellNumber % 6 != 0)
+        {
+            if(grid[cellNumber - 1].GetComponent<Cell>().enemy != null && grid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            {
+                grid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(grid[cellNumber - 1].GetComponent<Cell>().enemy);
+                checkNeighborRetreat(cellNumber - 1, group);
+            }
+        }
+        if((cellNumber + 1) % 6 != 0)
+        {
+            if(grid[cellNumber + 1].GetComponent<Cell>().enemy != null && grid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            {
+                grid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(grid[cellNumber + 1].GetComponent<Cell>().enemy);
+                checkNeighborRetreat(cellNumber + 1, group);
+            }
+        }
+        if(cellNumber < 66)
+        {
+            if(grid[cellNumber + 6].GetComponent<Cell>().enemy != null && grid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            {
+                grid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(grid[cellNumber + 6].GetComponent<Cell>().enemy);
+                checkNeighborRetreat(cellNumber + 6, group);
+            }
+        }
     }
     public void retreat(int cellNumber)
     {
@@ -337,6 +448,8 @@ public class GridManager : MonoBehaviour
         // Debug.Log("currentTransform: " + currentCellTransform);
 
         // Get above cell info
+        if(cellNumber > 5)
+        {
         GameObject aboveCell = grid[cellNumber - 6];
         Transform aboveCellTransform = aboveCell.transform;
         GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
@@ -355,6 +468,8 @@ public class GridManager : MonoBehaviour
             currentOccupant.transform.SetParent(aboveCellTransform);
             // Set current occupant position to above cell
             currentOccupant.transform.localPosition = Vector3.zero;
+            // Set current occupant's cell number
+            currentOccupant.GetComponent<Enemy>().cellNumber = aboveCell.GetComponent<Cell>().number;
             // Update current cell's enemy info
             currentCell.GetComponent<Cell>().enemy = null;
             currentCell.GetComponent<Cell>().color = null;
@@ -363,16 +478,10 @@ public class GridManager : MonoBehaviour
             aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
 
             Debug.Log(currentOccupant.GetComponent<Enemy>().color + " enemy in cell " + cellNumber + " retreating");
-        }
 
-        if(cellNumber < 66)
-        {
-            GameObject belowOccupant = grid[cellNumber + 6].GetComponent<Cell>().enemy;
-            if (belowOccupant != null)
-            {
-                belowOccupant.GetComponent<Enemy>().checkRetreat();
-            }
         }
+        }
+        checkRetreat();
     }
     public void GameOver()
     {
