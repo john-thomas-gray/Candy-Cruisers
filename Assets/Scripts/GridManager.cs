@@ -456,7 +456,7 @@ public class GridManager : MonoBehaviour
 
         // I'd like to add in some kind of delay so I can run this if check
         // if (aboveCell.GetComponent<Cell>().enemy == null)
-        if (true)
+        if (aboveCell.GetComponent<Cell>().enemy == null)
         {
             // Debug.Log("reassign");
             // Detach the children from the current cell
