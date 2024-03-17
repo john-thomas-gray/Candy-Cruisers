@@ -44,10 +44,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(16, 10);
-        populateFleet(26, 21);
-        populateFleet(6);
-        populateFleet(66, 54);
+        populateFleet(24);
 
         fleetShift();
         initialGridPos = transform.position;
@@ -389,7 +386,7 @@ public class GridManager : MonoBehaviour
                     GameObject enemy = queue[i];
                     if(enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
                     {
-                        // retreat(enemy.GetComponent<Enemy>().cellNumber);
+                        retreat(enemy.GetComponent<Enemy>().cellNumber);
                     }
                 }
             }
