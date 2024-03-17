@@ -327,7 +327,7 @@ public class Enemy : MonoBehaviour
     {
         if(alive == false && dead == false)
         {
-
+            EventManager eventManagerInstance = EventManager.Instance;
             // Set dead to true to prevent multiple runs in same frame
             dead = true;
             // Subtract color from colorCounts dictionary instance
@@ -351,7 +351,7 @@ public class Enemy : MonoBehaviour
                 gridManagerScript.specialGreenCount--;
                 specialGreenCounted = false;
             }
-            
+            eventManagerInstance.StartCheckRetreat();
             Destroy(this.gameObject);
 
         }

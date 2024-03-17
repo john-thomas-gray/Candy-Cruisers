@@ -52,6 +52,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
 
+        EventManager.CheckRetreat += checkRetreat;
     }
 
     void Update()
@@ -78,7 +79,7 @@ public class GridManager : MonoBehaviour
             populateFleet(24);
             wipedOut = false;
         }
-        checkRetreat();
+        // checkRetreat();
 
     }
 
@@ -319,7 +320,7 @@ public class GridManager : MonoBehaviour
 
     public void checkRetreat()
     {
-        Debug.Log("Checking retreat");
+        // Debug.Log("Checking retreat");
         // Empty out the queue
         queue.Clear();
         // Reset enemy group numbers
@@ -354,44 +355,63 @@ public class GridManager : MonoBehaviour
                     // Add to check queue
                     queue.Add(enemy);
                 }
-                Debug.Log("Enemy number " + grid[i].GetComponent<Cell>().number + " is in group " + group);
+                // Debug.Log("Enemy number " + grid[i].GetComponent<Cell>().number + " is in group " + group);
             }
         }
-        // Iterate through each group
         for (int j = 1; j <= group; j++)
+{
+    // Set initial retreat to true
+    bool shouldRetreat = true;
+    // Iterate through the queue
+    for (int i = 0; i < queue.Count; i++)
+    {
+        GameObject enemy = queue[i];
+
+        // If queued enemy is in the current group
+        if (enemy != null && enemy.GetComponent<Enemy>().group == j)
         {
-            // Set initial retreat to true
-            bool shouldRetreat = true;
-            // Iterate through the queue
-            for (int i = 0; i < queue.Count; i++)
+            if (enemy.GetComponent<Enemy>().cellNumber < 6)
             {
-                GameObject enemy = queue[i];
-
-                // If queued enemy is in the current group
-                if(enemy != null && enemy.GetComponent<Enemy>().group == j)
-                {
-                    if(enemy.GetComponent<Enemy>().cellNumber < 6)
-                    {
-                        shouldRetreat = false;
-                        break;
-                    }
-                }
-            }
-
-            if (shouldRetreat)
-            {
-
-                for (int i = 0; i < queue.Count; i++)
-                {
-                    GameObject enemy = queue[i];
-                    if(enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
-                    {
-                        retreat(enemy.GetComponent<Enemy>().cellNumber);
-                    }
-                }
+                shouldRetreat = false;
+                break;
             }
         }
-        Debug.Log(group);
+    }
+
+    if (shouldRetreat)
+    {
+        foreach (GameObject enemy in queue)
+        {
+            if (enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
+            {
+                StartCoroutine(RetreatWithDelay(enemy.GetComponent<Enemy>().cellNumber));
+            }
+        }
+    }
+}
+
+IEnumerator RetreatWithDelay(int cellNumber)
+{
+    // Get the enemy to retreat
+    GameObject enemy = GetEnemyByCellNumber(cellNumber);
+    // Retreat after a delay
+    yield return new WaitForSeconds(.1f); // Adjust the delay time as needed
+    retreat(cellNumber);
+}
+
+GameObject GetEnemyByCellNumber(int cellNumber)
+{
+    // Find and return the enemy with the specified cell number
+    foreach (GameObject enemy in queue)
+    {
+        if (enemy != null && enemy.GetComponent<Enemy>().cellNumber == cellNumber)
+        {
+            return enemy;
+        }
+    }
+    return null;
+}
+
     }
     public void checkNeighborRetreat(int cellNumber, int group)
     {
@@ -435,6 +455,7 @@ public class GridManager : MonoBehaviour
     }
     public void retreat(int cellNumber)
     {
+        EventManager eventManagerInstance = EventManager.Instance;
         // Get the cell to update
         GameObject currentCell = grid[cellNumber];
         Transform currentCellTransform = currentCell.transform;
@@ -447,38 +468,38 @@ public class GridManager : MonoBehaviour
         // Get above cell info
         if(cellNumber > 5)
         {
-        GameObject aboveCell = grid[cellNumber - 6];
-        Transform aboveCellTransform = aboveCell.transform;
-        GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
+            GameObject aboveCell = grid[cellNumber - 6];
+            Transform aboveCellTransform = aboveCell.transform;
+            GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
 
-        // Debug.Log("aboveCell: " + aboveCell);
-        // Debug.Log("aboveTransform: " + aboveCellTransform);
+            // Debug.Log("aboveCell: " + aboveCell);
+            // Debug.Log("aboveTransform: " + aboveCellTransform);
 
-        // I'd like to add in some kind of delay so I can run this if check
-        // if (aboveCell.GetComponent<Cell>().enemy == null)
-        if (aboveCell.GetComponent<Cell>().enemy == null)
-        {
-            // Debug.Log("reassign");
-            // Detach the children from the current cell
-            currentCellTransform.DetachChildren();
-            // Set current occupant as child of above cell
-            currentOccupant.transform.SetParent(aboveCellTransform);
-            // Set current occupant position to above cell
-            currentOccupant.transform.localPosition = Vector3.zero;
-            // Set current occupant's cell number
-            currentOccupant.GetComponent<Enemy>().cellNumber = aboveCell.GetComponent<Cell>().number;
-            // Update current cell's enemy info
-            currentCell.GetComponent<Cell>().enemy = null;
-            currentCell.GetComponent<Cell>().color = null;
-            // Update above cell's enemy info
-            aboveCell.GetComponent<Cell>().enemy = currentOccupant;
-            aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
+            // This must be delayed. Currently it uses coroutines
+            if (aboveCell.GetComponent<Cell>().enemy == null)
+            {
+                // Debug.Log(currentOccupant);
+                // Detach the children from the current cell
+                currentCellTransform.DetachChildren();
+                // Set current occupant as child of above cell
+                // ERROR currentOccupant is sometimes set to null during retreat
+                currentOccupant.transform.SetParent(aboveCellTransform);
+                // Set current occupant position to above cell
+                currentOccupant.transform.localPosition = Vector3.zero;
+                // Set current occupant's cell number
+                currentOccupant.GetComponent<Enemy>().cellNumber = aboveCell.GetComponent<Cell>().number;
+                // Update current cell's enemy info
+                currentCell.GetComponent<Cell>().enemy = null;
+                currentCell.GetComponent<Cell>().color = null;
+                // Update above cell's enemy info
+                aboveCell.GetComponent<Cell>().enemy = currentOccupant;
+                aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
 
-            Debug.Log(currentOccupant.GetComponent<Enemy>().color + " enemy in cell " + cellNumber + " retreating");
+                // Debug.Log(currentOccupant.GetComponent<Enemy>().color + " enemy in cell " + cellNumber + " retreating");
 
+            }
         }
-        }
-        checkRetreat();
+        eventManagerInstance.StartCheckRetreat();
     }
     public void GameOver()
     {
