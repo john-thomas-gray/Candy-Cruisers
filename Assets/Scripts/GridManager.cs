@@ -241,64 +241,64 @@ public class GridManager : MonoBehaviour
     }
 
     public void FleetMovement(float moveSpeed)
-{
-    float moveTime = 5.0f;
-    float moveIncrement = 0.10f;
-
-    if (!gameOver)
     {
-        if (turnInterval < 10)
+        float moveTime = 5.0f;
+        float moveIncrement = 0.10f;
+
+        if (!gameOver)
         {
-            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+            if (turnInterval < 10)
             {
-                timer += Time.deltaTime;
+                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+                {
+                    timer += Time.deltaTime;
+                }
+                else
+                {
+                    transform.position += Vector3.right * moveIncrement;
+                    timer = 0;
+                    turnInterval++;
+                    // Check if the descent should occur
+                    if (turnInterval == 10 && !hasDescended)
+                    {
+                        descend();
+                        hasDescended = true;
+                    }
+                }
             }
             else
             {
-                transform.position += Vector3.right * moveIncrement;
-                timer = 0;
-                turnInterval++;
-                // Check if the descent should occur
-                if (turnInterval == 10 && !hasDescended)
+                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
                 {
-                    descend();
-                    hasDescended = true;
+                    timer += Time.deltaTime;
                 }
-            }
-        }
-        else
-        {
-            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
-            {
-                timer += Time.deltaTime;
-            }
-            else
-            {
-                transform.position += Vector3.left * moveIncrement;
-                timer = 0;
-                turnInterval++;
-
-                // Check if the descent should occur
-                if (turnInterval == 20 && !hasDescended)
+                else
                 {
-                    descend();
-                    hasDescended = true;
+                    transform.position += Vector3.left * moveIncrement;
+                    timer = 0;
+                    turnInterval++;
+
+                    // Check if the descent should occur
+                    if (turnInterval == 20 && !hasDescended)
+                    {
+                        descend();
+                        hasDescended = true;
+                    }
+                }
+
+                if (turnInterval == 20)
+                {
+                    turnInterval = 0;
                 }
             }
 
-            if (turnInterval == 20)
+            // Reset the descent flag if the turnInterval is not 10 or 20
+            if (turnInterval != 10 && turnInterval != 20)
             {
-                turnInterval = 0;
+                hasDescended = false;
             }
-        }
-
-        // Reset the descent flag if the turnInterval is not 10 or 20
-        if (turnInterval != 10 && turnInterval != 20)
-        {
-            hasDescended = false;
         }
     }
-}
 
     public void descend()
     {
@@ -390,27 +390,27 @@ public class GridManager : MonoBehaviour
     }
 }
 
-IEnumerator RetreatWithDelay(int cellNumber)
-{
-    // Get the enemy to retreat
-    GameObject enemy = GetEnemyByCellNumber(cellNumber);
-    // Retreat after a delay
-    yield return new WaitForSeconds(.1f); // Adjust the delay time as needed
-    retreat(cellNumber);
-}
-
-GameObject GetEnemyByCellNumber(int cellNumber)
-{
-    // Find and return the enemy with the specified cell number
-    foreach (GameObject enemy in queue)
+    IEnumerator RetreatWithDelay(int cellNumber)
     {
-        if (enemy != null && enemy.GetComponent<Enemy>().cellNumber == cellNumber)
-        {
-            return enemy;
-        }
+        // Get the enemy to retreat
+        GameObject enemy = GetEnemyByCellNumber(cellNumber);
+        // Retreat after a delay
+        yield return new WaitForSeconds(.01f); // Adjust the delay time as needed
+        retreat(cellNumber);
     }
-    return null;
-}
+
+    GameObject GetEnemyByCellNumber(int cellNumber)
+    {
+        // Find and return the enemy with the specified cell number
+        foreach (GameObject enemy in queue)
+        {
+            if (enemy != null && enemy.GetComponent<Enemy>().cellNumber == cellNumber)
+            {
+                return enemy;
+            }
+        }
+        return null;
+    }
 
     }
     public void checkNeighborRetreat(int cellNumber, int group)
