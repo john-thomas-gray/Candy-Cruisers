@@ -99,15 +99,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 
+  cellNumber: 0
   alive: 1
   dead: 0
   special: 0
   super: 0
-  isChecked: 0
-  colorCounted: 0
+  kill: 0
+  specialGreenCounted: 0
+  onEnemyDeath: {fileID: 11400000, guid: e8aed3f789f3e4603ab6bf971256b6ca, type: 2}
   specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
+  retreat: 0
+  group: 1
   missilePrefab: {fileID: 434374807148448463, guid: 3f78ebf9b30224d63bc70182d4235b85, type: 3}
   shieldPrefab: {fileID: 8527978347457853173, guid: 71a0370f48fcb4166a7ed30a4b83eecb, type: 3}
+  specialMultiplier: 0
 --- !u!61 &-8168576666604565902
 BoxCollider2D:
   m_ObjectHideFlags: 0

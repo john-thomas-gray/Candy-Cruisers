@@ -14,6 +14,10 @@ public class Enemy : MonoBehaviour
     public bool kill;
     public bool specialGreenCounted;
 
+    [Header("Events")]
+
+    public GameEvent onEnemyDeath;
+
     // GridManager
     private Transform cellTransform;
     private Transform fleetTransform;
@@ -323,7 +327,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void death()
+    public void death(Component sender, object data)
     {
         if(alive == false && dead == false)
         {
@@ -352,6 +356,7 @@ public class Enemy : MonoBehaviour
                 specialGreenCounted = false;
             }
             eventManagerInstance.StartCheckRetreat();
+            onEnemyDeath.Raise();
             Destroy(this.gameObject);
 
         }

@@ -6,5 +6,6 @@ public class LevelManager : MonoBehaviour
 {
     // Current Level
     int currentLevel = 0;
-    
+
+    // If LevelUp event, increase current level by one
 }
