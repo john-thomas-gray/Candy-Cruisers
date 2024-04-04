@@ -359,36 +359,36 @@ public class GridManager : MonoBehaviour
             }
         }
         for (int j = 1; j <= group; j++)
-{
-    // Set initial retreat to true
-    bool shouldRetreat = true;
-    // Iterate through the queue
-    for (int i = 0; i < queue.Count; i++)
-    {
-        GameObject enemy = queue[i];
-
-        // If queued enemy is in the current group
-        if (enemy != null && enemy.GetComponent<Enemy>().group == j)
         {
-            if (enemy.GetComponent<Enemy>().cellNumber < 6)
+            // Set initial retreat to true
+            bool shouldRetreat = true;
+            // Iterate through the queue
+            for (int i = 0; i < queue.Count; i++)
             {
-                shouldRetreat = false;
-                break;
+                GameObject enemy = queue[i];
+
+                // If queued enemy is in the current group
+                if (enemy != null && enemy.GetComponent<Enemy>().group == j)
+                {
+                    if (enemy.GetComponent<Enemy>().cellNumber < 6)
+                    {
+                        shouldRetreat = false;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldRetreat)
+            {
+                foreach (GameObject enemy in queue)
+                {
+                    if (enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
+                    {
+                        StartCoroutine(RetreatWithDelay(enemy.GetComponent<Enemy>().cellNumber));
+                    }
+                }
             }
         }
-    }
-
-    if (shouldRetreat)
-    {
-        foreach (GameObject enemy in queue)
-        {
-            if (enemy != null && enemy.GetComponent<Enemy>().group == j && enemy.GetComponent<Enemy>().cellNumber >= 6)
-            {
-                StartCoroutine(RetreatWithDelay(enemy.GetComponent<Enemy>().cellNumber));
-            }
-        }
-    }
-}
 
 IEnumerator RetreatWithDelay(int cellNumber)
 {
