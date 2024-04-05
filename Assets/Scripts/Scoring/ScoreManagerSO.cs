@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/ScoreManagerSO")]
+[CreateAssetMenu(fileName = "ScoreManager", menuName = "ScriptableObjects/ScoreManagerSO")]
 public class ScoreManagerSO : ScriptableObject
 {
     public int score = 0;

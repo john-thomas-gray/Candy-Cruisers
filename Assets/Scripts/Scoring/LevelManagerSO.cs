@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/LevelManagerSO")]
+[CreateAssetMenu(fileName = "LevelManager", menuName = "ScriptableObjects/LevelManagerSO")]
 public class LevelManagerSO : ScriptableObject
 {
     public int level = 0;
@@ -13,6 +13,7 @@ public class LevelManagerSO : ScriptableObject
 
     private void OnEnable() {
         scoreManager.scoreChangeEvent.AddListener(LevelUp);
+        Debug.Log("level manager");
     }
 
     private void LevelUp(int score) {

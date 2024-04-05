@@ -107,6 +107,7 @@ MonoBehaviour:
   kill: 0
   specialGreenCounted: 0
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
+  onScoreChange: {fileID: 11400000, guid: 3a49a1926096343e58e0b3dc453e39af, type: 2}
   specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
   retreat: 0
   group: 1
