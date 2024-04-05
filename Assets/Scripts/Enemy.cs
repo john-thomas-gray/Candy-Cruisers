@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
     private GameObject fleet;
     private GridManager gridManagerScript;
 
+    // Scoring
+    private ScoreManagerSO scoreManager;
+
     // Color
     ColorManager colorManager;
     private Dictionary<string, int> colorCounts;
@@ -352,6 +355,7 @@ public class Enemy : MonoBehaviour
                 specialGreenCounted = false;
             }
             eventManagerInstance.StartCheckRetreat();
+            scoreManager.IncreaseScore(1);
             Destroy(this.gameObject);
 
         }
