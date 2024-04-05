@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     private GridManager gridManagerScript;
 
     // Scoring
+    [SerializeField]
     private ScoreManagerSO scoreManager;
 
     // Color

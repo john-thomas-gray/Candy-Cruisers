@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[CreateAssetMenu(menuName = "ScriptableObjects/LevelManagerSO")]
 public class LevelManagerSO : ScriptableObject
 {
     public int level = 0;
