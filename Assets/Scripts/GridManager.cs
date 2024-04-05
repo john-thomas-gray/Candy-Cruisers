@@ -45,7 +45,6 @@ public class GridManager : MonoBehaviour
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
         populateFleet(24);
-
         fleetShift();
         initialGridPos = transform.position;
     }
@@ -69,7 +68,8 @@ public class GridManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.L))
         {
-            checkRetreat();
+            // checkRetreat();
+            checkWarp();
         }
         // FleetWipe
         if(wipedOut)
@@ -180,125 +180,125 @@ public class GridManager : MonoBehaviour
 
     public void fleetShift()
     {
-            shift = new List<GameObject>(new GameObject[72]);
-            // Create list to hold enemies at indexes offset one row
-            for (int i = 0; i < 72; i++)
-            {
-                if(i < 6)
-                    {
-                        // Set the values in the first row to null
-                        shift[i] = null;
-                    }
-                else
-                    {
-                        // Populate the remaining indexes with the enemy in the cell currently above them
-                        // Get the cell in the above row
-                        GameObject aboveCell = grid[i - 6];
-                        // Reference the enemy from the above row
-                        GameObject aboveEnemy = aboveCell.GetComponent<Cell>().enemy;
-                        // Set the current row to that enemy
-                        shift[i] = aboveEnemy;
+        shift = new List<GameObject>(new GameObject[72]);
+        // Create list to hold enemies at indexes offset one row
+        for (int i = 0; i < 72; i++)
+        {
+            if(i < 6)
+                {
+                    // Set the values in the first row to null
+                    shift[i] = null;
+                }
+            else
+                {
+                    // Populate the remaining indexes with the enemy in the cell currently above them
+                    // Get the cell in the above row
+                    GameObject aboveCell = grid[i - 6];
+                    // Reference the enemy from the above row
+                    GameObject aboveEnemy = aboveCell.GetComponent<Cell>().enemy;
+                    // Set the current row to that enemy
+                    shift[i] = aboveEnemy;
 
-                    }
-            }
+                }
+        }
     }
 
     public void advance()
     {
-            for(int i = 0; i < 72; i++)
+        for(int i = 0; i < 72; i++)
+        {
+            // Get the cell to update
+            GameObject currentCell = grid[i];
+            Transform currentCellTransform = currentCell.transform;
+
+            // Get the enemy/null to be placed
+            GameObject newOccupant = shift[i];
+
+            // If the new occupant is not not null
+            if(newOccupant != null)
             {
-                // Get the cell to update
-                GameObject currentCell = grid[i];
-                Transform currentCellTransform = currentCell.transform;
+                // Detach the children from the current cell
+                currentCellTransform.DetachChildren();
 
-                // Get the enemy/null to be placed
-                GameObject newOccupant = shift[i];
+                // Set the new occupant as the child of the current cell
+                newOccupant.transform.SetParent(currentCellTransform);
 
-                // If the new occupant is not not null
-                if(newOccupant != null)
-                {
-                    // Detach the children from the current cell
-                    currentCellTransform.DetachChildren();
+                // Update the new occupant's position
+                newOccupant.transform.localPosition = Vector3.zero;
 
-                    // Set the new occupant as the child of the current cell
-                    newOccupant.transform.SetParent(currentCellTransform);
+                // Update cell's enemy info
+                currentCell.GetComponent<Cell>().enemy = newOccupant;
+                currentCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
 
-                    // Update the new occupant's position
-                    newOccupant.transform.localPosition = Vector3.zero;
-
-                    // Update cell's enemy info
-                    currentCell.GetComponent<Cell>().enemy = newOccupant;
-                    currentCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
-
-                }
-                else
-                {
-                    currentCell.GetComponent<Cell>().enemy = null;
-                }
             }
-            populateFleet(6);
+            else
+            {
+                currentCell.GetComponent<Cell>().enemy = null;
+            }
+        }
+        populateFleet(6);
 
     }
 
     public void FleetMovement(float moveSpeed)
-{
-    float moveTime = 5.0f;
-    float moveIncrement = 0.10f;
-
-    if (!gameOver)
     {
-        if (turnInterval < 10)
+        float moveTime = 5.0f;
+        float moveIncrement = 0.10f;
+
+        if (!gameOver)
         {
-            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+            if (turnInterval < 10)
             {
-                timer += Time.deltaTime;
+                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+                {
+                    timer += Time.deltaTime;
+                }
+                else
+                {
+                    transform.position += Vector3.right * moveIncrement;
+                    timer = 0;
+                    turnInterval++;
+                    // Check if the descent should occur
+                    if (turnInterval == 10 && !hasDescended)
+                    {
+                        descend();
+                        hasDescended = true;
+                    }
+                }
             }
             else
             {
-                transform.position += Vector3.right * moveIncrement;
-                timer = 0;
-                turnInterval++;
-                // Check if the descent should occur
-                if (turnInterval == 10 && !hasDescended)
+                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
                 {
-                    descend();
-                    hasDescended = true;
+                    timer += Time.deltaTime;
                 }
-            }
-        }
-        else
-        {
-            if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
-            {
-                timer += Time.deltaTime;
-            }
-            else
-            {
-                transform.position += Vector3.left * moveIncrement;
-                timer = 0;
-                turnInterval++;
-
-                // Check if the descent should occur
-                if (turnInterval == 20 && !hasDescended)
+                else
                 {
-                    descend();
-                    hasDescended = true;
+                    transform.position += Vector3.left * moveIncrement;
+                    timer = 0;
+                    turnInterval++;
+
+                    // Check if the descent should occur
+                    if (turnInterval == 20 && !hasDescended)
+                    {
+                        descend();
+                        hasDescended = true;
+                    }
+                }
+
+                if (turnInterval == 20)
+                {
+                    turnInterval = 0;
                 }
             }
 
-            if (turnInterval == 20)
+            // Reset the descent flag if the turnInterval is not 10 or 20
+            if (turnInterval != 10 && turnInterval != 20)
             {
-                turnInterval = 0;
+                hasDescended = false;
             }
-        }
-
-        // Reset the descent flag if the turnInterval is not 10 or 20
-        if (turnInterval != 10 && turnInterval != 20)
-        {
-            hasDescended = false;
         }
     }
-}
 
     public void descend()
     {
@@ -318,9 +318,81 @@ public class GridManager : MonoBehaviour
             }
     }
 
+    public void checkWarp()
+    {
+        // Create dict
+        Dictionary<int, List<int>> warpDict = new Dictionary<int, List<int>>();
+        // Iterate through grid list
+        for (int i = 0; i < grid.Count; i++)
+        {
+            // Create warpZones list
+            List<int> warpZones = new List<int>();
+            // Get enemy
+            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            if(enemy != null)
+            {
+                // Check up if not bot row
+                if (i > 5 && grid[i - 6].GetComponent<Cell>().enemy == null)
+                {
+                    warpZones.Add(i - 6);
+                }
+                // Check left if not left column
+                if (i % 6 != 0 && grid[i - 1].GetComponent<Cell>().enemy == null)
+                {
+                    warpZones.Add(i - 1);
+                }
+                // Check right if not right column
+                if ((i + 1) % 6 != 0 && grid[i + 1].GetComponent<Cell>().enemy == null)
+                {
+                    warpZones.Add(i + 1);
+                }
+                // Check down if not bot row
+                if (i < 66 && grid[i + 6].GetComponent<Cell>().enemy == null)
+                {
+                    warpZones.Add(i + 6);
+                }
+                if (warpZones.Count > 0)
+                {
+                    warpDict[i] = warpZones;
+                }
+                Debug.Log("Cell#: " + i + " WarpZones: " + warpZones.Count + " WarpDict: " + warpDict.Count);
+            }
+        }
+        if (warpDict.Count != 0)
+        {
+            // Pick a random enemy
+            int cellInx = GetRandomCellIndex();
+            int warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count);
+            // Debug.Log("CellInx: " + cellInx + " WarpInx: " + warpInx);
+            int warpZone = warpDict[cellInx][warpInx];
+            GameObject warpCell = grid[warpZone];
+            GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
+            // Assign enemy object to the cell
+            warpCell.GetComponent<Cell>().enemy = newEnemy;
+            // Assign cell's color
+            warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
+        }
+
+        int GetRandomCellIndex()
+        {
+            // Get the keys of the dictionary
+            List<int> keys = new List<int>(warpDict.Keys);
+
+            // Check if the dictionary is empty
+            if (keys.Count == 0)
+            {
+                return -1;
+            }
+
+            // Generate a random index within the range of keys
+            int randomIndex = UnityEngine.Random.Range(0, keys.Count);
+
+            // Retrieve and return the key at the randomly generated index
+            return keys[randomIndex];
+        }
+    }
     public void checkRetreat()
     {
-        // Debug.Log("Checking retreat");
         // Empty out the queue
         queue.Clear();
         // Reset enemy group numbers
@@ -390,27 +462,27 @@ public class GridManager : MonoBehaviour
             }
         }
 
-IEnumerator RetreatWithDelay(int cellNumber)
-{
-    // Get the enemy to retreat
-    GameObject enemy = GetEnemyByCellNumber(cellNumber);
-    // Retreat after a delay
-    yield return new WaitForSeconds(.1f); // Adjust the delay time as needed
-    retreat(cellNumber);
-}
-
-GameObject GetEnemyByCellNumber(int cellNumber)
-{
-    // Find and return the enemy with the specified cell number
-    foreach (GameObject enemy in queue)
-    {
-        if (enemy != null && enemy.GetComponent<Enemy>().cellNumber == cellNumber)
+        IEnumerator RetreatWithDelay(int cellNumber)
         {
-            return enemy;
+            // Get the enemy to retreat
+            GameObject enemy = GetEnemyByCellNumber(cellNumber);
+            // Retreat after a delay
+            yield return new WaitForSeconds(.1f);
+            retreat(cellNumber);
         }
-    }
-    return null;
-}
+
+        GameObject GetEnemyByCellNumber(int cellNumber)
+        {
+            // Find and return the enemy with the specified cell number
+            foreach (GameObject enemy in queue)
+            {
+                if (enemy != null && enemy.GetComponent<Enemy>().cellNumber == cellNumber)
+                {
+                    return enemy;
+                }
+            }
+            return null;
+        }
 
     }
     public void checkNeighborRetreat(int cellNumber, int group)
@@ -478,7 +550,6 @@ GameObject GetEnemyByCellNumber(int cellNumber)
             // This must be delayed. Currently it uses coroutines
             if (aboveCell.GetComponent<Cell>().enemy == null)
             {
-                // Debug.Log(currentOccupant);
                 // Detach the children from the current cell
                 currentCellTransform.DetachChildren();
                 // Set current occupant as child of above cell
@@ -495,8 +566,6 @@ GameObject GetEnemyByCellNumber(int cellNumber)
                 aboveCell.GetComponent<Cell>().enemy = currentOccupant;
                 aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
 
-                // Debug.Log(currentOccupant.GetComponent<Enemy>().color + " enemy in cell " + cellNumber + " retreating");
-
             }
         }
         eventManagerInstance.StartCheckRetreat();
@@ -506,5 +575,7 @@ GameObject GetEnemyByCellNumber(int cellNumber)
         Debug.Log("GAME OVER");
         gameOver = true;
     }
+
+
 
 }

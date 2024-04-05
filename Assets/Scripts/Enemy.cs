@@ -38,8 +38,8 @@ public class Enemy : MonoBehaviour
     List<GameObject> retreating = new List<GameObject> {};
 
     // RED ABILITIES
-    private float timeSinceLastShot = 0;
-    private double shotCoolDown;
+    private float timeSinceLastActivation = 0;
+    private double abilityCoolDown;
     private float[] shotCoolDownRange = {4, 7};
     private bool onCoolDown = false;
     public GameObject missilePrefab;
@@ -49,6 +49,8 @@ public class Enemy : MonoBehaviour
 
     // GREEN ABILITIES
     public float specialMultiplier;
+
+    // PURPLE ABILITIES
 
     void Awake()
     {
@@ -128,57 +130,6 @@ public class Enemy : MonoBehaviour
         // Special abilities
 
         // Super abilities
-    }
-
-     public void checkRetreat()
-    {
-        Debug.Log("checkretreat");
-        // Check if there is no enemy in the above cell and the current enemy could retreat
-        if (up.GetComponent<Cell>().enemy != null && up.GetComponent<Cell>().enemy.GetComponent<Enemy>().dead)
-            {
-                retreat = true;
-            }
-        // If enemy is not set to be killed and could retreat
-        if(kill == false && retreat == true)
-        {
-            // Get instance of current grid
-            List<GameObject> grid = gridManagerScript.grid;
-            // Get instance of cell holding this enemy
-            Transform cellTransform = transform.parent;
-            // Get the cell number
-            cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
-
-            // Check left if not left column
-            if (cellNumber % 6 != 0)
-            {
-                left = grid[cellNumber - 1].GetComponent<Cell>().enemy;
-                if (left != null && left.GetComponent<Enemy>().retreat == false)
-                {
-                    left.GetComponent<Enemy>().checkRetreat();
-                }
-            }
-            // Check right if not right column
-            if ((cellNumber + 1) % 6 != 0)
-            {
-                right = grid[cellNumber + 1].GetComponent<Cell>().enemy;
-                if (right != null && right.GetComponent<Enemy>().retreat == false)
-                {
-                    right.GetComponent<Enemy>().checkRetreat();
-                }
-            }
-            // Check down if not in bottom row
-            if (cellNumber < 66)
-            {
-                down = grid[cellNumber + 6];
-            }
-            gridManagerScript.retreat(cellNumber);
-            retreat = false;
-            if (cellNumber > 5)
-            {
-                checkRetreat();
-            }
-
-        }
     }
     public void checkNeighbors()
     {
@@ -289,13 +240,13 @@ public class Enemy : MonoBehaviour
     {
         if(!onCoolDown)
         {
-            shotCoolDown = random.NextDouble() * (shotCoolDownRange[1] - shotCoolDownRange[0]) + shotCoolDownRange[0];
+            abilityCoolDown = random.NextDouble() * (shotCoolDownRange[1] - shotCoolDownRange[0]) + shotCoolDownRange[0];
             onCoolDown = true;
         }
 
-        timeSinceLastShot += Time.deltaTime;
+        timeSinceLastActivation += Time.deltaTime;
 
-        if(timeSinceLastShot >= shotCoolDown)
+        if(timeSinceLastActivation >= abilityCoolDown)
         {
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
@@ -306,7 +257,7 @@ public class Enemy : MonoBehaviour
                 // Spawn missile in front of enemy
                 Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
                 // Reset cooldown
-                timeSinceLastShot = 0.0f;
+                timeSinceLastActivation = 0.0f;
                 onCoolDown = false;
             }
         }
