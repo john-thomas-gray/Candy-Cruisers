@@ -89,6 +89,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Abilities();
+        //BANDAID - the problem is that this adds to the color dictionary without subtracting the changed color from the dictionary
         if(warpedIn && !colorReset)
         {
             colorManager.SetColor(this.gameObject, color);

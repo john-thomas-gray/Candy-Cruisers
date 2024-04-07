@@ -420,6 +420,8 @@ public class GridManager : MonoBehaviour
                 {
                     // Assign enemy's color
                     enemy = grid[cellInx].GetComponent<Cell>().enemy;
+                    //BANDAID
+                    colorManager.colorCounts[newEnemy.GetComponent<Enemy>().color]--;
                     newEnemy.GetComponent<Enemy>().color = enemy.GetComponent<Enemy>().color;
                     newEnemy.GetComponent<Enemy>().warpedIn = true;
                 }
