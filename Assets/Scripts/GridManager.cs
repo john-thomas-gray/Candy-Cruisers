@@ -68,8 +68,15 @@ public class GridManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.L))
         {
-            // checkRetreat();
-            beamIn();
+            GameObject test = GameObject.Find("Enemy(Clone)");
+            if (test != null)
+            {
+                beamIn(test);
+            }
+            else
+            {
+                Debug.Log("Enemy GameObject not found.");
+            }
         }
         // FleetWipe
         if(wipedOut)
@@ -318,17 +325,17 @@ public class GridManager : MonoBehaviour
             }
     }
 
-    public void beamIn()
+    public void beamIn(GameObject callingEnemy)
     {
         // Set FarthestEnemy
         int farthestEnemyInx = 0;
         // Create dict
-        Dictionary<int, List<int>> warpDict = new Dictionary<int, List<int>>();
+        Dictionary<int, Dictionary<string, int>> warpDict = new Dictionary<int, Dictionary<string, int>>();
         // Iterate through grid list
         for (int i = 0; i < grid.Count; i++)
         {
-            // Create warpZones list
-            List<int> warpZones = new List<int>();
+            // Create warpZones dictionary
+            Dictionary<string, int> warpZones = new Dictionary<string, int>();
             // Get enemy
             GameObject enemy = grid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
@@ -336,22 +343,22 @@ public class GridManager : MonoBehaviour
                 // Check up if not bot row
                 if (i > 5 && grid[i - 6].GetComponent<Cell>().enemy == null)
                 {
-                    warpZones.Add(i - 6);
+                    warpZones["up"] = (i - 6);
                 }
                 // Check left if not left column
                 if (i % 6 != 0 && grid[i - 1].GetComponent<Cell>().enemy == null)
                 {
-                    warpZones.Add(i - 1);
+                    warpZones["left"] = (i - 1);
                 }
                 // Check right if not right column
                 if (i % 6 != 5 && grid[i + 1].GetComponent<Cell>().enemy == null)
                 {
-                    warpZones.Add(i + 1);
+                    warpZones["right"] = (i + 1);
                 }
                 // Check down if not bot row
                 if (i < 66 && grid[i + 6].GetComponent<Cell>().enemy == null)
                 {
-                    warpZones.Add(i + 6);
+                    warpZones["down"] = (i + 6);
                 }
                 if (warpZones.Count > 0)
                 {
@@ -361,32 +368,102 @@ public class GridManager : MonoBehaviour
                 // Debug.Log("Cell#: " + i + " WarpZones: " + warpZones.Count + " WarpDict: " + warpDict.Count);
             }
         }
+        // If a potential warp zone exists
         if (warpDict.Count != 0)
         {
-            // Pick a random enemy
-            int cellInx = GetRandomCellIndex();
-            int warpInx = 0;
-            if (cellInx == farthestEnemyInx)
+            int warpZone = -1;
+            // Select valid warpZone
+            while(warpZone == -1)
             {
+                if(warpDict.Count == 0)
+                {
+                    Debug.LogWarning("warpDict empty");
+                    break;
+                }
+                int cellInx = GetRandomCellIndex();
+                if (InFarthestRow(cellInx) && !callingEnemy.GetComponent<Enemy>().super == true)
+                {
+                    // Remove down and right values from the furthest index
+                    if (cellInx == farthestEnemyInx)
+                    {
+                        RemoveSelectedKey(warpDict[cellInx], new List<string>{ "down", "right"});
+                        if (warpDict[cellInx].Count == 0)
+                        {
+                            warpDict.Remove(cellInx);
+                            continue;
+                        }
+                    }
+                    else // Remove down values from indexes in the same row as furthest index
+                    {
+                        RemoveSelectedKey(warpDict[cellInx], new List<string>{ "down" });
+                        if (warpDict[cellInx].Count == 0)
+                        {
+                            warpDict.Remove(cellInx);
+                            continue;
+                        }
+                    }
 
-            }
-            else if (InFarthestRow(cellInx))
-            {
+                }
 
+                warpZone = SelectNullCell(warpDict[cellInx]);
             }
-            else
+            if (warpZone >= 0)
             {
-                warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count);
+                GameObject warpCell = grid[warpZone];
+                GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
+                // Assign enemy object to the cell
+                warpCell.GetComponent<Cell>().enemy = newEnemy;
+                // Assign cell's color
+                warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
             }
-            // int warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count - 1);
-            // Debug.Log("CellInx: " + cellInx + " WarpInx: " + warpInx);
-            int warpZone = warpDict[cellInx][warpInx];
-            GameObject warpCell = grid[warpZone];
-            GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
-            // Assign enemy object to the cell
-            warpCell.GetComponent<Cell>().enemy = newEnemy;
-            // Assign cell's color
-            warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
+        }
+        else
+        {
+            Debug.LogWarning("No room to warp in!");
+        }
+
+        void RemoveSelectedKey(Dictionary<string, int> dict, List<string> excludedKeys = null)
+        {
+            if (excludedKeys == null)
+                return;
+
+            // Create a list to store keys to be removed
+            List<string> keysToRemove = new List<string>();
+
+            // Iterate over the dictionary and add keys to be removed to the list
+            foreach (string key in dict.Keys)
+            {
+                if (excludedKeys.Contains(key))
+                {
+                    keysToRemove.Add(key);
+                }
+            }
+
+            // Remove keys from the dictionary using the list
+            foreach (string key in keysToRemove)
+            {
+                dict.Remove(key);
+            }
+        }
+
+        int SelectNullCell(Dictionary<string, int> dict)
+        {
+
+            // Check which keys are present in the dictionary
+            List<string> presentKeys = new List<string>();
+            foreach (string key in dict.Keys)
+            {
+                presentKeys.Add(key);
+            }
+
+            // Generate a random index within the range of keys
+            int randomIndex = UnityEngine.Random.Range(0, presentKeys.Count - 1);
+
+            // Randomly choose a key among the present keys
+            string chosenKey = presentKeys[randomIndex];
+
+            // return the index of the appropriate null cell
+            return dict[chosenKey];
         }
 
         bool InFarthestRow(int cellInx)

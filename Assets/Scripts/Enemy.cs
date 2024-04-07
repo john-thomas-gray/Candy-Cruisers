@@ -290,7 +290,7 @@ public class Enemy : MonoBehaviour
         if(timeSinceLastActivation >= abilityCoolDown)
         {
             // Beam in an enemy
-            gridManagerScript.beamIn();
+            gridManagerScript.beamIn(gameObject);
             Debug.Log("Cell " + cellNumber + " beaming in");
             // Reset cooldown
             timeSinceLastActivation = 0.0f;
