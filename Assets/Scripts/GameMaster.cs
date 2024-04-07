@@ -30,6 +30,7 @@ public class GameMaster : MonoBehaviour
 
     void Awake()
     {
+        Screen.SetResolution(1080, 1920, true);
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<PlayerController>();
     }
