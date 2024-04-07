@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
     public float specialMultiplier;
 
     // PURPLE ABILITIES
-
+    private float[] warpCoolDownRange = {7, 13};
     void Awake()
     {
         alive = true;
@@ -87,11 +87,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Abilities();
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            // checkNeighbors();
-            gridManagerScript.retreat(13);
-        }
+
     }
 
     void Abilities()
@@ -122,6 +118,10 @@ public class Enemy : MonoBehaviour
                     specialGreenCounted = true;
                 }
             }
+        }
+        else if(color == "Purple")
+        {
+            // beamIn();
         }
 
         // for each
@@ -273,6 +273,30 @@ public class Enemy : MonoBehaviour
 
     }
 
+    // PURPLE
+
+    // BASIC
+
+    void beamIn()
+    {
+        if(!onCoolDown)
+        {
+            abilityCoolDown = random.NextDouble() * (warpCoolDownRange[1] - warpCoolDownRange[0]) + warpCoolDownRange[0];
+            onCoolDown = true;
+        }
+
+        timeSinceLastActivation += Time.deltaTime;
+
+        if(timeSinceLastActivation >= abilityCoolDown)
+        {
+            // Beam in an enemy
+            gridManagerScript.beamIn();
+            Debug.Log("Cell " + cellNumber + " beaming in");
+            // Reset cooldown
+            timeSinceLastActivation = 0.0f;
+            onCoolDown = false;
+        }
+    }
 
     public void death()
     {

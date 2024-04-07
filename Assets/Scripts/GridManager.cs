@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        FleetMovement(.5f);
+        // FleetMovement(.5f);
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
@@ -69,7 +69,7 @@ public class GridManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.L))
         {
             // checkRetreat();
-            checkWarp();
+            beamIn();
         }
         // FleetWipe
         if(wipedOut)
@@ -318,8 +318,10 @@ public class GridManager : MonoBehaviour
             }
     }
 
-    public void checkWarp()
+    public void beamIn()
     {
+        // Set FarthestEnemy
+        int farthestEnemyInx = 0;
         // Create dict
         Dictionary<int, List<int>> warpDict = new Dictionary<int, List<int>>();
         // Iterate through grid list
@@ -342,7 +344,7 @@ public class GridManager : MonoBehaviour
                     warpZones.Add(i - 1);
                 }
                 // Check right if not right column
-                if ((i + 1) % 6 != 0 && grid[i + 1].GetComponent<Cell>().enemy == null)
+                if (i % 6 != 5 && grid[i + 1].GetComponent<Cell>().enemy == null)
                 {
                     warpZones.Add(i + 1);
                 }
@@ -354,15 +356,29 @@ public class GridManager : MonoBehaviour
                 if (warpZones.Count > 0)
                 {
                     warpDict[i] = warpZones;
+                    farthestEnemyInx = i;
                 }
-                Debug.Log("Cell#: " + i + " WarpZones: " + warpZones.Count + " WarpDict: " + warpDict.Count);
+                // Debug.Log("Cell#: " + i + " WarpZones: " + warpZones.Count + " WarpDict: " + warpDict.Count);
             }
         }
         if (warpDict.Count != 0)
         {
             // Pick a random enemy
             int cellInx = GetRandomCellIndex();
-            int warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count);
+            int warpInx = 0;
+            if (cellInx == farthestEnemyInx)
+            {
+
+            }
+            else if (InFarthestRow(cellInx))
+            {
+
+            }
+            else
+            {
+                warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count);
+            }
+            // int warpInx = UnityEngine.Random.Range(0, warpDict[cellInx].Count - 1);
             // Debug.Log("CellInx: " + cellInx + " WarpInx: " + warpInx);
             int warpZone = warpDict[cellInx][warpInx];
             GameObject warpCell = grid[warpZone];
@@ -371,6 +387,26 @@ public class GridManager : MonoBehaviour
             warpCell.GetComponent<Cell>().enemy = newEnemy;
             // Assign cell's color
             warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
+        }
+
+        bool InFarthestRow(int cellInx)
+        {
+            // Find the row index of the highest value
+            int highestValueRowIndex = farthestEnemyInx / 6;
+
+            // Calculate the row index range (inclusive) for the highest value
+            int startIndex = highestValueRowIndex * 6;
+            int endIndex = startIndex + 5;
+
+            // Check if the cell index falls within the row range of the highest value
+            if (startIndex <= cellInx && cellInx <= endIndex)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         int GetRandomCellIndex()
@@ -565,6 +601,8 @@ public class GridManager : MonoBehaviour
                 // Update above cell's enemy info
                 aboveCell.GetComponent<Cell>().enemy = currentOccupant;
                 aboveCell.GetComponent<Cell>().color = currentOccupant.GetComponent<Enemy>().color;
+                // Check special
+                fleetStatus();
 
             }
         }
