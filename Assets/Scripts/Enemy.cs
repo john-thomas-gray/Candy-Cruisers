@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     static System.Random random = new System.Random();
-    public string color;
+    public string color = "";
     public int cellNumber;
     public bool alive;
     public bool dead;
@@ -51,17 +51,19 @@ public class Enemy : MonoBehaviour
     public float specialMultiplier;
 
     // PURPLE ABILITIES
-    private float[] warpCoolDownRange = {7, 13};
+    private float[] warpCoolDownRange = {7, 20};
+    public bool warpedIn = false;
+    private bool colorReset = false;
     void Awake()
     {
         alive = true;
         dead = false;
 
         // Color
-        color = "";
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
         colorManager.SetColor(this.gameObject);
+
 
         special = false;
         super = false;
@@ -87,7 +89,11 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Abilities();
-
+        if(warpedIn && !colorReset)
+        {
+            colorManager.SetColor(this.gameObject, color);
+            colorReset = true;
+        }
     }
 
     void Abilities()
@@ -121,7 +127,7 @@ public class Enemy : MonoBehaviour
         }
         else if(color == "Purple")
         {
-            // beamIn();
+            beamIn();
         }
 
         // for each

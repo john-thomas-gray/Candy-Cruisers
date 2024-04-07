@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        // FleetMovement(.5f);
+        FleetMovement(.5f);
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
@@ -75,7 +75,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Enemy GameObject not found.");
+                Debug.LogWarning("Enemy GameObject not found.");
             }
         }
         // FleetWipe
@@ -130,6 +130,7 @@ public class GridManager : MonoBehaviour
 
     public void fleetStatus()
     {
+        Debug.Log("fleetStatus");
         colorCounts = colorManager.colorCounts;
 
         // Iterate through the cells in the grid
@@ -328,16 +329,19 @@ public class GridManager : MonoBehaviour
     public void beamIn(GameObject callingEnemy)
     {
         // Set FarthestEnemy
-        int farthestEnemyInx = 0;
+        int farthestEnemyInx = -1;
+        int cellInx = -1;
         // Create dict
         Dictionary<int, Dictionary<string, int>> warpDict = new Dictionary<int, Dictionary<string, int>>();
+        // Define enemy in wide scope
+        GameObject enemy = null;
         // Iterate through grid list
         for (int i = 0; i < grid.Count; i++)
         {
             // Create warpZones dictionary
             Dictionary<string, int> warpZones = new Dictionary<string, int>();
             // Get enemy
-            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            enemy = grid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
             {
                 // Check up if not bot row
@@ -365,7 +369,6 @@ public class GridManager : MonoBehaviour
                     warpDict[i] = warpZones;
                     farthestEnemyInx = i;
                 }
-                // Debug.Log("Cell#: " + i + " WarpZones: " + warpZones.Count + " WarpDict: " + warpDict.Count);
             }
         }
         // If a potential warp zone exists
@@ -380,7 +383,7 @@ public class GridManager : MonoBehaviour
                     Debug.LogWarning("warpDict empty");
                     break;
                 }
-                int cellInx = GetRandomCellIndex();
+                cellInx = GetRandomCellIndex();
                 if (InFarthestRow(cellInx) && !callingEnemy.GetComponent<Enemy>().super == true)
                 {
                     // Remove down and right values from the furthest index
@@ -413,6 +416,13 @@ public class GridManager : MonoBehaviour
                 GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
                 // Assign enemy object to the cell
                 warpCell.GetComponent<Cell>().enemy = newEnemy;
+                if (callingEnemy.GetComponent<Enemy>().special == true)
+                {
+                    // Assign enemy's color
+                    enemy = grid[cellInx].GetComponent<Cell>().enemy;
+                    newEnemy.GetComponent<Enemy>().color = enemy.GetComponent<Enemy>().color;
+                    newEnemy.GetComponent<Enemy>().warpedIn = true;
+                }
                 // Assign cell's color
                 warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
             }
@@ -506,6 +516,7 @@ public class GridManager : MonoBehaviour
     }
     public void checkRetreat()
     {
+        Debug.Log("checkRetreat");
         // Empty out the queue
         queue.Clear();
         // Reset enemy group numbers
@@ -540,7 +551,6 @@ public class GridManager : MonoBehaviour
                     // Add to check queue
                     queue.Add(enemy);
                 }
-                // Debug.Log("Enemy number " + grid[i].GetComponent<Cell>().number + " is in group " + group);
             }
         }
         for (int j = 1; j <= group; j++)
@@ -600,7 +610,7 @@ public class GridManager : MonoBehaviour
     }
     public void checkNeighborRetreat(int cellNumber, int group)
     {
-
+        Debug.Log("checkNeighborRetreat");
         if(cellNumber > 5)
         {
             if(grid[cellNumber - 6].GetComponent<Cell>().enemy != null && grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
@@ -646,9 +656,6 @@ public class GridManager : MonoBehaviour
         Transform currentCellTransform = currentCell.transform;
         // Get the enemy/null to be placed
         GameObject currentOccupant = currentCell.GetComponent<Cell>().enemy;
-        // Debug.Log(currentOccupant);
-        // Debug.Log("currentCell: " + currentCell);
-        // Debug.Log("currentTransform: " + currentCellTransform);
 
         // Get above cell info
         if(cellNumber > 5)
@@ -656,9 +663,6 @@ public class GridManager : MonoBehaviour
             GameObject aboveCell = grid[cellNumber - 6];
             Transform aboveCellTransform = aboveCell.transform;
             GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
-
-            // Debug.Log("aboveCell: " + aboveCell);
-            // Debug.Log("aboveTransform: " + aboveCellTransform);
 
             // This must be delayed. Currently it uses coroutines
             if (aboveCell.GetComponent<Cell>().enemy == null)
