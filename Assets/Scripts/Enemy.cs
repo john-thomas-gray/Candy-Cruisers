@@ -20,12 +20,10 @@ public class Enemy : MonoBehaviour
     private GameObject fleet;
     private GridManager gridManagerScript;
 
-    // Scoring
+    [Header("Scoring")]
     [SerializeField]
     private ScoreManagerSO scoreManager;
-
-    [Header("Events")]
-    public GameEventSO onScoreChange;
+    private int globalLevel = 1;
 
     // Color
     ColorManager colorManager;
@@ -310,6 +308,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    // public void updateLevel(Component sender, object newLevel)
+    // {
+    //     globalLevel = newLevel;
+    //     Debug.Log("working");
+    // }
+
     public void death()
     {
         if(alive == false && dead == false)
@@ -339,8 +343,7 @@ public class Enemy : MonoBehaviour
                 specialGreenCounted = false;
             }
             eventManagerInstance.StartCheckRetreat();
-            scoreManager.IncreaseScore(1);
-            onScoreChange.Raise();
+            scoreManager.IncreaseScore(100);
             Destroy(this.gameObject);
 
         }

@@ -130,7 +130,7 @@ public class GridManager : MonoBehaviour
 
     public void fleetStatus()
     {
-        Debug.Log("fleetStatus");
+        // Debug.Log("fleetStatus");
         colorCounts = colorManager.colorCounts;
 
         // Iterate through the cells in the grid
@@ -380,7 +380,7 @@ public class GridManager : MonoBehaviour
             {
                 if(warpDict.Count == 0)
                 {
-                    Debug.LogWarning("warpDict empty");
+                    // Debug.LogWarning("warpDict empty");
                     break;
                 }
                 cellInx = GetRandomCellIndex();
@@ -519,7 +519,7 @@ public class GridManager : MonoBehaviour
     }
     public void checkRetreat()
     {
-        Debug.Log("checkRetreat");
+        // Debug.Log("checkRetreat");
         // Empty out the queue
         queue.Clear();
         // Reset enemy group numbers
@@ -613,7 +613,7 @@ public class GridManager : MonoBehaviour
     }
     public void checkNeighborRetreat(int cellNumber, int group)
     {
-        Debug.Log("checkNeighborRetreat");
+        // Debug.Log("checkNeighborRetreat");
         if(cellNumber > 5)
         {
             if(grid[cellNumber - 6].GetComponent<Cell>().enemy != null && grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)

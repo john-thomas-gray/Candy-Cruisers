@@ -5,29 +5,29 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameEvent", menuName = "GameEvent")]
 public class GameEventSO : ScriptableObject
 {
-    public List<GameEventListener> listeners = new List<GameEventListener>();
+    // public List<GameEventListener> listeners = new List<GameEventListener>();
 
-    // Raise event through different method signatures
+    // // Raise event through different method signatures
 
-    public void Raise() {
-        for (int i = 0; i < listeners.Count; i++) {
-            listeners[i].OnEventRaised();
-        }
-    }
+    // public void Raise(Component sender, object data) {
+    //     for (int i = 0; i < listeners.Count; i++) {
+    //         listeners[i].OnEventRaised(sender, data);
+    //     }
+    // }
 
-    // Manage Listeners
+    // // Manage Listeners
 
-    public void RegisterListener(GameEventListener listener) {
-        if (!listeners.Contains(listener))
-        {
-            listeners.Add(listener);
-        }
-    }
+    // public void RegisterListener(GameEventListener listener) {
+    //     if (!listeners.Contains(listener))
+    //     {
+    //         listeners.Add(listener);
+    //     }
+    // }
 
-    public void UnregisterListener(GameEventListener listener) {
-        if (listeners.Contains(listener))
-        {
-            listeners.Remove(listener);
-        }
-    }
+    // public void UnregisterListener(GameEventListener listener) {
+    //     if (listeners.Contains(listener))
+    //     {
+    //         listeners.Remove(listener);
+    //     }
+    // }
 }

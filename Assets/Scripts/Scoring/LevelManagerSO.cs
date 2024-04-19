@@ -1,26 +1,47 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 [CreateAssetMenu(fileName = "LevelManager", menuName = "ScriptableObjects/LevelManagerSO")]
 public class LevelManagerSO : ScriptableObject
 {
-    public int level = 0;
-    public int startingLevel = 0;
+    public int level = 1;
+    public int startingLevel = 1;
+
+    private const int BasePoints = 100;
+    private const double GrowthFactor = 1.5;
 
     // Scoring
     [SerializeField]
     private ScoreManagerSO scoreManager;
+    [Header("Events")]
+    public GameEventSO onLevelUp;
 
     private void OnEnable() {
-        scoreManager.scoreChangeEvent.AddListener(LevelUp);
-        Debug.Log("level manager");
+        level = startingLevel;
+        if (scoreManager != null)
+        {
+            scoreManager.scoreChangeEvent.AddListener(LevelUp);
+        }
     }
 
     private void LevelUp(int score) {
-        if(level == 0 && score >= 24)
+        if (score >=  PointsForLevelUp(level))
         {
-            level = 1;
+            level += 1;
+            Debug.Log("Leveled up to Level " + level);
+            Debug.Log("Next level up at " + PointsForLevelUp(level) + " points!");
+            // onLevelUp.Raise(this, level);
         }
-        Debug.Log("Score: " + score);
+    }
+
+    public static int PointsForLevelUp(int currentLevel)
+    {
+        if (currentLevel < 1)
+            return 0; // Return 0 for invalid level entries
+
+        // Using the geometric series sum formula to calculate total points required up to the next level
+        double totalPoints = BasePoints * (Math.Pow(GrowthFactor, currentLevel) - 1) / (GrowthFactor - 1);
+        return (int)Math.Round(totalPoints);
     }
 }
