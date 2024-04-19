@@ -153,8 +153,6 @@ public class Enemy : MonoBehaviour
             // Check the neighboring cells
             List<GameObject> neighbors = new List<GameObject>();
 
-            // Debug.Log("Cell: " + cellNumber + ", " + "Color: " + color);
-
             // Check up if not bot row
             if (cellNumber > 5)
             {

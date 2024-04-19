@@ -427,6 +427,7 @@ public class GridManager : MonoBehaviour
                 }
                 // Assign cell's color
                 warpCell.GetComponent<Cell>().color = newEnemy.GetComponent<Enemy>().color;
+                newEnemy.GetComponent<Enemy>().checkNeighbors();
             }
         }
         else
