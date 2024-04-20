@@ -9,7 +9,7 @@ public class LevelManagerSO : ScriptableObject
     [SerializeField]
     public const int startingLevel = 1;
 
-    private const int BasePoints = 10000;
+    private const int BasePoints = 1500;
     private const double GrowthFactor = 1.5;
 
     // Scoring

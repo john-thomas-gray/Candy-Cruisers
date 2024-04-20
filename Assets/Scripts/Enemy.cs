@@ -269,7 +269,14 @@ public class Enemy : MonoBehaviour
     {
         if(!onCoolDown)
         {
+            // Set a random cooldown in the cooldown range.
             abilityCoolDown = random.NextDouble() * (shotCoolDownRange[1] - shotCoolDownRange[0]) + shotCoolDownRange[0];
+            // Decrease cooldown based on globalLevel
+            abilityCoolDown -= (0.5f * (globalLevel) - 1);
+            if (abilityCoolDown < 0)
+            {
+                abilityCoolDown = 1;
+            }
             onCoolDown = true;
         }
 
@@ -311,6 +318,12 @@ public class Enemy : MonoBehaviour
         if(!onCoolDown)
         {
             abilityCoolDown = random.NextDouble() * (warpCoolDownRange[1] - warpCoolDownRange[0]) + warpCoolDownRange[0];
+            // Decrease cooldown based on globalLevel
+            abilityCoolDown -= (0.5f * (globalLevel) - 1);
+            if (abilityCoolDown < 0)
+            {
+                abilityCoolDown = 1;
+            }
             onCoolDown = true;
         }
 

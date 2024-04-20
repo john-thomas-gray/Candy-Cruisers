@@ -314,8 +314,10 @@ public class GridManager : MonoBehaviour
 
         float moveTimeByLevel(int level)
         {
-            float baseMoveTime = 5.0f;
-            return baseMoveTime * (1 - (level - 1) * 0.05f);
+            float baseMoveTime = 10.0f;
+            float factor = 0.10f;
+            float calculatedTime = baseMoveTime * (1 - (level - 1) * factor);
+            return Mathf.Max(calculatedTime, 0); // Ensures the returned time is never negative
 
         }
     }
