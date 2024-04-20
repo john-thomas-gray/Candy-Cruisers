@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2cd8d956568452d91195cd0b9871fc, type: 3}
   m_Name: Level Manager SO
   m_EditorClassIdentifier: 
-  level: 0
-  startingLevel: 0
+  level: 3
+  fleet: {fileID: 0}
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
+  onLevelUp: {fileID: 11400000, guid: 78c3aac060eec45008a5ea1e75104f14, type: 2}

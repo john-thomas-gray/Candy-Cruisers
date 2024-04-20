@@ -6,10 +6,14 @@ using System;
 public class LevelManagerSO : ScriptableObject
 {
     public int level = 1;
-    public int startingLevel = 1;
+    [SerializeField]
+    public const int startingLevel = 3;
 
     private const int BasePoints = 100;
     private const double GrowthFactor = 1.5;
+
+    [SerializeField]
+    public GameObject fleet;
 
     // Scoring
     [SerializeField]
@@ -23,6 +27,12 @@ public class LevelManagerSO : ScriptableObject
         {
             scoreManager.scoreChangeEvent.AddListener(LevelUp);
         }
+        if (fleet == null)
+        {
+            fleet = GameObject.FindGameObjectWithTag("Fleet");
+        }
+        fleet.GetComponent<GridManager>().globalLevel = level;
+        // Debug.Log("Starting level: " + level);
     }
 
     private void LevelUp(int score) {
@@ -30,8 +40,9 @@ public class LevelManagerSO : ScriptableObject
         {
             level += 1;
             Debug.Log("Leveled up to Level " + level);
-            Debug.Log("Next level up at " + PointsForLevelUp(level) + " points!");
+            // Debug.Log("Next level up at " + PointsForLevelUp(level) + " points!");
             // onLevelUp.Raise(this, level);
+            fleet.GetComponent<GridManager>().globalLevel = level;
         }
     }
 

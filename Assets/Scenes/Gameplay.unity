@@ -280,8 +280,11 @@ MonoBehaviour:
   specialGreenCount: 0
   grid: []
   cellPrefab: {fileID: 1219203507519098383, guid: ccf021b8f01394f9bb252db76f693f1b, type: 3}
+  shift: []
   gameOver: 0
   wipedOut: 0
+  levelManager: {fileID: 11400000, guid: a7d185af62d4f48fe96e30e04d40fda3, type: 2}
+  globalLevel: 3
 --- !u!4 &343026342
 Transform:
   m_ObjectHideFlags: 0

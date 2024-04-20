@@ -22,7 +22,7 @@ public class ScoreManagerSO : ScriptableObject
     public void IncreaseScore(int amount) {
         score += amount;
         scoreChangeEvent.Invoke(score);
-        Debug.Log("score increase: " + score);
+        // Debug.Log("score increase: " + score);
     }
 
 }

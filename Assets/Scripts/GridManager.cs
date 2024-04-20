@@ -39,6 +39,11 @@ public class GridManager : MonoBehaviour
     // Retreat
     private List<GameObject> queue = new List<GameObject>();
 
+    // Level
+    [SerializeField]
+    private LevelManagerSO levelManager;
+    public int globalLevel = -1;
+
     void Awake()
     {
         gameOver = false;
@@ -50,13 +55,13 @@ public class GridManager : MonoBehaviour
     }
     void Start()
     {
-
         EventManager.CheckRetreat += checkRetreat;
+        globalLevel = levelManager.level;
     }
 
     void Update()
     {
-        FleetMovement(.5f);
+        FleetMovement();
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
@@ -248,16 +253,15 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public void FleetMovement(float moveSpeed)
+    public void FleetMovement()
     {
-        float moveTime = 5.0f;
         float moveIncrement = 0.10f;
 
         if (!gameOver)
         {
             if (turnInterval < 10)
             {
-                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount))
                 {
                     timer += Time.deltaTime;
                 }
@@ -276,7 +280,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                if (timer < moveTime / (colorManager.colorCounts["Green"] + specialGreenCount))
+                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount))
                 {
                     timer += Time.deltaTime;
                 }
@@ -305,6 +309,13 @@ public class GridManager : MonoBehaviour
             {
                 hasDescended = false;
             }
+        }
+
+        float moveTimeByLevel(int level)
+        {
+            float baseMoveTime = 5.0f;
+            return baseMoveTime * (1 - (level - 1) * 0.05f);
+
         }
     }
 

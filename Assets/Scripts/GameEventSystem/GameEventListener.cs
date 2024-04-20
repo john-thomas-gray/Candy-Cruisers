@@ -7,19 +7,19 @@ using UnityEngine.Events;
 public class CustomGameEvent : UnityEvent<Component, object> {}
 public class GameEventListener : MonoBehaviour
 {
-    // public GameEventSO gameEvent;
+    public GameEventSO gameEvent;
 
-    // public CustomGameEvent response;
+    public CustomGameEvent response;
 
-    // private void OnEnable() {
-    //     gameEvent.RegisterListener(this);
-    // }
+    private void OnEnable() {
+        gameEvent.RegisterListener(this);
+    }
 
-    // private void OnDisable() {
-    //     gameEvent.UnregisterListener(this);
-    // }
+    private void OnDisable() {
+        gameEvent.UnregisterListener(this);
+    }
 
-    // public void OnEventRaised(LevelManagerSO sender, int data) {
-    //     response.Invoke(sender, data);
-    // }
+    public void OnEventRaised(Component sender, object data) {
+        response.Invoke(sender, data);
+    }
 }
