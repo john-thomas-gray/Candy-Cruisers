@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7651907833786731898}
   - component: {fileID: 4577741112024003502}
   - component: {fileID: -8168576666604565902}
-  - component: {fileID: 7334432011839770191}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -107,7 +106,9 @@ MonoBehaviour:
   super: 0
   kill: 0
   specialGreenCounted: 0
+  updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
+  globalLevel: 1
   specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
   retreat: 0
   group: 1
@@ -160,31 +161,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7334432011839770191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7377057956046256033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b08d195051e7247d189e6835327b8297, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 78c3aac060eec45008a5ea1e75104f14, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: b3df68eeb00e940c691e69cd479fc435, type: 3}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Enemy.updateLevel
-          m_BoolArgument: 0
-        m_CallState: 2

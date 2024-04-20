@@ -7,7 +7,7 @@ public class LevelManagerSO : ScriptableObject
 {
     public int level = 1;
     [SerializeField]
-    public const int startingLevel = 3;
+    public const int startingLevel = 1;
 
     private const int BasePoints = 100;
     private const double GrowthFactor = 1.5;
@@ -18,8 +18,9 @@ public class LevelManagerSO : ScriptableObject
     // Scoring
     [SerializeField]
     private ScoreManagerSO scoreManager;
-    [Header("Events")]
-    public GameEventSO onLevelUp;
+
+    // Broadcasting
+    public IntEventChannelSO updateGlobalLevelChannel;
 
     private void OnEnable() {
         level = startingLevel;
@@ -31,8 +32,8 @@ public class LevelManagerSO : ScriptableObject
         {
             fleet = GameObject.FindGameObjectWithTag("Fleet");
         }
-        fleet.GetComponent<GridManager>().globalLevel = level;
-        // Debug.Log("Starting level: " + level);
+        updateGlobalLevelChannel.RaiseEvent(level);
+
     }
 
     private void LevelUp(int score) {
@@ -42,7 +43,11 @@ public class LevelManagerSO : ScriptableObject
             Debug.Log("Leveled up to Level " + level);
             // Debug.Log("Next level up at " + PointsForLevelUp(level) + " points!");
             // onLevelUp.Raise(this, level);
-            fleet.GetComponent<GridManager>().globalLevel = level;
+            // fleet.GetComponent<GridManager>().globalLevel = level;
+            if (updateGlobalLevelChannel != null)
+            {
+                updateGlobalLevelChannel.RaiseEvent(level);
+            }
         }
     }
 

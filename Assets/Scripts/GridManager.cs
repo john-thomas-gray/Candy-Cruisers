@@ -43,6 +43,22 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private LevelManagerSO levelManager;
     public int globalLevel = -1;
+    public IntEventChannelSO updateGlobalLevelChannel;
+
+    private void OnEnable()
+    {
+        updateGlobalLevelChannel.OnEventRaised += setGlobalLevel;
+
+    }
+    private void OnDisable()
+    {
+        updateGlobalLevelChannel.OnEventRaised -= setGlobalLevel;
+    }
+
+    void setGlobalLevel(int level)
+    {
+        globalLevel = level;
+    }
 
     void Awake()
     {
@@ -59,6 +75,7 @@ public class GridManager : MonoBehaviour
         globalLevel = levelManager.level;
     }
 
+
     void Update()
     {
         FleetMovement();
@@ -70,18 +87,6 @@ public class GridManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.D))
         {
             descend();
-        }
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-            GameObject test = GameObject.Find("Enemy(Clone)");
-            if (test != null)
-            {
-                beamIn(test);
-            }
-            else
-            {
-                Debug.LogWarning("Enemy GameObject not found.");
-            }
         }
         // FleetWipe
         if(wipedOut)

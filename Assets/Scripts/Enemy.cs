@@ -14,6 +14,9 @@ public class Enemy : MonoBehaviour
     public bool kill;
     public bool specialGreenCounted;
 
+    // Level Manager
+    public IntEventChannelSO updateGlobalLevelChannel;
+
     // GridManager
     private Transform cellTransform;
     private Transform fleetTransform;
@@ -23,7 +26,7 @@ public class Enemy : MonoBehaviour
     [Header("Scoring")]
     [SerializeField]
     private ScoreManagerSO scoreManager;
-    private int globalLevel = 1;
+    public int globalLevel = 1;
 
     // Color
     ColorManager colorManager;
@@ -59,6 +62,21 @@ public class Enemy : MonoBehaviour
     private float[] warpCoolDownRange = {7, 20};
     public bool warpedIn = false;
     private bool colorReset = false;
+
+    private void OnEnable()
+    {
+        updateGlobalLevelChannel.OnEventRaised += levelUp;
+
+    }
+    private void OnDisable()
+    {
+        updateGlobalLevelChannel.OnEventRaised -= levelUp;
+    }
+
+    void levelUp(int level)
+    {
+        globalLevel = level;
+    }
     void Awake()
     {
         alive = true;
@@ -307,12 +325,6 @@ public class Enemy : MonoBehaviour
             onCoolDown = false;
         }
     }
-
-    // public void updateLevel(Component sender, object newLevel)
-    // {
-    //     globalLevel = newLevel;
-    //     Debug.Log("working");
-    // }
 
     public void death()
     {
