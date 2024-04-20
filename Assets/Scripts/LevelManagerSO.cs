@@ -9,11 +9,8 @@ public class LevelManagerSO : ScriptableObject
     [SerializeField]
     public const int startingLevel = 1;
 
-    private const int BasePoints = 100;
+    private const int BasePoints = 10000;
     private const double GrowthFactor = 1.5;
-
-    [SerializeField]
-    public GameObject fleet;
 
     // Scoring
     [SerializeField]
@@ -28,10 +25,6 @@ public class LevelManagerSO : ScriptableObject
         {
             scoreManager.scoreChangeEvent.AddListener(LevelUp);
         }
-        if (fleet == null)
-        {
-            fleet = GameObject.FindGameObjectWithTag("Fleet");
-        }
         updateGlobalLevelChannel.RaiseEvent(level);
 
     }
@@ -41,9 +34,6 @@ public class LevelManagerSO : ScriptableObject
         {
             level += 1;
             Debug.Log("Leveled up to Level " + level);
-            // Debug.Log("Next level up at " + PointsForLevelUp(level) + " points!");
-            // onLevelUp.Raise(this, level);
-            // fleet.GetComponent<GridManager>().globalLevel = level;
             if (updateGlobalLevelChannel != null)
             {
                 updateGlobalLevelChannel.RaiseEvent(level);

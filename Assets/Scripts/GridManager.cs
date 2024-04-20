@@ -41,18 +41,21 @@ public class GridManager : MonoBehaviour
 
     // Level
     [SerializeField]
-    private LevelManagerSO levelManager;
     public int globalLevel = -1;
+    [Header("Event Channels")]
     public IntEventChannelSO updateGlobalLevelChannel;
+    public VoidEventChannelSO checkRetreatChannel;
 
     private void OnEnable()
     {
         updateGlobalLevelChannel.OnEventRaised += setGlobalLevel;
+        checkRetreatChannel.OnEventRaised += StartCheckRetreat;
 
     }
     private void OnDisable()
     {
         updateGlobalLevelChannel.OnEventRaised -= setGlobalLevel;
+        checkRetreatChannel.OnEventRaised -= StartCheckRetreat;
     }
 
     void setGlobalLevel(int level)
@@ -69,12 +72,6 @@ public class GridManager : MonoBehaviour
         fleetShift();
         initialGridPos = transform.position;
     }
-    void Start()
-    {
-        EventManager.CheckRetreat += checkRetreat;
-        globalLevel = levelManager.level;
-    }
-
 
     void Update()
     {
@@ -96,7 +93,6 @@ public class GridManager : MonoBehaviour
             populateFleet(24);
             wipedOut = false;
         }
-        // checkRetreat();
 
     }
 
@@ -669,7 +665,6 @@ public class GridManager : MonoBehaviour
     }
     public void retreat(int cellNumber)
     {
-        EventManager eventManagerInstance = EventManager.Instance;
         // Get the cell to update
         GameObject currentCell = grid[cellNumber];
         Transform currentCellTransform = currentCell.transform;
@@ -706,7 +701,18 @@ public class GridManager : MonoBehaviour
 
             }
         }
-        eventManagerInstance.StartCheckRetreat();
+        StartCheckRetreat();
+    }
+    public void StartCheckRetreat()
+    {
+        // Start a coroutine for a delay
+        StartCoroutine(DelayedInvoke());
+    }
+
+    private IEnumerator DelayedInvoke()
+    {
+        yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
+        checkRetreat();
     }
     public void GameOver()
     {

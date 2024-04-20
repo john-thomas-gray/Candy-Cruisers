@@ -14,8 +14,10 @@ public class Enemy : MonoBehaviour
     public bool kill;
     public bool specialGreenCounted;
 
-    // Level Manager
+    [Header ("Event Channels")]
     public IntEventChannelSO updateGlobalLevelChannel;
+    public VoidEventChannelSO checkRetreatEventChannel;
+
 
     // GridManager
     private Transform cellTransform;
@@ -65,15 +67,15 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        updateGlobalLevelChannel.OnEventRaised += levelUp;
+        updateGlobalLevelChannel.OnEventRaised += updateGlobalLevel;
 
     }
     private void OnDisable()
     {
-        updateGlobalLevelChannel.OnEventRaised -= levelUp;
+        updateGlobalLevelChannel.OnEventRaised -= updateGlobalLevel;
     }
 
-    void levelUp(int level)
+    void updateGlobalLevel(int level)
     {
         globalLevel = level;
     }
@@ -81,7 +83,6 @@ public class Enemy : MonoBehaviour
     {
         alive = true;
         dead = false;
-
         // Color
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
@@ -96,7 +97,7 @@ public class Enemy : MonoBehaviour
         fleetTransform = cellTransform.parent;
         fleet = fleetTransform.gameObject;
         gridManagerScript = fleet.GetComponent<GridManager>();
-
+        updateGlobalLevel(fleet.GetComponent<GridManager>().globalLevel);
         checkNeighbors();
 
     }
@@ -330,7 +331,6 @@ public class Enemy : MonoBehaviour
     {
         if(alive == false && dead == false)
         {
-            EventManager eventManagerInstance = EventManager.Instance;
             // Set dead to true to prevent multiple runs in same frame
             dead = true;
             // Subtract color from colorCounts dictionary instance
@@ -354,10 +354,9 @@ public class Enemy : MonoBehaviour
                 gridManagerScript.specialGreenCount--;
                 specialGreenCounted = false;
             }
-            eventManagerInstance.StartCheckRetreat();
+            checkRetreatEventChannel.RaiseEvent();
             scoreManager.IncreaseScore(100);
             Destroy(this.gameObject);
-
         }
     }
 
