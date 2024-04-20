@@ -283,8 +283,9 @@ MonoBehaviour:
   shift: []
   gameOver: 0
   wipedOut: 0
-  levelManager: {fileID: 11400000, guid: a7d185af62d4f48fe96e30e04d40fda3, type: 2}
-  globalLevel: 3
+  globalLevel: 1
+  updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
+  checkRetreatChannel: {fileID: 11400000, guid: 77507d2768ebf4e99889dac78f3c5ba2, type: 2}
 --- !u!4 &343026342
 Transform:
   m_ObjectHideFlags: 0
