@@ -53,6 +53,7 @@ public class Enemy : MonoBehaviour
     private float[] shotCoolDownRange = {4, 7};
     private bool onCoolDown = false;
     public GameObject missilePrefab;
+    public GameObject homingMissilePrefab;
 
     // BLUE ABILITIES
     public GameObject shieldPrefab;
@@ -108,6 +109,7 @@ public class Enemy : MonoBehaviour
         {
             activateShield();
         }
+
     }
 
     void Update()
@@ -119,6 +121,11 @@ public class Enemy : MonoBehaviour
             colorManager.SetColor(this.gameObject, color);
             colorReset = true;
         }
+        //TEST
+        if(Input.GetKeyDown(KeyCode.P) &&  color == "Red")
+        {
+            Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+        }
     }
 
     void Abilities()
@@ -126,17 +133,7 @@ public class Enemy : MonoBehaviour
         // Check color
         if(color == "Red")
         {
-            // Base ability
-            if (!special)
-            {
-                fireMissile();
-            }
-            // Special ability
-            else if (special)
-            {
-
-            }
-
+            fireMissile();
         }
         else if(color == "Green")
         {
@@ -284,18 +281,21 @@ public class Enemy : MonoBehaviour
 
         if(timeSinceLastActivation >= abilityCoolDown)
         {
-                // Debug.Log("shotColor: " + shotColor);
-                // Debug.Log("color: " + color);
-            colorCounts = colorManager.colorCounts;
 
-            if (colorManager.colorSet)
+            // Spawn missile in front of enemy
+            if (special == false)
             {
-                // Spawn missile in front of enemy
                 Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
-                // Reset cooldown
-                timeSinceLastActivation = 0.0f;
-                onCoolDown = false;
             }
+            else
+            {
+                Instantiate(homingMissilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+            }
+
+            // Reset cooldown
+            timeSinceLastActivation = 0.0f;
+            onCoolDown = false;
+
         }
     }
 

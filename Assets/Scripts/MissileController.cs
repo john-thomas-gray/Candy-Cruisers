@@ -6,55 +6,89 @@ public class MissileController : MonoBehaviour
 {
     // Missile color
     public GameObject player;
-    // Missile movement
-    private float destroyPlain = 5.3f;
-    private float missileSpeed = 5.0f;
     // Destroy Timer
     private float destroyTimer = 0;
 
+    private float destroyPlain = 5.3f;
+    public bool homing;
+    private float initialZRotation;
+    private float rotationSpeed = 2f;
+    private float maxRotationDifference = 35f;
+
     void Start()
     {
-        GameObject player = GameObject.Find("Player");
+        player = GameObject.Find("Player");
+        initialZRotation = transform.eulerAngles.z;
 
+        if (gameObject.name.Contains("Homing"))
+        {
+            homing = true;
+            Debug.Log("working");
+        }
+        else
+        {
+            homing = false;
+            Debug.Log("not working");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         MoveMissile();
-
         // Destroy missile if onscreen too long
         destroyTimer += Time.deltaTime;
         if(destroyTimer > 2f)
         {
             Destroy(this.gameObject);
         }
-
-    }
-
-    void MoveMissile()
-    {
-
-        transform.Translate(Vector3.up * missileSpeed * Time.deltaTime);
-
-        // Delete offscreen missile
+        // Destroy off-screen missiles
         if(Mathf.Abs(transform.position.y) > destroyPlain)
         {
             Destroy(this.gameObject);
         }
     }
 
-    // private void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //         if(collision.gameObject.layer == 9)
-    //         {
-    //             GameObject collided = collision.gameObject;
-    //             PlayerController playerScript = collided.GetComponent<PlayerController>();
-    //             Debug.Log("Ouch!");
-    //             playerScript.alive = false;
-    //             Destroy(this.gameObject);
+    void MoveMissile()
+    {
 
-    //         }
+        float missileSpeed = 5.0f;
+        if (homing == false)
+        {
+            transform.Translate(Vector3.up * missileSpeed * Time.deltaTime);
+        } else
+        {
+            Homing();
+        }
+    }
 
-    // }
+    void Homing()
+    {
+        float homingSpeed = 5f;
+        Debug.Log("homing");
+        transform.Translate(Vector3.up * homingSpeed * Time.deltaTime);
+
+        // Calculate potential new rotation values
+        float newZRotationClockwise = transform.eulerAngles.z + rotationSpeed;
+        float newZRotationCounterclockwise = transform.eulerAngles.z - rotationSpeed;
+
+        if (player.transform.position.x > transform.position.x)
+        {
+            // Rotate clockwise if within bounds
+            if (Mathf.Abs(newZRotationClockwise - initialZRotation) <= maxRotationDifference)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, newZRotationClockwise);
+            }
+        }
+        else if (player.transform.position.x < transform.position.x)
+        {
+            // Rotate counterclockwise if within bounds
+            if (Mathf.Abs(newZRotationCounterclockwise - initialZRotation) <= maxRotationDifference)
+            {
+                transform.rotation = Quaternion.Euler(0, 0, newZRotationCounterclockwise);
+            }
+        }
+
+    }
+
 }
