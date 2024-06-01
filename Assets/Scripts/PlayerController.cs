@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
     }
     void death()
     {
-        this.gameObject.transform.position = new Vector3(-6f, -4.69f, -2f);
+        this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

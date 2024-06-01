@@ -23,12 +23,12 @@ public class MissileController : MonoBehaviour
         if (gameObject.name.Contains("Homing"))
         {
             homing = true;
-            Debug.Log("working");
+            // Debug.Log("working");
         }
         else
         {
             homing = false;
-            Debug.Log("not working");
+            // Debug.Log("not working");
         }
     }
 
@@ -38,15 +38,15 @@ public class MissileController : MonoBehaviour
         MoveMissile();
         // Destroy missile if onscreen too long
         destroyTimer += Time.deltaTime;
-        if(destroyTimer > 2f)
-        {
-            Destroy(this.gameObject);
-        }
-        // Destroy off-screen missiles
-        if(Mathf.Abs(transform.position.y) > destroyPlain)
-        {
-            Destroy(this.gameObject);
-        }
+        // if(destroyTimer > 2f)
+        // {
+        //     Destroy(this.gameObject);
+        // }
+        // // Destroy off-screen missiles
+        // if(Mathf.Abs(transform.position.y) > destroyPlain)
+        // {
+        //     Destroy(this.gameObject);
+        // }
     }
 
     void MoveMissile()
@@ -64,8 +64,8 @@ public class MissileController : MonoBehaviour
 
     void Homing()
     {
-        float homingSpeed = 5f;
-        Debug.Log("homing");
+        float homingSpeed = 2.5f;
+        // Debug.Log("homing");
         transform.Translate(Vector3.up * homingSpeed * Time.deltaTime);
 
         // Calculate potential new rotation values

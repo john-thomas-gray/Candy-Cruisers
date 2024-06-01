@@ -29,6 +29,13 @@ public class LevelManagerSO : ScriptableObject
 
     }
 
+    private void OnDisable() {
+        if (scoreManager != null)
+        {
+            scoreManager.scoreChangeEvent.RemoveListener(LevelUp);
+        }
+    }
+
     private void LevelUp(int score) {
         if (score >=  PointsForLevelUp(level))
         {

@@ -63,7 +63,7 @@ public class GameMaster : MonoBehaviour
    public void respawnPlayer()
    {
     // Debug.Log("respawn");
-    float respawnTime = 1f;
+    float respawnTime = 3f;
     float iFrames = 5f;
     respawnTimer += Time.deltaTime;
     if(respawnTimer >= respawnTime && playerController.alive == false)

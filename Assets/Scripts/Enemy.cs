@@ -285,11 +285,11 @@ public class Enemy : MonoBehaviour
             // Spawn missile in front of enemy
             if (special == false)
             {
-                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
             }
             else
             {
-                Instantiate(homingMissilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
+                Instantiate(homingMissilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
             }
 
             // Reset cooldown
