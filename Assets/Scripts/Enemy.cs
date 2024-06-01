@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
             colorReset = true;
         }
         //TEST
-        if(Input.GetKeyDown(KeyCode.P) &&  color == "Red")
+        if(Input.GetKeyDown(KeyCode.Q) &&  color == "Red")
         {
             Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y - .75f, transform.position.z), transform.rotation);
         }
