@@ -31,6 +31,12 @@ public class PlayerController : MonoBehaviour
     GameMaster gameMaster;
     public bool spawnProtection = false;
 
+    // GameOver
+    public bool gameOver = false;
+
+    [Header("Event Channels")]
+    public VoidEventChannelSO gameOverEventChannel;
+
     void Awake()
     {
         alive = true;
@@ -53,10 +59,20 @@ public class PlayerController : MonoBehaviour
     {
         colorManager.SetColor(this.gameObject);
     }
-    // Update is called once per frame
+
+    private void OnEnable()
+    {
+        gameOverEventChannel.OnEventRaised+= GameOver;
+    }
+
+    private void OnDisable()
+    {
+        gameOverEventChannel.OnEventRaised -= GameOver;
+    }
+
     void Update()
     {
-        if(alive)
+        if(alive && !gameOver)
         {
             playerMovement();
             fireLaser();
@@ -120,5 +136,10 @@ public class PlayerController : MonoBehaviour
                 death();
             }
 
+    }
+
+    void GameOver()
+    {
+        gameOver = true;
     }
 }

@@ -1,10 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.SceneManagement;
-public class PauseMenu : MonoBehaviour
+public class InGameMenues : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject gameOverMenu;
+    [SerializeField] VoidEventChannelSO gameOverEventChannel;
+    [SerializeField] ScoreManagerSO scoreManager;
+    [SerializeField] TMP_Text scoreNumber;
+
+    private void OnEnable()
+    {
+        gameOverEventChannel.OnEventRaised+= GameOver;
+    }
+
+    private void OnDisable()
+    {
+        gameOverEventChannel.OnEventRaised -= GameOver;
+    }
 
     private void Update()
     {
@@ -16,7 +31,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
-        Debug.Log("Works");
         if(pauseMenu.activeInHierarchy == false)
         {
             pauseMenu.SetActive(true);
@@ -38,5 +52,10 @@ public class PauseMenu : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
         Time.timeScale = 1;
+    }
+    private void GameOver()
+    {
+        scoreNumber.SetText(scoreManager.score.ToString());
+        gameOverMenu.SetActive(true);
     }
 }

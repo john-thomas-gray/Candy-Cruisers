@@ -45,6 +45,7 @@ public class GridManager : MonoBehaviour
     [Header("Event Channels")]
     public IntEventChannelSO updateGlobalLevelChannel;
     public VoidEventChannelSO checkRetreatChannel;
+    public VoidEventChannelSO gameOverEventChannel;
 
     private void OnEnable()
     {
@@ -720,6 +721,7 @@ public class GridManager : MonoBehaviour
     {
         Debug.Log("GAME OVER");
         gameOver = true;
+        gameOverEventChannel.RaiseEvent();
     }
 
 
