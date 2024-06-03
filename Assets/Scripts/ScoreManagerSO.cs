@@ -4,6 +4,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "ScoreManager", menuName = "ScriptableObjects/ScoreManagerSO")]
 public class ScoreManagerSO : ScriptableObject
 {
+    // Change score to a long
     public int score = 0;
     public int startingScore = 0;
     public int enemies_destroyed = 0;

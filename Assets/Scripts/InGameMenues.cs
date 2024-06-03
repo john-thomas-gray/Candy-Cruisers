@@ -9,7 +9,8 @@ public class InGameMenues : MonoBehaviour
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] VoidEventChannelSO gameOverEventChannel;
     [SerializeField] ScoreManagerSO scoreManager;
-    [SerializeField] TMP_Text scoreNumber;
+    [SerializeField] TMP_Text scoreGameOver;
+    [SerializeField] TMP_Text scoreInGame;
 
     private void OnEnable()
     {
@@ -27,6 +28,8 @@ public class InGameMenues : MonoBehaviour
         {
             Pause();
         }
+        // Change so Score Change event sets this
+        scoreInGame.SetText(scoreManager.score.ToString());
     }
 
     public void Pause()
@@ -55,7 +58,7 @@ public class InGameMenues : MonoBehaviour
     }
     private void GameOver()
     {
-        scoreNumber.SetText(scoreManager.score.ToString());
+        scoreGameOver.SetText(scoreManager.score.ToString());
         gameOverMenu.SetActive(true);
     }
 }
