@@ -9,8 +9,8 @@ public class InGameMenues : MonoBehaviour
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] VoidEventChannelSO gameOverEventChannel;
     [SerializeField] ScoreManagerSO scoreManager;
-    [SerializeField] TMP_Text scoreGameOver;
-    [SerializeField] TMP_Text scoreInGame;
+    public TMP_Text scoreGameOver;
+    public TMP_Text scoreInGame;
 
     private void OnEnable()
     {
@@ -50,11 +50,13 @@ public class InGameMenues : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
+        scoreInGame.SetText(0.ToString());
     }
     public void ExitToMainMenu()
     {
         SceneManager.LoadSceneAsync(0);
         Time.timeScale = 1;
+        scoreInGame.SetText(0.ToString());
     }
     private void GameOver()
     {

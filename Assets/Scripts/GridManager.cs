@@ -62,6 +62,7 @@ public class GridManager : MonoBehaviour
     void setGlobalLevel(int level)
     {
         globalLevel = level;
+        Debug.Log("GridManager, setGlobalLevel" + level);
     }
 
     void Awake()
