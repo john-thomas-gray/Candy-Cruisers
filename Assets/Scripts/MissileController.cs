@@ -38,15 +38,16 @@ public class MissileController : MonoBehaviour
         MoveMissile();
         // Destroy missile if onscreen too long
         destroyTimer += Time.deltaTime;
-        // if(destroyTimer > 2f)
-        // {
-        //     Destroy(this.gameObject);
-        // }
-        // // Destroy off-screen missiles
-        // if(Mathf.Abs(transform.position.y) > destroyPlain)
-        // {
-        //     Destroy(this.gameObject);
-        // }
+        if(!homing && destroyTimer > 2f || destroyTimer > 5f)
+        {
+            Destroy(this.gameObject);
+        }
+
+        // Destroy off-screen missiles
+        if(Mathf.Abs(transform.position.y) > destroyPlain)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     void MoveMissile()
