@@ -9,8 +9,11 @@ public class InGameMenues : MonoBehaviour
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] VoidEventChannelSO gameOverEventChannel;
     [SerializeField] ScoreManagerSO scoreManager;
+    [SerializeField] LevelManagerSO levelManager;
     public TMP_Text scoreGameOver;
     public TMP_Text scoreInGame;
+
+    public TMP_Text levelCounterInGame;
 
     private void OnEnable()
     {
@@ -30,6 +33,8 @@ public class InGameMenues : MonoBehaviour
         }
         // Change so Score Change event sets this
         scoreInGame.SetText(scoreManager.score.ToString());
+        levelCounterInGame.SetText("L: " + levelManager.level);
+
     }
 
     public void Pause()

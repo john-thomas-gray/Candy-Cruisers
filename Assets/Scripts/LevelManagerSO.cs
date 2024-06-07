@@ -10,8 +10,7 @@ public class LevelManagerSO : ScriptableObject
     [SerializeField]
     private static readonly int startingLevel = 1;
 
-    private const int BasePoints = 1;
-    private const double GrowthFactor = 1.5;
+    private const int baseEnemies = 24;
 
     // Scoring
     [SerializeField]
@@ -48,12 +47,12 @@ public class LevelManagerSO : ScriptableObject
         enemyDestroyedECSO.OnEventRaised -= LevelUp;
     }
 
-    private void LevelUp(int score)
+    private void LevelUp(int enemies_destroyed)
     {
-        if (score >= PointsForLevelUp(level))
+        if (enemies_destroyed >= EnemiesForLevelUp(level, baseEnemies))
         {
             level += 1;
-            Debug.Log("Leveled up to Level " + level);
+            Debug.Log("Leveled up to Level " + level + " at " + enemies_destroyed + " enemies destroyed");
 
             if (updateGlobalLevelChannel != null)
             {
@@ -62,13 +61,19 @@ public class LevelManagerSO : ScriptableObject
         }
     }
 
-    public static int PointsForLevelUp(int currentLevel)
-    {
-        if (currentLevel < 1)
-            return 0; // Return 0 for invalid level entries
+    public static int EnemiesForLevelUp(int currentLevel, int baseEnemies)
+{
+    if (currentLevel < 1)
+        return 0; // Return 0 for invalid level entries
 
-        // Using the geometric series sum formula to calculate total points required up to the next level
-        double totalPoints = BasePoints * (Math.Pow(GrowthFactor, currentLevel) - 1) / (GrowthFactor - 1);
-        return (int)Math.Round(totalPoints);
+    int totalEnemiesDestroyed = 0;
+
+    // Sum the enemies required for each level up to the current level
+    for (int level = 1; level <= currentLevel; level++)
+    {
+        totalEnemiesDestroyed += baseEnemies * level;
     }
+
+    return totalEnemiesDestroyed;
+}
 }

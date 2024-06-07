@@ -16,9 +16,8 @@ public class Enemy : MonoBehaviour
 
     [Header ("Event Channels")]
     public IntEventChannelSO updateGlobalLevelChannel;
+    // Broadcasting
     public VoidEventChannelSO checkRetreatEventChannel;
-    public VoidEventChannelSO enemyDestroyedEVSO;
-
 
     // GridManager
     private Transform cellTransform;
@@ -70,6 +69,7 @@ public class Enemy : MonoBehaviour
     private void OnEnable()
     {
         updateGlobalLevelChannel.OnEventRaised += updateGlobalLevel;
+
 
     }
     private void OnDisable()
