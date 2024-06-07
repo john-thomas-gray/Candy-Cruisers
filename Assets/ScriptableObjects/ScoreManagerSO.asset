@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12ac6ca464834b53b45b3e8f4566940, type: 3}
   m_Name: ScoreManagerSO
   m_EditorClassIdentifier: 
-  score: 1000
+  score: 0
   startingScore: 0
-  enemies_destroyed: 10
+  enemies_destroyed: 0
+  enemyDestroyedECSO: {fileID: 11400000, guid: f67ec8b62af674242847c8f87b213a19, type: 2}

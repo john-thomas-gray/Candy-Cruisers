@@ -10,7 +10,7 @@ public class LevelManagerSO : ScriptableObject
     [SerializeField]
     private static readonly int startingLevel = 1;
 
-    private const int BasePoints = 100;
+    private const int BasePoints = 1;
     private const double GrowthFactor = 1.5;
 
     // Scoring
@@ -19,28 +19,33 @@ public class LevelManagerSO : ScriptableObject
 
     // Broadcasting
     public IntEventChannelSO updateGlobalLevelChannel;
+    public IntEventChannelSO enemyDestroyedECSO;
 
     private void OnEnable()
     {
         level = startingLevel;
 
-        if (scoreManager != null)
-        {
-            scoreManager.scoreChangeEvent.AddListener(LevelUp);
-        }
+        // if (scoreManager != null)
+        // {
+        //     scoreManager.scoreChangeEvent.AddListener(LevelUp);
+        // }
 
         if (updateGlobalLevelChannel != null)
         {
             updateGlobalLevelChannel.RaiseEvent(level);
         }
+
+        enemyDestroyedECSO.OnEventRaised += LevelUp;
+
     }
 
     private void OnDisable()
     {
-        if (scoreManager != null)
-        {
-            scoreManager.scoreChangeEvent.RemoveListener(LevelUp);
-        }
+        // if (scoreManager != null)
+        // {
+        //     scoreManager.scoreChangeEvent.RemoveListener(LevelUp);
+        // }
+        enemyDestroyedECSO.OnEventRaised -= LevelUp;
     }
 
     private void LevelUp(int score)

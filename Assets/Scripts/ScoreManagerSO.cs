@@ -11,6 +11,7 @@ public class ScoreManagerSO : ScriptableObject
 
     [System.NonSerialized]
     public UnityEvent<int> scoreChangeEvent;
+    public IntEventChannelSO enemyDestroyedECSO;
 
     private void OnEnable() {
         score = startingScore;
@@ -24,6 +25,7 @@ public class ScoreManagerSO : ScriptableObject
     public void IncreaseScore(int amount) {
         score += amount;
         enemies_destroyed += 1;
+        enemyDestroyedECSO.RaiseEvent(enemies_destroyed);
         scoreChangeEvent.Invoke(score);
     }
 }

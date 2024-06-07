@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 825b0fe88460d446c968aa1ad45b0032, type: 3}
-  m_Name: OnScoreChange
+  m_Script: {fileID: 11500000, guid: e1e4645899d0f48638d7bf84363ec047, type: 3}
+  m_Name: EnemyDestroyedECSO
   m_EditorClassIdentifier: 
-  listeners: []

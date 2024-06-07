@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     [Header ("Event Channels")]
     public IntEventChannelSO updateGlobalLevelChannel;
     public VoidEventChannelSO checkRetreatEventChannel;
+    public VoidEventChannelSO enemyDestroyedEVSO;
 
 
     // GridManager

@@ -15,3 +15,4 @@ MonoBehaviour:
   level: 1
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
   updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
+  enemyDestroyedECSO: {fileID: 11400000, guid: f67ec8b62af674242847c8f87b213a19, type: 2}
