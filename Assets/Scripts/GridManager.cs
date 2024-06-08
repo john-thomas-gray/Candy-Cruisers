@@ -70,7 +70,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(24);
+        populateFleet(18);
         fleetShift();
         initialGridPos = transform.position;
     }
@@ -92,7 +92,19 @@ public class GridManager : MonoBehaviour
         {
             transform.position = initialGridPos;
             turnInterval = 0;
-            populateFleet(24);
+            if(globalLevel < 4)
+            {
+                populateFleet(24);
+            }
+            else if(globalLevel < 7)
+            {
+                populateFleet(30);
+            }
+            else
+            {
+                populateFleet(36);
+            }
+
             wipedOut = false;
         }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 public class InGameMenues : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
@@ -14,6 +16,10 @@ public class InGameMenues : MonoBehaviour
     public TMP_Text scoreInGame;
 
     public TMP_Text levelCounterInGame;
+
+    public EventSystem eventSystem;
+    public Button gameOverRestartButton;
+    public Button playButton;
 
     private void OnEnable()
     {
@@ -54,12 +60,12 @@ public class InGameMenues : MonoBehaviour
     // make restart event channel
     public void Restart()
     {
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         scoreManager.score = 0;
         scoreManager.enemies_destroyed = 0;
         levelManager.level = 1;
         Time.timeScale = 1;
+        eventSystem.firstSelectedGameObject = playButton.gameObject;
 
     }
     public void ExitToMainMenu()
@@ -72,6 +78,7 @@ public class InGameMenues : MonoBehaviour
     }
     private void GameOver()
     {
+        eventSystem.firstSelectedGameObject = gameOverRestartButton.gameObject;
         scoreGameOver.SetText(scoreManager.score.ToString());
         gameOverMenu.SetActive(true);
     }

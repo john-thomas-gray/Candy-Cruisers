@@ -18,9 +18,6 @@ public class LaserController : MonoBehaviour
     private float destroyTimer = 0;
 
     // Raycast
-    RaycastHit hit;
-    int layerMaskEnemies = 1 << 8;
-    private float rayLength;
 
     void Start()
     {
@@ -33,7 +30,6 @@ public class LaserController : MonoBehaviour
             magicLaser = true;
         }
         colorManager.magicLaser = false;
-        rayLength = transform.localScale.y / 2;
 
     }
 
@@ -52,16 +48,6 @@ public class LaserController : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        if (Physics.Raycast(transform.position, transform.up, out hit, rayLength, layerMaskEnemies))
-        {
-            Debug.DrawRay(transform.position, transform.up * hit.distance, Color.yellow);
-            Debug.Log("Did Hit");
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.up * rayLength, Color.white);
-            Debug.Log("Did not Hit");
-        }
     }
 
     void MoveLaser()

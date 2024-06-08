@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Galaxy : MonoBehaviour
 {
     // Rotation speed in degrees per second
@@ -36,11 +36,14 @@ public class Galaxy : MonoBehaviour
         // Rotate the game object around the z-axis
         transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
 
-        // Move the game object up and down
-        float newY = originalY + Mathf.Sin(Time.time * moveSpeed) * moveAmplitude;
-        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        if (SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            float newY = originalY + Mathf.Sin(Time.time * moveSpeed) * moveAmplitude;
+            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        }
     }
 
+    // Would be cool to switch rotation direction
     void RaiseRotationSpeed(int level)
     {
         rotationSpeed = rotationSpeed + 2f * level;

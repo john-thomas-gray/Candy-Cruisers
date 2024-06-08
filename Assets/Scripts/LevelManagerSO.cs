@@ -10,7 +10,7 @@ public class LevelManagerSO : ScriptableObject
     [SerializeField]
     private static readonly int startingLevel = 1;
 
-    private const int baseEnemies = 4;
+    private const int baseEnemies = 24;
 
     // Scoring
     [SerializeField]

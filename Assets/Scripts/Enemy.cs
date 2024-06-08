@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
     // RED ABILITIES
     private float timeSinceLastActivation = 0;
     private double abilityCoolDown;
-    private float[] shotCoolDownRange = {4, 7};
+    private float[] shotCoolDownRange = {5, 12};
     private bool onCoolDown = false;
     public GameObject missilePrefab;
     public GameObject homingMissilePrefab;
