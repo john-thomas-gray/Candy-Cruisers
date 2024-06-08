@@ -51,17 +51,24 @@ public class InGameMenues : MonoBehaviour
         }
     }
 
+    // make restart event channel
     public void Restart()
     {
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        scoreManager.score = 0;
+        scoreManager.enemies_destroyed = 0;
+        levelManager.level = 1;
         Time.timeScale = 1;
-        scoreInGame.SetText(0.ToString());
+
     }
     public void ExitToMainMenu()
     {
         SceneManager.LoadSceneAsync(0);
+        scoreManager.score = 0;
+        scoreManager.enemies_destroyed = 0;
+        levelManager.level = 1;
         Time.timeScale = 1;
-        scoreInGame.SetText(0.ToString());
     }
     private void GameOver()
     {

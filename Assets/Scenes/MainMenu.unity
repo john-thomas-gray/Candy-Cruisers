@@ -580,7 +580,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d811bdbdb5e24b56bab74986325758d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 5
+  updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
 --- !u!1 &777389587
 GameObject:
   m_ObjectHideFlags: 0

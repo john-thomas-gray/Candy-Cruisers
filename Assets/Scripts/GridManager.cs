@@ -683,7 +683,7 @@ public class GridManager : MonoBehaviour
             GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
 
             // This must be delayed. Currently it uses coroutines
-            if (aboveCell.GetComponent<Cell>().enemy == null)
+            if (currentOccupant && aboveCell.GetComponent<Cell>().enemy == null)
             {
                 // Detach the children from the current cell
                 currentCellTransform.DetachChildren();

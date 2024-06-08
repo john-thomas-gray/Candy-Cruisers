@@ -65,7 +65,7 @@ public class MissileController : MonoBehaviour
 
     void Homing()
     {
-        float homingSpeed = 2.5f;
+        float homingSpeed = 3.5f;
         // Debug.Log("homing");
         transform.Translate(Vector3.up * homingSpeed * Time.deltaTime);
 
