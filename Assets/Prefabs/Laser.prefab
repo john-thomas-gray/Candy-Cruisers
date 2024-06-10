@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5855860216803939432}
   - component: {fileID: 6009191677256398703}
   - component: {fileID: 1444804265566604761}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}

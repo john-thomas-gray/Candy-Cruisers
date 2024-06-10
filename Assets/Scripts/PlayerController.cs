@@ -7,9 +7,8 @@ public class PlayerController : MonoBehaviour
     static System.Random random = new System.Random();
     public bool alive;
     // Movement
-    private float tankSpeed = 4f;
-    private float screenBoundLeft = -2.45f;
-    private float screenBoundRight = 2.45f;
+    private float tankSpeed = 3f;
+    private float screenBound = 3f;
     // GridManager
     private GameObject fleet;
     private GridManager gridManagerInstance;
@@ -88,16 +87,24 @@ public class PlayerController : MonoBehaviour
     void playerMovement()
     {
         // Move Left
-        if(Input.GetKey(KeyCode.LeftArrow) && transform.position.x > screenBoundLeft)
+        if(Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position = transform.position + Vector3.left * tankSpeed * Time.deltaTime;
         }
         // Move Right
-        else if(Input.GetKey(KeyCode.RightArrow) && transform.position.x < screenBoundRight)
+        else if(Input.GetKey(KeyCode.RightArrow))
         {
             transform.position = transform.position + Vector3.right * tankSpeed * Time.deltaTime;
         }
-}
+        if(transform.position.x > screenBound)
+        {
+            transform.position = transform.position + Vector3.right * -2 * screenBound;
+        }
+        if(transform.position.x < -screenBound)
+        {
+            transform.position = transform.position + Vector3.right * 2 * screenBound;
+        }
+    }
     void fireLaser()
     {
         timeSinceLastShot += Time.deltaTime;
