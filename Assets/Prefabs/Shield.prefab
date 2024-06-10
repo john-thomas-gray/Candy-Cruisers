@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1959249369625766022}
   - component: {fileID: 8336127486753180246}
-  - component: {fileID: 1326893104564380574}
   - component: {fileID: 6478073341573392650}
+  - component: {fileID: 1089501091895763648}
   m_Layer: 10
   m_Name: Shield
   m_TagString: Shield
@@ -86,8 +86,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &1326893104564380574
-BoxCollider2D:
+--- !u!114 &6478073341573392650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8527978347457853173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfbae011e0ed940d0982658624c06265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  special: 0
+  specialSprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
+  shieldEnemyColor: 
+--- !u!58 &1089501091895763648
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -115,35 +131,9 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
---- !u!114 &6478073341573392650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8527978347457853173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfbae011e0ed940d0982658624c06265, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  special: 0
-  specialSprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  originalColor: {r: 0, g: 0, b: 0, a: 0}
-  absorbing: 0
+  m_Radius: 0.5

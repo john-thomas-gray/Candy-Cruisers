@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9170669034468434452}
   - component: {fileID: 7651907833786731898}
   - component: {fileID: 4577741112024003502}
-  - component: {fileID: -8168576666604565902}
+  - component: {fileID: -665881645409245413}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -108,7 +108,6 @@ MonoBehaviour:
   specialGreenCounted: 0
   updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
   checkRetreatEventChannel: {fileID: 11400000, guid: 77507d2768ebf4e99889dac78f3c5ba2, type: 2}
-  enemyDestroyedEVSO: {fileID: 11400000, guid: f67ec8b62af674242847c8f87b213a19, type: 2}
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
   globalLevel: 1
   specialSkin: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
@@ -119,8 +118,8 @@ MonoBehaviour:
   shieldPrefab: {fileID: 8527978347457853173, guid: 71a0370f48fcb4166a7ed30a4b83eecb, type: 3}
   specialMultiplier: 0
   warpedIn: 0
---- !u!61 &-8168576666604565902
-BoxCollider2D:
+--- !u!58 &-665881645409245413
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -148,19 +147,9 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Radius: 0.5

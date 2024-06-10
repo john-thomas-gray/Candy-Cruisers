@@ -33,6 +33,7 @@ public class InGameMenues : MonoBehaviour
 
     private void Update()
     {
+        // This should be called from somewhere else
         if (Input.GetKeyDown(KeyCode.P))
         {
             Pause();
@@ -40,6 +41,15 @@ public class InGameMenues : MonoBehaviour
         // Change so Score Change event sets this
         scoreInGame.SetText(scoreManager.score.ToString());
         levelCounterInGame.SetText("L: " + levelManager.level);
+
+        if (eventSystem.currentSelectedGameObject == null)
+        {
+            // Check if the up or down arrow keys are pressed
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                eventSystem.SetSelectedGameObject(gameOverRestartButton.gameObject);
+            }
+        }
 
     }
 
@@ -78,8 +88,20 @@ public class InGameMenues : MonoBehaviour
     }
     private void GameOver()
     {
-        eventSystem.SetSelectedGameObject(gameOverRestartButton.gameObject);
-        scoreGameOver.SetText(scoreManager.score.ToString());
+        eventSystem.SetSelectedGameObject(null);
+        scoreGameOver.text = scoreManager.score.ToString();
         gameOverMenu.SetActive(true);
+
+        StartCoroutine(WaitAndSelectButton());
+    }
+
+    private IEnumerator WaitAndSelectButton()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        if (eventSystem.currentSelectedGameObject == null)
+        {
+            eventSystem.SetSelectedGameObject(gameOverRestartButton.gameObject);
+        }
     }
 }

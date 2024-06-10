@@ -36,7 +36,7 @@ public class LaserController : MonoBehaviour
         }
         colorManager.magicLaser = false;
 
-        rayLength = transform.localScale.x;
+        rayLength = transform.localScale.y * .25f;
     }
 
     // Update is called once per frame
@@ -58,8 +58,7 @@ public class LaserController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 rightEdgePosition = transform.position + new Vector3(rayLength/2, .15f, 0);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(rightEdgePosition, Vector2.left, rayLength, layersToHit);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.up, rayLength, layersToHit);
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.collider != null)
@@ -106,7 +105,7 @@ public class LaserController : MonoBehaviour
             }
         }
 
-        Debug.DrawRay(rightEdgePosition, transform.TransformDirection(Vector2.left) * rayLength, Color.red);
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
     }
 
     void MoveLaser()
