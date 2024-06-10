@@ -8,7 +8,7 @@ public class scrip : MonoBehaviour
     public float moveSpeed = 5f;
 
     public float rayLength;
-    private LayerMask layersToHit = 8 << 1;
+    private LayerMask layersToHit = 1 << 8;
 
     void Start()
     {
@@ -35,17 +35,14 @@ public class scrip : MonoBehaviour
     void FixedUpdate()
     {
         // Create a ray pointing upwards from the object's position
-        Ray2D ray = new Ray2D(transform.position, Vector2.up);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, rayLength, layersToHit);
 
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, rayLength, layersToHit);
+       if (hit.collider != null)
+       {
+            Debug.Log("hit gameobject " + hit.collider.gameObject);
+       }
 
-        if (hit.collider != null)
-        {
-            Debug.Log(hit.collider.gameObject.name + " was hit!");
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
-        }
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
+
     }
 }

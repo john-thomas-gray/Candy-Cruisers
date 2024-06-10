@@ -374,4 +374,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void hitByLaser(string laserColor, bool isMagicLaser)
+    {
+        if(isMagicLaser || laserColor == color)
+        {
+            Debug.Log("laserColor: " + laserColor + " enemyColor:" + color);
+            alive = false;
+            checkNeighbors();
+        }
+    }
+
 }

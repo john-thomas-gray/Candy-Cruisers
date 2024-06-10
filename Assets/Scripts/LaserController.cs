@@ -18,19 +18,24 @@ public class LaserController : MonoBehaviour
     private float destroyTimer = 0;
 
     // Raycast
-
+    private float rayLength;
+    private LayerMask layersToHit = (1 << 8 | 1 << 10); // Combine enemy and shield layers
     void Start()
     {
         GameObject player = GameObject.Find("Player");
         shotColor = player.GetComponent<PlayerController>().shotColor;
+
         colorManager = ColorManager.Instance;
+
         colorManager.SetColor(this.gameObject, shotColor);
+
         if(colorManager.magicLaser)
         {
             magicLaser = true;
         }
         colorManager.magicLaser = false;
 
+        rayLength = transform.localScale.y / 2;
     }
 
     // Update is called once per frame
@@ -50,6 +55,32 @@ public class LaserController : MonoBehaviour
 
     }
 
+    void FixedUpdate()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, rayLength, layersToHit);
+
+        if (hit.collider != null)
+        {
+            GameObject hitGameObject = hit.collider.gameObject;
+            if(hit.collider.gameObject.layer == 8)
+            {
+                Enemy enemyScript = hitGameObject.GetComponent<Enemy>();
+                string enemyColor = enemyScript.color;
+                if(enemyScript != null)
+                {
+                    enemyScript.hitByLaser(color, magicLaser);
+                    if(color == enemyColor && !magicLaser)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                }
+            }
+
+        }
+
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
+    }
+
     void MoveLaser()
     {
 
@@ -62,51 +93,51 @@ public class LaserController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-            // Hitting an enemy
-            if(collision.gameObject.layer == 8)
-            {
-                GameObject collided = collision.gameObject;
-                Enemy enemy = collided.GetComponent<Enemy>();
-                string enemyColor = enemy.color;
-                if(enemy != null && magicLaser)
-                {
-                    enemy.alive = false;
-                    enemy.checkNeighbors();
-                }
-                else if(enemy != null && enemyColor == color)
-                {
-                    enemy.alive = false;
-                    enemy.checkNeighbors();
-                    Destroy(this.gameObject);
-                }
+    // private void OnTriggerEnter2D(Collider2D collision)
+    // {
+    //         // Hitting an enemy
+    //         if(collision.gameObject.layer == 8)
+    //         {
+    //             GameObject collided = collision.gameObject;
+    //             Enemy enemy = collided.GetComponent<Enemy>();
+    //             string enemyColor = enemy.color;
+    //             if(enemy != null && magicLaser)
+    //             {
+    //                 enemy.alive = false;
+    //                 enemy.checkNeighbors();
+    //             }
+    //             else if(enemy != null && enemyColor == color)
+    //             {
+    //                 enemy.alive = false;
+    //                 enemy.checkNeighbors();
+    //                 Destroy(this.gameObject);
+    //             }
 
-            }
-            // Hitting a shield
-            if (magicLaser == false && collision.gameObject.layer == 10)
-            {
-                GameObject collided = collision.gameObject;
-                Shield shieldScript = collided.GetComponent<Shield>();
-                float reflectRotation = 180f;
-                if (color != shieldScript.shieldEnemyColor)
-                {
-                    // BASIC ABSORB
-                    if (!shieldScript.special)
-                    {
-                        shieldScript.absorb();
-                        Destroy(this.gameObject);
-                    }
-                    // SPECIAL DEFLECT
-                    if (shieldScript.special)
-                    {
-                        colorManager.turnWhite(this.gameObject);
-                        transform.Rotate(new Vector3(0f, 0f, reflectRotation));
-                        laserSpeed = laserSpeed * 0.5f;
-                        this.gameObject.layer = 11;
-                    }
-                }
-            }
+    //         }
+    //         // Hitting a shield
+    //         if (magicLaser == false && collision.gameObject.layer == 10)
+    //         {
+    //             GameObject collided = collision.gameObject;
+    //             Shield shieldScript = collided.GetComponent<Shield>();
+    //             float reflectRotation = 180f;
+    //             if (color != shieldScript.shieldEnemyColor)
+    //             {
+    //                 // BASIC ABSORB
+    //                 if (!shieldScript.special)
+    //                 {
+    //                     shieldScript.absorb();
+    //                     Destroy(this.gameObject);
+    //                 }
+    //                 // SPECIAL DEFLECT
+    //                 if (shieldScript.special)
+    //                 {
+    //                     colorManager.turnWhite(this.gameObject);
+    //                     transform.Rotate(new Vector3(0f, 0f, reflectRotation));
+    //                     laserSpeed = laserSpeed * 0.5f;
+    //                     this.gameObject.layer = 11;
+    //                 }
+    //             }
+    //         }
 
-    }
+    // }
 }
