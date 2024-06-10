@@ -78,7 +78,7 @@ public class InGameMenues : MonoBehaviour
     }
     private void GameOver()
     {
-        eventSystem.firstSelectedGameObject = gameOverRestartButton.gameObject;
+        eventSystem.SetSelectedGameObject(gameOverRestartButton.gameObject);
         scoreGameOver.SetText(scoreManager.score.ToString());
         gameOverMenu.SetActive(true);
     }
