@@ -55,6 +55,11 @@ public class InGameMenues : MonoBehaviour
 
     public void Pause()
     {
+        if (eventSystem.currentSelectedGameObject == null)
+        {
+            eventSystem.SetSelectedGameObject(playButton.gameObject);
+        }
+
         if(pauseMenu.activeInHierarchy == false)
         {
             pauseMenu.SetActive(true);
