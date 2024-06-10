@@ -133,16 +133,13 @@ public class PlayerController : MonoBehaviour
         this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void hit()
     {
-            if(collision.gameObject.layer == 11 && spawnProtection == false)
-            {
-                GameObject collided = collision.gameObject;
-                // Debug.Log("Ouch!");
-                alive = false;
-                death();
-            }
-
+        if(!spawnProtection)
+        {
+            alive = false;
+            death();
+        }
     }
 
     void GameOver()

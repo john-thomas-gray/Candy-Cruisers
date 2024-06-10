@@ -12,7 +12,7 @@ public class GameMaster : MonoBehaviour
     // Player
     public GameObject player;
     public PlayerController playerController;
-    public float respawnTimer;
+    public float respawnTimer = 5;
     public static GameMaster Instance
     {
         get

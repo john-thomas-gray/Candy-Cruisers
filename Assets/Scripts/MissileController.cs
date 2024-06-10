@@ -15,10 +15,15 @@ public class MissileController : MonoBehaviour
     private float rotationSpeed = 2f;
     private float maxRotationDifference = 35f;
 
+    // Raycast
+    private float rayLength;
+    private LayerMask layersToHit = 1 << 9;
+
     void Start()
     {
         player = GameObject.Find("Player");
         initialZRotation = transform.eulerAngles.z;
+        rayLength = transform.localScale.y * .25f;
 
         if (gameObject.name.Contains("Homing"))
         {
@@ -47,6 +52,23 @@ public class MissileController : MonoBehaviour
         if(Mathf.Abs(transform.position.y) > destroyPlain)
         {
             Destroy(this.gameObject);
+        }
+    }
+    void FixedUpdate()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength, layersToHit);
+        if (hit.collider != null)
+        {
+            GameObject hitGameObject = hit.collider.gameObject;
+            if(hitGameObject.layer == 9)
+            {
+                PlayerController playerControllerScript = hitGameObject.GetComponent<PlayerController>();
+                if(playerControllerScript && !playerControllerScript.spawnProtection)
+                {
+                    playerControllerScript.hit();
+                    Destroy(this.gameObject);
+                }
+            }
         }
     }
 
