@@ -98,10 +98,16 @@ public class ColorManager : MonoBehaviour
                                 onScreenColors.Add(kvp.Key);
                             }
                     }
-                int randomIndex = random.Next(onScreenColors.Count);
-                // Set sprite color to skin
-                spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
-                color = onScreenColors[randomIndex];
+                if (onScreenColors.Count > 0)
+                {
+                    int randomIndex = random.Next(onScreenColors.Count);
+                    spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
+                    color = onScreenColors[randomIndex];
+                }
+                else // if there are no enemies on screen
+                {
+                    color = "Red";
+                }
             }
             colorSet = true;
 
