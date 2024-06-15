@@ -952,10 +952,12 @@ MonoBehaviour:
   shift: []
   gameOver: 0
   wipedOut: 0
+  enemyCount: 0
   globalLevel: 1
   updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
   checkRetreatChannel: {fileID: 11400000, guid: 77507d2768ebf4e99889dac78f3c5ba2, type: 2}
   gameOverEventChannel: {fileID: 11400000, guid: 4d47b232a7c934396a679ce4ba24b4cc, type: 2}
+  fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
 --- !u!4 &343026342
 Transform:
   m_ObjectHideFlags: 0
@@ -3581,6 +3583,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1239739234870907690, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
+      propertyPath: fleetWipeEC
+      value: 
+      objectReference: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
     - target: {fileID: 1239739234870907690, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
       propertyPath: laserPrefab
       value: 

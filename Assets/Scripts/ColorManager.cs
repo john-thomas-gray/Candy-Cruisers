@@ -13,7 +13,6 @@ public class ColorManager : MonoBehaviour
     public bool magicLaser = false;
     private float multicolorTimer = 0.0f;
     private float multicolorCooldown = 0.05f;
-
     public static ColorManager Instance
     {
         get
@@ -28,7 +27,6 @@ public class ColorManager : MonoBehaviour
             return colorManager;
         }
     }
-
     // Color dictionary
     public Dictionary<string, int> colorCounts = null;
 
@@ -88,20 +86,23 @@ public class ColorManager : MonoBehaviour
                 targetObject.GetComponent<LaserController>().color = color;
             }
         }
-        else
+        else // Set player color
         {
-            List<string> onScreenColors = new List<string> {};
-            foreach (var kvp in colorCounts)
-                {
-                     if (kvp.Value > 0)
-                        {
-                            onScreenColors.Add(kvp.Key);
-                        }
-                }
-            int randomIndex = random.Next(onScreenColors.Count);
-            // Set sprite color to skin
-            spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
-            color = onScreenColors[randomIndex];
+            if (color == null)
+            {
+                List<string> onScreenColors = new List<string> {};
+                foreach (var kvp in colorCounts)
+                    {
+                        if (kvp.Value > 0)
+                            {
+                                onScreenColors.Add(kvp.Key);
+                            }
+                    }
+                int randomIndex = random.Next(onScreenColors.Count);
+                // Set sprite color to skin
+                spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
+                color = onScreenColors[randomIndex];
+            }
             colorSet = true;
 
             shotColor = color;

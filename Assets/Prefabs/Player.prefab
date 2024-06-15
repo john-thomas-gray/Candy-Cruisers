@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 629551758658613140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.69, z: -2}
+  m_LocalPosition: {x: 0, y: -6.69, z: -2}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -103,6 +103,9 @@ MonoBehaviour:
   shotColor: 
   color: 
   laserPrefab: {fileID: 0}
+  spawnProtection: 0
+  gameOver: 0
+  gameOverEventChannel: {fileID: 0}
 --- !u!61 &2949749450885060517
 BoxCollider2D:
   m_ObjectHideFlags: 0

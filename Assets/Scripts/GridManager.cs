@@ -31,10 +31,9 @@ public class GridManager : MonoBehaviour
     // Set gameOver
     public bool gameOver;
 
-    // Fleet empty
-    public bool wipedOut;
-
+    // FleetWipe
     private Vector3 initialGridPos;
+    public int enemyCount = 0;
 
     // Retreat
     private List<GameObject> queue = new List<GameObject>();
@@ -46,17 +45,20 @@ public class GridManager : MonoBehaviour
     public IntEventChannelSO updateGlobalLevelChannel;
     public VoidEventChannelSO checkRetreatChannel;
     public VoidEventChannelSO gameOverEventChannel;
+    public VoidEventChannelSO fleetWipeEC;
 
     private void OnEnable()
     {
         updateGlobalLevelChannel.OnEventRaised += setGlobalLevel;
         checkRetreatChannel.OnEventRaised += StartCheckRetreat;
+        fleetWipeEC.OnEventRaised += FleetWipe;
 
     }
     private void OnDisable()
     {
         updateGlobalLevelChannel.OnEventRaised -= setGlobalLevel;
         checkRetreatChannel.OnEventRaised -= StartCheckRetreat;
+        fleetWipeEC.OnEventRaised -= FleetWipe;
     }
 
     void setGlobalLevel(int level)
@@ -70,7 +72,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(18);
+        populateFleet(6);
         fleetShift();
         initialGridPos = transform.position;
     }
@@ -86,26 +88,6 @@ public class GridManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.D))
         {
             descend();
-        }
-        // FleetWipe
-        if(wipedOut)
-        {
-            transform.position = initialGridPos;
-            turnInterval = 0;
-            if(globalLevel < 4)
-            {
-                populateFleet(24);
-            }
-            else if(globalLevel < 7)
-            {
-                populateFleet(30);
-            }
-            else
-            {
-                populateFleet(36);
-            }
-
-            wipedOut = false;
         }
 
     }
@@ -169,20 +151,38 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void FleetWipeCheck()
+    public void DecrementEnemyCount()
     {
-        int emptyKeyCount = 0;
-        foreach (var kvp in colorCounts)
+        enemyCount--;
+        if (enemyCount == 0)
         {
-            if (kvp.Value <= 0)
-            {
-                emptyKeyCount++;
-            }
+            fleetWipeEC.RaiseEvent();
         }
-        if (emptyKeyCount == colorCounts.Count)
+    }
+    public void FleetWipe()
+    {
+
+        StartCoroutine(PopulateFleetAfterDelay());
+    }
+
+    private IEnumerator PopulateFleetAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        transform.position = initialGridPos;
+        if (globalLevel < 4)
         {
-            wipedOut = true;
+            populateFleet(24);
         }
+        else if (globalLevel < 7)
+        {
+            populateFleet(30);
+        }
+        else
+        {
+            populateFleet(36);
+        }
+        turnInterval = 0;
+        timer = 0;
     }
 
     void populateFleet(int end, int start = 0)
@@ -200,9 +200,8 @@ public class GridManager : MonoBehaviour
             cell.GetComponent<Cell>().enemy = enemy;
             // Assign cell's color
             cell.GetComponent<Cell>().color = enemy.GetComponent<Enemy>().color;
-
         }
-
+        enemyCount += (end - start);
         fleetStatus();
     }
 
@@ -442,6 +441,7 @@ public class GridManager : MonoBehaviour
             {
                 GameObject warpCell = grid[warpZone];
                 GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
+                enemyCount++;
                 // Assign enemy object to the cell
                 warpCell.GetComponent<Cell>().enemy = newEnemy;
                 if (callingEnemy.GetComponent<Enemy>().special == true)
@@ -529,19 +529,15 @@ public class GridManager : MonoBehaviour
 
         int GetRandomCellIndex()
         {
-            // Get the keys of the dictionary
             List<int> keys = new List<int>(warpDict.Keys);
 
-            // Check if the dictionary is empty
             if (keys.Count == 0)
             {
                 return -1;
             }
 
-            // Generate a random index within the range of keys
             int randomIndex = UnityEngine.Random.Range(0, keys.Count);
 
-            // Retrieve and return the key at the randomly generated index
             return keys[randomIndex];
         }
     }
@@ -732,7 +728,6 @@ public class GridManager : MonoBehaviour
     }
     public void GameOver()
     {
-        Debug.Log("GAME OVER");
         gameOver = true;
         gameOverEventChannel.RaiseEvent();
     }

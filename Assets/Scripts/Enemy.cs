@@ -70,7 +70,6 @@ public class Enemy : MonoBehaviour
     {
         updateGlobalLevelChannel.OnEventRaised += updateGlobalLevel;
 
-
     }
     private void OnDisable()
     {
@@ -316,6 +315,7 @@ public class Enemy : MonoBehaviour
 
     void beamIn()
     {
+        // Reset cooldown to a random value
         if(!onCoolDown)
         {
             abilityCoolDown = random.NextDouble() * (warpCoolDownRange[1] - warpCoolDownRange[0]) + warpCoolDownRange[0];
@@ -355,8 +355,7 @@ public class Enemy : MonoBehaviour
             // Check if current color count is 0
             if (colorCounts[color] == 0)
             {
-                gridManagerScript.FleetWipeCheck();
-                if (!gridManagerScript.wipedOut)
+                if (gridManagerScript.enemyCount != 0)
                 {
                     colorManager.magicLaser = true;
                 }
@@ -370,6 +369,7 @@ public class Enemy : MonoBehaviour
             }
             checkRetreatEventChannel.RaiseEvent();
             scoreManager.IncreaseScore(100);
+            gridManagerScript.DecrementEnemyCount();
             Destroy(this.gameObject);
         }
     }
@@ -378,7 +378,6 @@ public class Enemy : MonoBehaviour
     {
         if(isMagicLaser || laserColor == color)
         {
-            Debug.Log("laserColor: " + laserColor + " enemyColor:" + color);
             alive = false;
             checkNeighbors();
         }

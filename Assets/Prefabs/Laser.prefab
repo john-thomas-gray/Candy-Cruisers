@@ -100,3 +100,5 @@ MonoBehaviour:
   color: Green
   shotColor: 
   player: {fileID: 629551758658613140, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
+  laserSpeed: 20
+  fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}

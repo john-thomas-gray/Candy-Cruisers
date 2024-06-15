@@ -7,12 +7,11 @@ public class PlayerController : MonoBehaviour
     static System.Random random = new System.Random();
     public bool alive;
     // Movement
-    private float tankSpeed = 3f;
+    private float tankSpeed;
     private float screenBound = 3f;
     // GridManager
     private GameObject fleet;
     private GridManager gridManagerInstance;
-    private bool wipedOut;
 
     // ColorManager
     private Dictionary<string, int> colorCounts;
@@ -29,17 +28,20 @@ public class PlayerController : MonoBehaviour
     // GameMaster
     GameMaster gameMaster;
     public bool spawnProtection = false;
+    private SpriteRenderer spriteRenderer;
+
 
     // GameOver
     public bool gameOver = false;
 
     [Header("Event Channels")]
     public VoidEventChannelSO gameOverEventChannel;
+    public VoidEventChannelSO fleetWipeEC;
 
     void Awake()
     {
         alive = true;
-        tankSpeed = 6f;
+        tankSpeed = 5f;
         // Get fleet GO and Grid script
         GameObject fleet = GameObject.Find("Fleet");
         gridManagerInstance = fleet.GetComponent<GridManager>();
@@ -47,8 +49,6 @@ public class PlayerController : MonoBehaviour
         colorManager = ColorManager.Instance;
         // Create a reference to the colorCounts dictionary
         colorCounts = colorManager.colorCounts;
-        // Create a reference to the wipedOut int
-        wipedOut = gridManagerInstance.wipedOut;
         // Get Game Master instance
         gameMaster = GameMaster.Instance;
 
@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         colorManager.SetColor(this.gameObject);
     }
 
@@ -77,11 +78,17 @@ public class PlayerController : MonoBehaviour
             fireLaser();
         }
 
-        if(colorManager.magicLaser)
+        if(colorManager.magicLaser && colorSet == false)
         {
             colorManager.Multicolor(this.gameObject);
+            colorSet = true;
         }
-        // Debug.Log(spawnProtection);
+
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            hit();
+        }
+
     }
 
     void playerMovement()
@@ -108,6 +115,7 @@ public class PlayerController : MonoBehaviour
     void fireLaser()
     {
         timeSinceLastShot += Time.deltaTime;
+        colorSet = false;
 
         if(Input.GetKey(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) && timeSinceLastShot >= shotCoolDown)
         {
@@ -128,15 +136,17 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    void death()
+    public void death()
     {
         this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
+        // StartCoroutine(BlinkSprite());
     }
 
     public void hit()
     {
         if(!spawnProtection)
         {
+            Debug.Log("Hit");
             alive = false;
             death();
         }
@@ -145,5 +155,14 @@ public class PlayerController : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
+    }
+
+    private IEnumerator BlinkSprite()
+    {
+        while (true)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 }

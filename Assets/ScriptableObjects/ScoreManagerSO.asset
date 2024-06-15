@@ -16,3 +16,4 @@ MonoBehaviour:
   startingScore: 0
   enemies_destroyed: 0
   enemyDestroyedECSO: {fileID: 11400000, guid: f67ec8b62af674242847c8f87b213a19, type: 2}
+  fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}

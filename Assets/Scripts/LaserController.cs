@@ -11,7 +11,7 @@ public class LaserController : MonoBehaviour
     private bool magicLaser = false;
     // Laser movement
     private float destroyPlain = 5.3f;
-    private float laserSpeed = 20f;
+    public float laserSpeed = 20f;
     private bool deflected = false;
     // ColorManager
     ColorManager colorManager;
@@ -20,7 +20,8 @@ public class LaserController : MonoBehaviour
 
     // Raycast
     private float rayLength;
-    private LayerMask layersToHit = (1 << 8 | 1 << 10); // Combine enemy and shield layers
+    private LayerMask layersToHit = (1 << 8 | 1<<9 | 1 << 10); // Combine enemy and shield layers
+
     void Start()
     {
         GameObject player = GameObject.Find("Player");
@@ -80,7 +81,7 @@ public class LaserController : MonoBehaviour
                 else if(hit.collider.gameObject.layer == 10 && !magicLaser)
                 {
                     Shield shieldScript = hitGameObject.GetComponent<Shield>();
-                    float reflectRotation = 180f;
+                    float deflectRotation = 180f;
 
                     if(color != shieldScript.shieldEnemyColor)
                     {
@@ -95,11 +96,20 @@ public class LaserController : MonoBehaviour
                         if (deflected == false && shieldScript.special)
                         {
                             deflected = true;
+                            Debug.Log("Deflected: " + deflected);
                             colorManager.turnWhite(this.gameObject);
-                            transform.Rotate(new Vector3(0f, 0f, reflectRotation));
+                            transform.Rotate(new Vector3(0f, 0f, deflectRotation));
                             laserSpeed = laserSpeed * 0.5f;
                         }
 
+                    }
+                } else if(deflected && hit.collider.gameObject.layer == 9)
+                {
+                    PlayerController playerControllerScript = hitGameObject.GetComponent<PlayerController>();
+                    if(playerControllerScript && !playerControllerScript.spawnProtection)
+                    {
+                        playerControllerScript.hit();
+                        Destroy(this.gameObject);
                     }
                 }
             }
