@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Galaxy : MonoBehaviour
 {
-    // Rotation speed in degrees per second
-    public float rotationSpeed = 5f;
     public IntEventChannelSO updateGlobalLevelChannel;
-
     // Movement variables
+    public float rotationSpeed = 5f;
+
     public float moveSpeed = 2f; // Speed of the vertical movement
     public float moveAmplitude = .5f; // Amplitude of the vertical movement
 
@@ -41,12 +40,38 @@ public class Galaxy : MonoBehaviour
             float newY = originalY + Mathf.Sin(Time.time * moveSpeed) * moveAmplitude;
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
         }
+        Debug.Log("rotation speed" + rotationSpeed);
     }
 
     // Would be cool to switch rotation direction
     void RaiseRotationSpeed(int level)
     {
-        rotationSpeed = rotationSpeed + 2f * level;
-        moveSpeed = moveSpeed + 0.1f;
+        float newRotationSpeed;
+
+        if (level % 2 == 0)
+        {
+            newRotationSpeed = -(Mathf.Abs(rotationSpeed) + 2f * level);
+        }
+        else
+        {
+            newRotationSpeed = Mathf.Abs(rotationSpeed) + 2f * level;
+        }
+
+        StartCoroutine(ChangeRotationSpeedGradually(newRotationSpeed, 1f));
+    }
+
+    private IEnumerator ChangeRotationSpeedGradually(float targetSpeed, float duration)
+    {
+        float startSpeed = rotationSpeed;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
+        {
+            rotationSpeed = Mathf.Lerp(startSpeed, targetSpeed, timeElapsed / duration);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rotationSpeed = targetSpeed;
     }
 }

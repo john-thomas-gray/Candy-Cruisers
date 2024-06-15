@@ -25,10 +25,10 @@ public class PlayerController : MonoBehaviour
     private float shotCoolDown = 0.4f;
     private float timeSinceLastShot = 0.0f;
 
-    // GameMaster
-    GameMaster gameMaster;
+    // Death and Respawn
     public bool spawnProtection = false;
     private SpriteRenderer spriteRenderer;
+    private float respawnTimer = 5;
 
 
     // GameOver
@@ -49,8 +49,6 @@ public class PlayerController : MonoBehaviour
         colorManager = ColorManager.Instance;
         // Create a reference to the colorCounts dictionary
         colorCounts = colorManager.colorCounts;
-        // Get Game Master instance
-        gameMaster = GameMaster.Instance;
 
     }
 
@@ -75,7 +73,10 @@ public class PlayerController : MonoBehaviour
         if(alive && !gameOver)
         {
             playerMovement();
-            fireLaser();
+            if (spawnProtection == false)
+            {
+                fireLaser();
+            }
         }
 
         if(colorManager.magicLaser && colorSet == false)
@@ -84,9 +85,13 @@ public class PlayerController : MonoBehaviour
             colorSet = true;
         }
 
-        if(Input.GetKeyDown(KeyCode.T))
+        if(!alive && respawnTimer >= 5)
         {
-            hit();
+            respawnTimer = 0;
+        }
+        if(respawnTimer < 5)
+        {
+            respawnPlayer();
         }
 
     }
@@ -139,7 +144,6 @@ public class PlayerController : MonoBehaviour
     public void death()
     {
         this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
-        // StartCoroutine(BlinkSprite());
     }
 
     public void hit()
@@ -159,10 +163,30 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator BlinkSprite()
     {
-        while (true)
+        int count = 0;
+        while (count < 6)
         {
+            yield return new WaitForSeconds(0.25f);
             spriteRenderer.enabled = !spriteRenderer.enabled;
-            yield return new WaitForSeconds(0.5f);
+            count ++;
         }
     }
+
+    public void respawnPlayer()
+   {
+    // Debug.Log("respawn");
+    float respawnTime = 3.5f;
+    float iFrames = 5f;
+    respawnTimer += Time.deltaTime;
+    if(respawnTimer >= respawnTime && alive == false)
+    {
+        transform.position = new Vector3(0f, -4.69f, -2f);
+        spawnProtection = true;
+        alive = true;
+        StartCoroutine(BlinkSprite());
+    } else if (respawnTimer >= iFrames)
+    {
+        spawnProtection = false;
+    }
+   }
 }
