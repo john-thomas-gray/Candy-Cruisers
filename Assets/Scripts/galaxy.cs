@@ -40,7 +40,6 @@ public class Galaxy : MonoBehaviour
             float newY = originalY + Mathf.Sin(Time.time * moveSpeed) * moveAmplitude;
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
         }
-        Debug.Log("rotation speed" + rotationSpeed);
     }
 
     // Would be cool to switch rotation direction

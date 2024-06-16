@@ -14,6 +14,7 @@ public class GridManager : MonoBehaviour
 
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
+    public GameObject[] fleetGrid = new GameObject[72];
     public GameObject cellPrefab;
 
     // Variable for when fleet changes directions
@@ -21,8 +22,6 @@ public class GridManager : MonoBehaviour
     private float timer;
     private bool hasDescended = false;
 
-    // List of enemies shifted one row down with the top row cleared
-    public List<GameObject> shift = new List<GameObject>();
     // Color dictionary
     public Dictionary<string, int> colorCounts = new Dictionary<string, int>();
     // Color Manager
@@ -73,7 +72,6 @@ public class GridManager : MonoBehaviour
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
         populateFleet(18);
-        fleetShift();
         initialGridPos = transform.position;
     }
 
@@ -97,23 +95,27 @@ public class GridManager : MonoBehaviour
         int cellInx = 0;
         int rows = 12;
         int columns = 6;
+        float cellOffset = 0.75f;
+        float gridOffsetX = 1.875f;
+        float gridOffsetY = 3.75f;
+
         for(int row = 0; row < rows; row++)
         {
             for(int column = 0; column < columns; column++)
             {
-                // 1. Set position of cell
+                // 1. Set position of cells and grid
                 float xPosition = (float)column;
                 float yPosition = (float)row;
-                // Set the spacing
-                xPosition = xPosition * 0.75f;
-                yPosition = yPosition * 0.75f;
-                // Offset position so fleet GameObject is at the center of all cells
-                xPosition = xPosition - 1.875f;
-                yPosition = yPosition - 3.75f;
-                // Set Vector3
+
+                xPosition = xPosition * cellOffset;
+                yPosition = yPosition * cellOffset;
+
+                xPosition = xPosition - gridOffsetX;
+                yPosition = yPosition - gridOffsetY;
+
                 Vector3 cellLocation = new Vector3(xPosition, yPosition, 0);
                 // 2. Add cells
-                // Instantiate
+
                 GameObject cell = Instantiate(cellPrefab, transform);
                 // Name
                 cell.GetComponent<Cell>().name = "Cell " + cellInx.ToString();
@@ -125,6 +127,9 @@ public class GridManager : MonoBehaviour
                 // 3. Create list containing every cell
                 grid.Insert(cellInx, cell);
                 cellInx++;
+                // // 3. Add cells to fleetGrid list
+                // fleetGrid[cellInx] = cell;
+                // cellInx++;
 
             }
         }
@@ -205,65 +210,54 @@ public class GridManager : MonoBehaviour
         fleetStatus();
     }
 
-    public void fleetShift()
+    public void descend()
     {
-        shift = new List<GameObject>(new GameObject[72]);
-        // Create list to hold enemies at indexes offset one row
-        for (int i = 0; i < 72; i++)
-        {
-            if(i < 6)
+        for (int i = 66; i < 72; i++)
                 {
-                    // Set the values in the first row to null
-                    shift[i] = null;
+                    GameObject currentCell = grid[i];
+                    if (currentCell.GetComponent<Cell>().enemy)
+                    {
+                        GameOver();
+                    }
                 }
-            else
-                {
-                    // Populate the remaining indexes with the enemy in the cell currently above them
-                    // Get the cell in the above row
-                    GameObject aboveCell = grid[i - 6];
-                    // Reference the enemy from the above row
-                    GameObject aboveEnemy = aboveCell.GetComponent<Cell>().enemy;
-                    // Set the current row to that enemy
-                    shift[i] = aboveEnemy;
 
-                }
-        }
-    }
-
-    public void advance()
-    {
-        for(int i = 0; i < 72; i++)
+        if(!gameOver)
         {
-            // Get the cell to update
-            GameObject currentCell = grid[i];
-            Transform currentCellTransform = currentCell.transform;
-
-            // Get the enemy/null to be placed
-            GameObject newOccupant = shift[i];
-
-            // If the new occupant is not not null
-            if(newOccupant != null)
+            for(int i = grid.Count - 1; i > 5; i--)
             {
-                // Detach the children from the current cell
-                currentCellTransform.DetachChildren();
+                Debug.Log(i);
+                // Get the cell to update
+                GameObject receivingCell = grid[i];
+                Transform receivingCellTransform = receivingCell.transform;
 
-                // Set the new occupant as the child of the current cell
-                newOccupant.transform.SetParent(currentCellTransform);
+                // Get the enemy/null to be placed
+                GameObject givingCell = grid[i - 6];
+                GameObject newOccupant = givingCell.GetComponent<Cell>().enemy;
 
-                // Update the new occupant's position
-                newOccupant.transform.localPosition = Vector3.zero;
+                if(newOccupant != null)
+                {
+                    // Detach the children from the current cell
+                    receivingCellTransform.DetachChildren();
 
-                // Update cell's enemy info
-                currentCell.GetComponent<Cell>().enemy = newOccupant;
-                currentCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
+                    // Set the new occupant as the child of the current cell
+                    newOccupant.transform.SetParent(receivingCellTransform);
 
+                    // Update the new occupant's position
+                    newOccupant.transform.localPosition = Vector3.zero;
+
+                    // Update cell's enemy info
+                    receivingCell.GetComponent<Cell>().enemy = newOccupant;
+                    Debug.Log(newOccupant);
+                    // receivingCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
+
+                }
+                else
+                {
+                    receivingCell.GetComponent<Cell>().enemy = null;
+                }
             }
-            else
-            {
-                currentCell.GetComponent<Cell>().enemy = null;
-            }
+            populateFleet(6);
         }
-        populateFleet(6);
 
     }
 
@@ -333,24 +327,6 @@ public class GridManager : MonoBehaviour
             return Mathf.Max(calculatedTime, 0); // Ensures the returned time is never negative
 
         }
-    }
-
-    public void descend()
-    {
-        // Game Over
-            for (int i = 66; i < 72; i++)
-                {
-                    GameObject currentCell = grid[i];
-                    if (currentCell.GetComponent<Cell>().enemy)
-                    {
-                        GameOver();
-                    }
-                }
-            if(!gameOver)
-            {
-                fleetShift();
-                advance();
-            }
     }
 
     public void beamIn(GameObject callingEnemy)
