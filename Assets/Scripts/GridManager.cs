@@ -63,7 +63,6 @@ public class GridManager : MonoBehaviour
     void setGlobalLevel(int level)
     {
         globalLevel = level;
-        Debug.Log("GridManager, setGlobalLevel" + level);
     }
 
     void Awake()
@@ -135,11 +134,10 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    // THIS FUNCTION IS ALMOST CERTAINLY NOT DRY
+    // THERE MUST BE A BETTER PLACE TO MAKE SURE SPECIALS ARE SET
     public void fleetStatus()
     {
-        // Debug.Log("fleetStatus");
-        colorCounts = colorManager.colorCounts;
-
         // Iterate through the cells in the grid
         for (int i = 0; i < grid.Count; i++)
         {
@@ -225,7 +223,6 @@ public class GridManager : MonoBehaviour
         {
             for(int i = grid.Count - 1; i > 5; i--)
             {
-                Debug.Log(i);
                 // Get the cell to update
                 GameObject receivingCell = grid[i];
                 Transform receivingCellTransform = receivingCell.transform;
@@ -247,8 +244,7 @@ public class GridManager : MonoBehaviour
 
                     // Update cell's enemy info
                     receivingCell.GetComponent<Cell>().enemy = newOccupant;
-                    Debug.Log(newOccupant);
-                    // receivingCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
+                    receivingCell.GetComponent<Cell>().color = newOccupant.GetComponent<Enemy>().color;
 
                 }
                 else
