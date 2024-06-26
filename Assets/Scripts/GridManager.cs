@@ -14,6 +14,7 @@ public class GridManager : MonoBehaviour
 
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
+
     public GameObject[] fleetGrid = new GameObject[72];
     public GameObject cellPrefab;
 
@@ -124,11 +125,11 @@ public class GridManager : MonoBehaviour
                 cell.transform.localPosition = cellLocation;
 
                 // 3. Create list containing every cell
-                grid.Insert(cellInx, cell);
-                cellInx++;
-                // // 3. Add cells to fleetGrid list
-                // fleetGrid[cellInx] = cell;
+                // grid.Insert(cellInx, cell);
                 // cellInx++;
+                // // 3. Add cells to fleetGrid list
+                fleetGrid[cellInx] = cell;
+                cellInx++;
 
             }
         }
@@ -139,10 +140,10 @@ public class GridManager : MonoBehaviour
     public void fleetStatus()
     {
         // Iterate through the cells in the grid
-        for (int i = 0; i < grid.Count; i++)
+        for (int i = 0; i < fleetGrid.Length; i++)
         {
             // Get the cell
-            GameObject currentCell = grid[i];
+            GameObject currentCell = fleetGrid[i];
             // Check if current cell contains an enemy
             if (currentCell.GetComponent<Cell>().enemy)
             {
@@ -195,7 +196,7 @@ public class GridManager : MonoBehaviour
         for (int i = start; i < end; i++)
         {
             // Instantiate enemy at the cell's transform
-            GameObject cell = grid[i];
+            GameObject cell = fleetGrid[i];
             GameObject enemy = Instantiate(enemyPrefab, cell.transform);
             // // Set the cellNum property on the enemy NECESSARY?
             // enemy.GetComponent<Enemy>().cellNum = i;
@@ -212,7 +213,7 @@ public class GridManager : MonoBehaviour
     {
         for (int i = 66; i < 72; i++)
                 {
-                    GameObject currentCell = grid[i];
+                    GameObject currentCell = fleetGrid[i];
                     if (currentCell.GetComponent<Cell>().enemy)
                     {
                         GameOver();
@@ -221,14 +222,14 @@ public class GridManager : MonoBehaviour
 
         if(!gameOver)
         {
-            for(int i = grid.Count - 1; i > 5; i--)
+            for(int i = fleetGrid.Length - 1; i > 5; i--)
             {
                 // Get the cell to update
-                GameObject receivingCell = grid[i];
+                GameObject receivingCell = fleetGrid[i];
                 Transform receivingCellTransform = receivingCell.transform;
 
                 // Get the enemy/null to be placed
-                GameObject givingCell = grid[i - 6];
+                GameObject givingCell = fleetGrid[i - 6];
                 GameObject newOccupant = givingCell.GetComponent<Cell>().enemy;
 
                 if(newOccupant != null)
@@ -334,32 +335,32 @@ public class GridManager : MonoBehaviour
         Dictionary<int, Dictionary<string, int>> warpDict = new Dictionary<int, Dictionary<string, int>>();
         // Define enemy in wide scope
         GameObject enemy = null;
-        // Iterate through grid list
-        for (int i = 0; i < grid.Count; i++)
+        // Iterate through fleetGrid array
+        for (int i = 0; i < fleetGrid.Length; i++)
         {
             // Create warpZones dictionary
             Dictionary<string, int> warpZones = new Dictionary<string, int>();
             // Get enemy
-            enemy = grid[i].GetComponent<Cell>().enemy;
+            enemy = fleetGrid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
             {
                 // Check up if not bot row
-                if (i > 5 && grid[i - 6].GetComponent<Cell>().enemy == null)
+                if (i > 5 && fleetGrid[i - 6].GetComponent<Cell>().enemy == null)
                 {
                     warpZones["up"] = (i - 6);
                 }
                 // Check left if not left column
-                if (i % 6 != 0 && grid[i - 1].GetComponent<Cell>().enemy == null)
+                if (i % 6 != 0 && fleetGrid[i - 1].GetComponent<Cell>().enemy == null)
                 {
                     warpZones["left"] = (i - 1);
                 }
                 // Check right if not right column
-                if (i % 6 != 5 && grid[i + 1].GetComponent<Cell>().enemy == null)
+                if (i % 6 != 5 && fleetGrid[i + 1].GetComponent<Cell>().enemy == null)
                 {
                     warpZones["right"] = (i + 1);
                 }
                 // Check down if not bot row
-                if (i < 66 && grid[i + 6].GetComponent<Cell>().enemy == null)
+                if (i < 66 && fleetGrid[i + 6].GetComponent<Cell>().enemy == null)
                 {
                     warpZones["down"] = (i + 6);
                 }
@@ -411,7 +412,7 @@ public class GridManager : MonoBehaviour
             }
             if (warpZone >= 0)
             {
-                GameObject warpCell = grid[warpZone];
+                GameObject warpCell = fleetGrid[warpZone];
                 GameObject newEnemy = Instantiate(enemyPrefab, warpCell.transform);
                 enemyCount++;
                 // Assign enemy object to the cell
@@ -419,7 +420,7 @@ public class GridManager : MonoBehaviour
                 if (callingEnemy.GetComponent<Enemy>().special == true)
                 {
                     // Assign enemy's color
-                    enemy = grid[cellInx].GetComponent<Cell>().enemy;
+                    enemy = fleetGrid[cellInx].GetComponent<Cell>().enemy;
                     //BANDAID
                     colorManager.colorCounts[newEnemy.GetComponent<Enemy>().color]--;
                     newEnemy.GetComponent<Enemy>().color = enemy.GetComponent<Enemy>().color;
@@ -519,22 +520,20 @@ public class GridManager : MonoBehaviour
         // Empty out the queue
         queue.Clear();
         // Reset enemy group numbers
-        for (int i = 0; i < grid.Count; i++)
+        for (int i = 0; i < fleetGrid.Length; i++)
         {
-            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            GameObject enemy = fleetGrid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
             {
                 Enemy enemyScript = enemy.GetComponent<Enemy>();
                 enemyScript.group = 0;
             }
         }
-        // Set fresh group variable
         int group = 0;
-        // Iterate through the grid list
-        for (int i = 0; i < grid.Count; i++)
+        for (int i = 0; i < fleetGrid.Length; i++)
         {
             // Get enemy
-            GameObject enemy = grid[i].GetComponent<Cell>().enemy;
+            GameObject enemy = fleetGrid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
             {
                 Enemy enemyScript = enemy.GetComponent<Enemy>();
@@ -546,7 +545,7 @@ public class GridManager : MonoBehaviour
                     // Label him group number
                     enemyScript.group = group;
                     // Have enemy run neighbor checks until all connected enemies are labelled group number (coroutine?)
-                    checkNeighborRetreat(grid[i].GetComponent<Cell>().number, group);
+                    checkNeighborRetreat(fleetGrid[i].GetComponent<Cell>().number, group);
                     // Add to check queue
                     queue.Add(enemy);
                 }
@@ -612,37 +611,37 @@ public class GridManager : MonoBehaviour
         // Debug.Log("checkNeighborRetreat");
         if(cellNumber > 5)
         {
-            if(grid[cellNumber - 6].GetComponent<Cell>().enemy != null && grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            if(fleetGrid[cellNumber - 6].GetComponent<Cell>().enemy != null && fleetGrid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
             {
-                grid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
-                queue.Add(grid[cellNumber - 6].GetComponent<Cell>().enemy);
+                fleetGrid[cellNumber - 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(fleetGrid[cellNumber - 6].GetComponent<Cell>().enemy);
                 checkNeighborRetreat(cellNumber - 6, group);
             }
         }
         if(cellNumber % 6 != 0)
         {
-            if(grid[cellNumber - 1].GetComponent<Cell>().enemy != null && grid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            if(fleetGrid[cellNumber - 1].GetComponent<Cell>().enemy != null && fleetGrid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
             {
-                grid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
-                queue.Add(grid[cellNumber - 1].GetComponent<Cell>().enemy);
+                fleetGrid[cellNumber - 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(fleetGrid[cellNumber - 1].GetComponent<Cell>().enemy);
                 checkNeighborRetreat(cellNumber - 1, group);
             }
         }
         if((cellNumber + 1) % 6 != 0)
         {
-            if(grid[cellNumber + 1].GetComponent<Cell>().enemy != null && grid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            if(fleetGrid[cellNumber + 1].GetComponent<Cell>().enemy != null && fleetGrid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
             {
-                grid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
-                queue.Add(grid[cellNumber + 1].GetComponent<Cell>().enemy);
+                fleetGrid[cellNumber + 1].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(fleetGrid[cellNumber + 1].GetComponent<Cell>().enemy);
                 checkNeighborRetreat(cellNumber + 1, group);
             }
         }
         if(cellNumber < 66)
         {
-            if(grid[cellNumber + 6].GetComponent<Cell>().enemy != null && grid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
+            if(fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy != null && fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
             {
-                grid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
-                queue.Add(grid[cellNumber + 6].GetComponent<Cell>().enemy);
+                fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group = group;
+                queue.Add(fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy);
                 checkNeighborRetreat(cellNumber + 6, group);
             }
         }
@@ -650,7 +649,7 @@ public class GridManager : MonoBehaviour
     public void retreat(int cellNumber)
     {
         // Get the cell to update
-        GameObject currentCell = grid[cellNumber];
+        GameObject currentCell = fleetGrid[cellNumber];
         Transform currentCellTransform = currentCell.transform;
         // Get the enemy/null to be placed
         GameObject currentOccupant = currentCell.GetComponent<Cell>().enemy;
@@ -658,7 +657,7 @@ public class GridManager : MonoBehaviour
         // Get above cell info
         if(cellNumber > 5)
         {
-            GameObject aboveCell = grid[cellNumber - 6];
+            GameObject aboveCell = fleetGrid[cellNumber - 6];
             Transform aboveCellTransform = aboveCell.transform;
             GameObject aboveOccupant = aboveCell.GetComponent<Cell>().enemy;
 

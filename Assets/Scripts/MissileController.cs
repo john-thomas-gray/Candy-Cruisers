@@ -12,7 +12,7 @@ public class MissileController : MonoBehaviour
     private float destroyPlain = 5.3f;
     public bool homing;
     private float initialZRotation;
-    private float rotationSpeed = 2f;
+    private float rotationSpeed = .3f;
     private float maxRotationDifference = 35f;
 
     // Raycast

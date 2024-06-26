@@ -164,7 +164,7 @@ public class Enemy : MonoBehaviour
         if(kill == false)
         {
             // Get instance of current grid
-            List<GameObject> grid = gridManagerScript.grid;
+            GameObject[] fleetGrid = gridManagerScript.fleetGrid;
             // Get instance of cell holding this enemy
             Transform cellTransform = transform.parent;
             // Get the cell number
@@ -177,26 +177,26 @@ public class Enemy : MonoBehaviour
             // Check up if not bot row
             if (cellNumber > 5)
             {
-                up = grid[cellNumber - 6];
+            up = fleetGrid[cellNumber - 6];
                 neighbors.Add(up);
 
             }
             // Check left if not left column
             if (cellNumber % 6 != 0)
             {
-                left = grid[cellNumber - 1];
+                left = fleetGrid[cellNumber - 1];
                 neighbors.Add(left);
             }
             // Check right if not right column
             if ((cellNumber + 1) % 6 != 0)
             {
-                right = grid[cellNumber + 1];
+                right = fleetGrid[cellNumber + 1];
                 neighbors.Add(right);
             }
             // Check down if not bot row
             if (cellNumber < 66)
             {
-                down = grid[cellNumber + 6];
+                down = fleetGrid[cellNumber + 6];
                 neighbors.Add(down);
             }
 
