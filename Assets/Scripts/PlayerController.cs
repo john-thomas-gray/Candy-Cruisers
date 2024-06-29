@@ -20,6 +20,10 @@ public class PlayerController : MonoBehaviour
     public string shotColor;
     public string color;
 
+
+    // Tongue
+
+    public GameObject Tongue;
     // Laser
     public GameObject laserPrefab;
     private float shotCoolDown = 0.4f;
@@ -127,13 +131,13 @@ public class PlayerController : MonoBehaviour
                 // Debug.Log("shotColor: " + shotColor);
                 // Debug.Log("color: " + color);
             colorCounts = colorManager.colorCounts;
-
+            Tongue.GetComponent<Tongue>().Project();
             if (colorManager.colorSet)
             {
                 // Set independent shotColor variable, so missile can reference it once player changes colors
                 shotColor = colorManager.shotColor;
                 // Spawn laser in front of player
-                Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
+                // Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
                 // Make player a different color
                 colorManager.SetColor(this.gameObject);
                 // Reset cooldown

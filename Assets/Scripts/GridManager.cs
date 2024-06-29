@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 
@@ -532,7 +532,6 @@ public class GridManager : MonoBehaviour
         int group = 0;
         for (int i = 0; i < fleetGrid.Length; i++)
         {
-            // Get enemy
             GameObject enemy = fleetGrid[i].GetComponent<Cell>().enemy;
             if(enemy != null)
             {
@@ -540,9 +539,7 @@ public class GridManager : MonoBehaviour
                 // If an enemy has not been grouped
                 if (enemyScript.group == 0 && enemyScript.alive)
                 {
-                    // Iterate group number
                     group++;
-                    // Label him group number
                     enemyScript.group = group;
                     // Have enemy run neighbor checks until all connected enemies are labelled group number (coroutine?)
                     checkNeighborRetreat(fleetGrid[i].GetComponent<Cell>().number, group);

@@ -945,8 +945,80 @@ MonoBehaviour:
   enemyPrefab: {fileID: 7377057956046256033, guid: 19faa1b06daa0404db5a811a2e5c24d8, type: 3}
   specialGreenCount: 0
   grid: []
+  fleetGrid:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   cellPrefab: {fileID: 1219203507519098383, guid: ccf021b8f01394f9bb252db76f693f1b, type: 3}
-  shift: []
   gameOver: 0
   enemyCount: 0
   globalLevel: 1
@@ -1506,6 +1578,11 @@ MonoBehaviour:
   rotationSpeed: 5
   moveSpeed: 0.5
   moveAmplitude: 0.5
+--- !u!1 &713349873 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 629551758658613140, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
+  m_PrefabInstance: {fileID: 371685566373187628}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &782355445
 GameObject:
   m_ObjectHideFlags: 0
@@ -3542,6 +3619,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7788548955302002427, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 713349873}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
