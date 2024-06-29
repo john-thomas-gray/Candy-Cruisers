@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ColorManager : MonoBehaviour
 {
     static System.Random random = new System.Random();
     private static ColorManager colorManager;
     public bool colorSet;
-    public string shotColor;
 
     // Multicolor
-    public bool magicLaser = false;
+    public bool magicTongue = false;
     private float multicolorTimer = 0.0f;
     private float multicolorCooldown = 0.05f;
     public static ColorManager Instance
@@ -29,15 +29,14 @@ public class ColorManager : MonoBehaviour
     }
     // Color dictionary
     public Dictionary<string, int> colorCounts = null;
-
     Color purple = new Color(1f, 0f, 1f, 1f);
-    List<Color> skins = null;
-    List<string> colors = null;
+    Color[] skins = null;
+    string[] colors = null;
 
     void Awake()
     {
-        skins = new List<Color> { Color.red, Color.yellow, Color.blue, Color.green, purple };
-        colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
+        skins = new Color[5] { Color.red, Color.yellow, Color.blue, Color.green, purple };
+        colors = new string[5] { "Red", "Yellow", "Blue", "Green", "Purple" };
         // Set initial color dictionary
         colorCounts = new Dictionary<string, int>
             {
@@ -52,8 +51,20 @@ public class ColorManager : MonoBehaviour
     public void SetColor(GameObject targetObject, string color = null)
     {
         Color purple = new Color(1f, 0f, 1f, 1f);
-        List<Color> skins = new List<Color> { Color.red, Color.yellow, Color.blue, Color.green, purple };
-        List<string> colors = new List<string> { "Red", "Yellow", "Blue", "Green", "Purple" };
+        Color[] skins = new Color[5] {
+                        Color.red,
+                        Color.yellow,
+                        Color.blue,
+                        Color.green,
+                        purple
+                        };
+        string[] colors = new string[5] {
+            "Red",
+            "Yellow",
+            "Blue",
+            "Green",
+            "Purple"
+            };
 
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
 
@@ -63,13 +74,13 @@ public class ColorManager : MonoBehaviour
             if (color == null)
             {
                 // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Count);
+                int randomIndex = random.Next(colors.Length);
                 color = colors[randomIndex];
             }
 
             targetObject.tag = color;
             // Get index of item in list
-            int colorInx = colors.IndexOf(color);
+            int colorInx = Array.IndexOf(colors, color);
 
             // Set the target sprite's color
             Color spriteColor = skins[colorInx];
@@ -83,7 +94,7 @@ public class ColorManager : MonoBehaviour
             }
             else
             {
-                targetObject.GetComponent<LaserController>().color = color;
+                targetObject.GetComponent<Tongue>().color = color;
             }
         }
         else // Set player color
@@ -101,17 +112,16 @@ public class ColorManager : MonoBehaviour
                 if (onScreenColors.Count > 0)
                 {
                     int randomIndex = random.Next(onScreenColors.Count);
-                    spriteRenderer.color = skins[colors.IndexOf(onScreenColors[randomIndex])];
+                    spriteRenderer.color = skins[Array.IndexOf(colors, onScreenColors[randomIndex])];
                     color = onScreenColors[randomIndex];
                 }
-                else // if there are no enemies on screen
+                else // if there are no enemies on screen, use fallback
                 {
                     color = "Red";
                 }
             }
             colorSet = true;
 
-            shotColor = color;
             targetObject.GetComponent<PlayerController>().color = color;
         }
     }
@@ -156,7 +166,7 @@ public class ColorManager : MonoBehaviour
             if (multicolorTimer >= multicolorCooldown)
             {
                 // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Count);
+                int randomIndex = random.Next(colors.Length);
                 color = colors[randomIndex];
                 multicolorTimer = 0.0f;
             }
@@ -164,14 +174,14 @@ public class ColorManager : MonoBehaviour
             // targetObject.tag = 'Multicolor';
 
             // Get index of item in list
-            int colorInx = colors.IndexOf(color);
+            int colorInx = Array.IndexOf(colors,color);
 
             // Set the target sprite's color
             Color spriteColor = skins[colorInx];
             spriteRenderer.color = spriteColor;
 
             // Set color property
-            targetObject.GetComponent<LaserController>().color = "Multicolor";
+            targetObject.GetComponent<Tongue>().color = "Multicolor";
 
         }
         else
@@ -181,7 +191,7 @@ public class ColorManager : MonoBehaviour
             if (multicolorTimer >= multicolorCooldown)
             {
                 // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Count);
+                int randomIndex = random.Next(colors.Length);
                 color = colors[randomIndex];
                 Color skin = skins[randomIndex];
                 multicolorTimer = 0.0f;
@@ -195,7 +205,7 @@ public class ColorManager : MonoBehaviour
     public void turnWhite(GameObject targetObject)
     {
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
-        targetObject.GetComponent<LaserController>().color = "White";
+        targetObject.GetComponent<Tongue>().color = "White";
         spriteRenderer.color = Color.white;
     }
 

@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     public IntEventChannelSO updateGlobalLevelChannel;
     // Broadcasting
     public VoidEventChannelSO checkRetreatEventChannel;
+    public BoolEventChannelSO SetMagicTongueChannel;
 
     // GridManager
     private Transform cellTransform;
@@ -357,7 +358,7 @@ public class Enemy : MonoBehaviour
             {
                 if (gridManagerScript.enemyCount != 0)
                 {
-                    colorManager.magicLaser = true;
+                    SetMagicTongueChannel.RaiseEvent(true);
                 }
             }
 
@@ -374,9 +375,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void hitByLaser(string laserColor, bool isMagicLaser)
+    public void hit(string tongueColor, bool isMagic)
     {
-        if(isMagicLaser || laserColor == color)
+        if(isMagic || tongueColor == color)
         {
             alive = false;
             checkNeighbors();

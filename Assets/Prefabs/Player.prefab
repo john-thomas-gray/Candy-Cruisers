@@ -190,12 +190,14 @@ MonoBehaviour:
   colorSet: 0
   shotColor: 
   color: 
+  Body: {fileID: 22856695612734873}
   Tongue: {fileID: 6553616614561688037}
-  laserPrefab: {fileID: 0}
+  tongueReady: 1
   spawnProtection: 0
   gameOver: 0
-  gameOverEventChannel: {fileID: 0}
-  fleetWipeEC: {fileID: 0}
+  gameOverEventChannel: {fileID: 11400000, guid: 4d47b232a7c934396a679ce4ba24b4cc, type: 2}
+  fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
+  SetMagicTongueChannel: {fileID: 11400000, guid: 72cbf64ff73dd422582cb99b730d499f, type: 2}
 --- !u!61 &2949749450885060517
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -658,8 +660,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 629551758658613140}
   color: 
-  deflected: 0
+  retracting: 0
   maxSpeed: 20
+  SetMagicTongueChannel: {fileID: 0}
 --- !u!1 &8579251643394826562
 GameObject:
   m_ObjectHideFlags: 0

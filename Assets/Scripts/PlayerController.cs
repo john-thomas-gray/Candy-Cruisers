@@ -7,27 +7,21 @@ public class PlayerController : MonoBehaviour
     static System.Random random = new System.Random();
     public bool alive;
     // Movement
-    private float tankSpeed;
+    private float moveSpeed;
     private float screenBound = 3f;
-    // GridManager
-    private GameObject fleet;
-    private GridManager gridManagerInstance;
 
     // ColorManager
-    private Dictionary<string, int> colorCounts;
     ColorManager colorManager;
     public bool colorSet;
-    public string shotColor;
     public string color;
+    public GameObject Body;
 
 
     // Tongue
 
     public GameObject Tongue;
-    // Laser
-    public GameObject laserPrefab;
-    private float shotCoolDown = 0.4f;
-    private float timeSinceLastShot = 0.0f;
+    public bool tongueReady = true;
+    private bool magicTongue;
 
     // Death and Respawn
     public bool spawnProtection = false;
@@ -41,35 +35,34 @@ public class PlayerController : MonoBehaviour
     [Header("Event Channels")]
     public VoidEventChannelSO gameOverEventChannel;
     public VoidEventChannelSO fleetWipeEC;
+    public BoolEventChannelSO SetMagicTongueChannel;
 
     void Awake()
     {
         alive = true;
-        tankSpeed = 5f;
-        // Get fleet GO and Grid script
-        GameObject fleet = GameObject.Find("Fleet");
-        gridManagerInstance = fleet.GetComponent<GridManager>();
+        moveSpeed = 5f;
         // Get ColorManager instance
         colorManager = ColorManager.Instance;
-        // Create a reference to the colorCounts dictionary
-        colorCounts = colorManager.colorCounts;
 
     }
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        colorManager.SetColor(this.gameObject);
+        setPlayerColor();
+        Tongue.GetComponent<Tongue>().SetColor(color);
     }
 
     private void OnEnable()
     {
         gameOverEventChannel.OnEventRaised+= GameOver;
+        SetMagicTongueChannel.OnEventRaised += SetMagicTongue;
     }
 
     private void OnDisable()
     {
         gameOverEventChannel.OnEventRaised -= GameOver;
+        SetMagicTongueChannel.OnEventRaised -= SetMagicTongue;
     }
 
     void Update()
@@ -79,11 +72,11 @@ public class PlayerController : MonoBehaviour
             playerMovement();
             if (spawnProtection == false)
             {
-                fireLaser();
+                BallisticTongueProjection();
             }
         }
 
-        if(colorManager.magicLaser && colorSet == false)
+        if(magicTongue && colorSet == false)
         {
             colorManager.Multicolor(this.gameObject);
             colorSet = true;
@@ -105,12 +98,12 @@ public class PlayerController : MonoBehaviour
         // Move Left
         if(Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.position = transform.position + Vector3.left * tankSpeed * Time.deltaTime;
+            transform.position = transform.position + Vector3.left * moveSpeed * Time.deltaTime;
         }
         // Move Right
         else if(Input.GetKey(KeyCode.RightArrow))
         {
-            transform.position = transform.position + Vector3.right * tankSpeed * Time.deltaTime;
+            transform.position = transform.position + Vector3.right * moveSpeed * Time.deltaTime;
         }
         if(transform.position.x > screenBound)
         {
@@ -121,29 +114,26 @@ public class PlayerController : MonoBehaviour
             transform.position = transform.position + Vector3.right * 2 * screenBound;
         }
     }
-    void fireLaser()
+    void BallisticTongueProjection()
     {
-        timeSinceLastShot += Time.deltaTime;
         colorSet = false;
 
-        if(Input.GetKey(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) && timeSinceLastShot >= shotCoolDown)
+        if( Input.GetKeyDown(KeyCode.Space) &&
+            tongueReady == true
+            )
         {
-                // Debug.Log("shotColor: " + shotColor);
-                // Debug.Log("color: " + color);
-            colorCounts = colorManager.colorCounts;
             Tongue.GetComponent<Tongue>().Project();
-            if (colorManager.colorSet)
-            {
-                // Set independent shotColor variable, so missile can reference it once player changes colors
-                shotColor = colorManager.shotColor;
-                // Spawn laser in front of player
-                // Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), transform.rotation);
-                // Make player a different color
-                colorManager.SetColor(this.gameObject);
-                // Reset cooldown
-                timeSinceLastShot = 0.0f;
-            }
+            Tongue.GetComponent<Tongue>().SetColor(color);
         }
+    }
+    public void setPlayerColor()
+    {
+        colorManager.SetColor(this.gameObject);
+        SpriteRenderer bodySpriteRenderer = Body.GetComponent<SpriteRenderer>();
+        Color parsedColor;
+        ColorUtility.TryParseHtmlString(color, out parsedColor);
+        bodySpriteRenderer.color = parsedColor;
+        Debug.Log("Player color set to: " + color);
     }
     public void death()
     {
@@ -154,7 +144,6 @@ public class PlayerController : MonoBehaviour
     {
         if(!spawnProtection)
         {
-            Debug.Log("Hit");
             alive = false;
             death();
         }
@@ -168,8 +157,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator BlinkSprite()
     {
         int count = 0;
-        while (count < 6)
         {
+        while (count < 6)
             yield return new WaitForSeconds(0.25f);
             spriteRenderer.enabled = !spriteRenderer.enabled;
             count ++;
@@ -193,4 +182,9 @@ public class PlayerController : MonoBehaviour
         spawnProtection = false;
     }
    }
+
+   private void SetMagicTongue(bool b)
+    {
+        magicTongue = b;
+    }
 }
