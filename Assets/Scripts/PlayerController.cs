@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(alive && !gameOver)
+        if(alive && !gameOver && Tongue.GetComponent<Tongue>().deflected == false)
         {
             playerMovement();
             if (spawnProtection == false)

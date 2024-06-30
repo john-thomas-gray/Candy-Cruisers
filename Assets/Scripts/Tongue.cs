@@ -8,7 +8,7 @@ public class Tongue : MonoBehaviour
     public string color;
     private bool colorSet;
     ColorManager colorManager;
-    private bool deflected = false;
+    public bool deflected = false;
     public bool retracting = false;
     private float originY;
     private bool magicTongue = false;
@@ -33,10 +33,12 @@ public class Tongue : MonoBehaviour
     {
         SetMagicTongueChannel.OnEventRaised -= SetMagicTongue;
     }
+    void Awake()
+    {
+        colorManager = ColorManager.Instance;
+    }
     void Start()
     {
-        // Get ColorManager instance
-        colorManager = ColorManager.Instance;
         rayLength = transform.localScale.y * .25f;
         speedFactor = 0f;
         originY = transform.position.y;
@@ -111,7 +113,7 @@ public class Tongue : MonoBehaviour
                             Retract();
                             deflected = true;
                             // colorManager.turnWhite(this.gameObject);
-                            speedFactor = -0.5f;
+                            speedFactor = -0.25f;
                         }
 
                     }
@@ -157,6 +159,7 @@ public class Tongue : MonoBehaviour
         {
             unstoppable = true;
         }
+        deflected = false;
 
     }
 
