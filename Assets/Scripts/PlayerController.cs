@@ -156,9 +156,10 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator BlinkSprite()
     {
+        Debug.Log("Blinking");
         int count = 0;
-        {
         while (count < 6)
+        {
             yield return new WaitForSeconds(0.25f);
             spriteRenderer.enabled = !spriteRenderer.enabled;
             count ++;
@@ -167,7 +168,6 @@ public class PlayerController : MonoBehaviour
 
     public void respawnPlayer()
    {
-    // Debug.Log("respawn");
     float respawnTime = 3.5f;
     float iFrames = 5f;
     respawnTimer += Time.deltaTime;
