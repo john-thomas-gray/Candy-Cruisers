@@ -253,7 +253,6 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        // Call death to kill current enemy
         death();
     }
 
