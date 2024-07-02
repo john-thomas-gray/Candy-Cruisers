@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour
         // Color
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
-        colorManager.SetColor(this.gameObject);
+        colorManager.SetEnemyColor(this.gameObject);
 
 
         special = false;
@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour
         //BANDAID - the problem is that this adds to the color dictionary without subtracting the changed color from the dictionary
         if(warpedIn && !colorReset)
         {
-            colorManager.SetColor(this.gameObject, color);
+            colorManager.SetEnemyColor(this.gameObject, color);
             colorReset = true;
         }
         //TEST

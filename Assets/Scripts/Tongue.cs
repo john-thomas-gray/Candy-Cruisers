@@ -47,7 +47,6 @@ public class Tongue : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.up * speed() * Time.deltaTime);
-        Debug.Log("Retracting: " + retracting);
 
         if (transform.position.y >= maxLength)
         {
@@ -90,7 +89,6 @@ public class Tongue : MonoBehaviour
                         if(color == enemyColor && !unstoppable)
                         {
                             Retract();
-                            Debug.Log("FixedUpdateRetract");
                         }
                     }
                 }
@@ -120,7 +118,7 @@ public class Tongue : MonoBehaviour
                 }
             }
         }
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
+        // Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.up) * rayLength, Color.red);
     }
 
     public void Project()
@@ -148,10 +146,9 @@ public class Tongue : MonoBehaviour
     }
     public void TongueReset()
     {
-        Debug.Log("Tongue Reset");
         if(colorSet == false)
         {
-            player.GetComponent<PlayerController>().setPlayerColor();
+            player.GetComponent<PlayerController>().setColor();
             colorSet = true;
         }
         player.GetComponent<PlayerController>().tongueReady = true;
@@ -163,9 +160,9 @@ public class Tongue : MonoBehaviour
 
     }
 
-    public void SetColor(string color)
+    public void SetColor(string inputColor)
     {
-        colorManager.SetColor(this.gameObject, color);
+        colorManager.SetColor(this.gameObject, inputColor);
     }
 
     private void SetMagicTongue(bool b)

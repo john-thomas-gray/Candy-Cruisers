@@ -48,7 +48,63 @@ public class ColorManager : MonoBehaviour
             };
     }
 
-    public void SetColor(GameObject targetObject, string color = null)
+    public string RandomOnscreenColor()
+    {
+        string[] colors = new string[5] {
+            "Red",
+            "Yellow",
+            "Blue",
+            "Green",
+            "Purple"
+            };
+
+        string randomColor = null;
+        int fallback = 0;
+        int randomIndex = 0;
+        while(fallback <= 20 && randomColor == null)
+        {
+            randomIndex = random.Next(colors.Length);
+            if(colorCounts[colors[randomIndex]] > 0)
+            {
+                randomColor = colors[randomIndex];
+                return randomColor;
+            }
+            fallback++;
+        }
+
+        Debug.Log("Fallback");
+        randomIndex = random.Next(colors.Length);
+        return colors[randomIndex];
+
+    }
+
+    public void SetColor(GameObject targetObject, string inputColor = null)
+    {
+        Color purple = new Color(1f, 0f, 1f, 1f);
+        Color[] skins = new Color[5] {
+                        Color.red,
+                        Color.yellow,
+                        Color.blue,
+                        Color.green,
+                        purple
+                        };
+
+        SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
+
+        spriteRenderer.color = skins[Array.IndexOf(colors, inputColor)];
+
+        if(targetObject.GetComponent<PlayerController>())
+        {
+            targetObject.GetComponent<PlayerController>().color = inputColor;
+        }
+        else if(targetObject.GetComponent<Tongue>())
+        {
+            targetObject.GetComponent<Tongue>().color = inputColor;
+        }
+
+    }
+
+    public void SetEnemyColor(GameObject targetObject, string color = null)
     {
         Color purple = new Color(1f, 0f, 1f, 1f);
         Color[] skins = new Color[5] {
@@ -68,63 +124,34 @@ public class ColorManager : MonoBehaviour
 
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
 
-        // Check if the object is not the player
-        if (targetObject.tag != "Player")
+        if (color == null)
         {
-            if (color == null)
-            {
-                // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Length);
-                color = colors[randomIndex];
-            }
-
-            targetObject.tag = color;
-            // Get index of item in list
-            int colorInx = Array.IndexOf(colors, color);
-
-            // Set the target sprite's color
-            Color spriteColor = skins[colorInx];
-            spriteRenderer.color = spriteColor;
-
-            // Set color property
-            if(targetObject.GetComponent<Enemy>())
-            {
-                targetObject.GetComponent<Enemy>().color = color;
-                colorCounts[color] += 1;
-            }
-            else
-            {
-                targetObject.GetComponent<Tongue>().color = color;
-            }
+            // Set color string to a random "color"
+            int randomIndex = random.Next(colors.Length);
+            color = colors[randomIndex];
         }
-        else // Set player color
+
+        targetObject.tag = color;
+        // Get index of item in list
+        int colorInx = Array.IndexOf(colors, color);
+
+        // Set the target sprite's color
+        Color spriteColor = skins[colorInx];
+        spriteRenderer.color = spriteColor;
+
+        // Set color property
+        if(targetObject.GetComponent<Enemy>())
         {
-            if (color == null)
-            {
-                List<string> onScreenColors = new List<string> {};
-                foreach (var kvp in colorCounts)
-                    {
-                        if (kvp.Value > 0)
-                            {
-                                onScreenColors.Add(kvp.Key);
-                            }
-                    }
-                if (onScreenColors.Count > 0)
-                {
-                    int randomIndex = random.Next(onScreenColors.Count);
-                    spriteRenderer.color = skins[Array.IndexOf(colors, onScreenColors[randomIndex])];
-                    color = onScreenColors[randomIndex];
-                }
-                else // if there are no enemies on screen, use fallback
-                {
-                    color = "Red";
-                }
-            }
-            colorSet = true;
-
-            targetObject.GetComponent<PlayerController>().color = color;
+            targetObject.GetComponent<Enemy>().color = color;
+            colorCounts[color] += 1;
         }
+        else
+        {
+            Debug.LogWarning("ColorManager: No enemy found.");
+        }
+
     }
+
 
     public void UpdateColorCounts(Dictionary<string, int> updateDictionary)
     {

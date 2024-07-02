@@ -295,7 +295,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount))
+                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount/2))
                 {
                     timer += Time.deltaTime;
                 }
@@ -330,8 +330,9 @@ public class GridManager : MonoBehaviour
         {
             float baseMoveTime = 10.0f;
             float factor = 0.10f;
-            float calculatedTime = baseMoveTime * (1 - (level - 1) * factor);
-            return Mathf.Max(calculatedTime, 0); // Ensures the returned time is never negative
+            float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
+
+            return calculatedTime;
 
         }
     }

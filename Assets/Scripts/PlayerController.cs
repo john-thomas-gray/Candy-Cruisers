@@ -49,8 +49,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        setPlayerColor();
-        Tongue.GetComponent<Tongue>().SetColor(color);
+        setColor();
     }
 
     private void OnEnable()
@@ -120,21 +119,22 @@ public class PlayerController : MonoBehaviour
 
         if( Input.GetKeyDown(KeyCode.Space) &&
             tongueReady == true
-            )
+        )
         {
             Tongue.GetComponent<Tongue>().Project();
-            Tongue.GetComponent<Tongue>().SetColor(color);
         }
     }
-    public void setPlayerColor()
+
+    public void setColor()
     {
-        colorManager.SetColor(this.gameObject);
-        SpriteRenderer bodySpriteRenderer = Body.GetComponent<SpriteRenderer>();
-        Color parsedColor;
-        ColorUtility.TryParseHtmlString(color, out parsedColor);
-        bodySpriteRenderer.color = parsedColor;
-        Debug.Log("Player color set to: " + color);
+        color = colorManager.RandomOnscreenColor();
+        colorManager.SetColor(this.gameObject, color);
+
+        Tongue.GetComponent<Tongue>().SetColor(color);
+
+        colorManager.SetColor(Body, color);
     }
+
     public void death()
     {
         this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
