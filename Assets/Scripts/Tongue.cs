@@ -101,7 +101,7 @@ public class Tongue : MonoBehaviour
                         // BASIC ABSORB
                         if (!shieldScript.special)
                         {
-                            // Destroy shield
+                            shieldScript.deactivate();
                             Retract();
                         }
                         // SPECIAL DEFLECT

@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
     public float specialMultiplier;
 
     // PURPLE ABILITIES
-    private float[] warpCoolDownRange = {7, 20};
+    private float[] warpCoolDownRange = {15, 60};
     public bool warpedIn = false;
     private bool colorReset = false;
 

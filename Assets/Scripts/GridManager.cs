@@ -276,7 +276,7 @@ public class GridManager : MonoBehaviour
         {
             if (turnInterval < 10)
             {
-                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount))
+                if (timer < moveTimeByLevel(globalLevel))
                 {
                     timer += Time.deltaTime;
                 }
@@ -295,7 +295,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                if (timer < moveTimeByLevel(globalLevel) / (colorManager.colorCounts["Green"] + specialGreenCount/2))
+                if (timer < moveTimeByLevel(globalLevel))
                 {
                     timer += Time.deltaTime;
                 }
@@ -331,8 +331,9 @@ public class GridManager : MonoBehaviour
             float baseMoveTime = 10.0f;
             float factor = 0.10f;
             float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
+            // Debug.Log("moveTime: " + calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2));
 
-            return calculatedTime;
+            return calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
 
         }
     }

@@ -9,9 +9,14 @@ public class Shield : MonoBehaviour
     SpriteRenderer spriteRenderer;
     public Color originalColor;
     private bool deflectorUp = false;
-
+    private bool onCoolDown = false;
+    private bool deactivated = false;
+    private float reactivationTime = 0;
+    private double abilityCoolDown;
+    private float[] reactivateCoolDownRange = { 25, 45 };
     public string shieldEnemyColor;
 
+    static System.Random random = new System.Random();
 
     // Current Enemy
     private GameObject enemy;
@@ -51,6 +56,8 @@ public class Shield : MonoBehaviour
             special = false;
         }
 
+        reactivate();
+
     }
 
     IEnumerator ShieldSize(float targetScale, float duration)
@@ -71,18 +78,11 @@ public class Shield : MonoBehaviour
         transform.localScale = targetScaleVector; // Ensure the final scale is set
     }
 
-    public void absorb()
+    public void deactivate()
     {
+        deactivated = true;
         spriteRenderer.color = new Color(1f, 1f, 1f, spriteRenderer.color.a);
-
-        StartCoroutine(ShieldSize (1.5f, .5f));
-        // spriteRenderer.color = Color.white;
-        if(this.gameObject.transform.localScale.x >= 1.5f)
-        {
-            StartCoroutine(ShieldSize (1.25f, .10f));
-            // spriteRenderer.color = originalColor;
-        }
-
+        StartCoroutine(ShieldSize (0.01f, 0.001f));
     }
 
     public void deflector()
@@ -101,6 +101,40 @@ public class Shield : MonoBehaviour
                 // Grow shield
                 StartCoroutine(ShieldSize (1.5f, .3f));
                 deflectorUp = true;
+            }
+        }
+
+    }
+
+    public void reactivate()
+    {
+        if (deactivated)
+        {
+            if (!onCoolDown)
+            {
+                abilityCoolDown = random.NextDouble() * (reactivateCoolDownRange[1] - reactivateCoolDownRange[0]) + reactivateCoolDownRange[0];
+                // Decrease cooldown based on globalLevel
+                enemy = transform.parent.gameObject;
+                enemyScript = enemy.GetComponent<Enemy>();
+                if (enemyScript != null)
+                {
+                    abilityCoolDown -= (2.5f * (enemyScript.globalLevel) - 1);
+                }
+                if (abilityCoolDown < 0)
+                {
+                    abilityCoolDown = 1;
+                }
+                onCoolDown = true;
+            }
+
+            reactivationTime += Time.deltaTime;
+
+            if (reactivationTime >= abilityCoolDown)
+            {
+                StartCoroutine(ShieldSize(1.25f, 0.25f)); // Grow over 2 seconds
+                reactivationTime = 0.0f;
+                onCoolDown = false;
+                deactivated = false;
             }
         }
 
