@@ -168,8 +168,8 @@ public class PlayerController : MonoBehaviour
 
     public void respawnPlayer()
    {
-    float respawnTime = 3.5f;
-    float iFrames = 5f;
+    float respawnTime = 1.5f;
+    float iFrames = 3f;
     respawnTimer += Time.deltaTime;
     if(respawnTimer >= respawnTime && alive == false)
     {
