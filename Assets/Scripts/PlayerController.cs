@@ -69,10 +69,7 @@ public class PlayerController : MonoBehaviour
         if(alive && !gameOver && Tongue.GetComponent<Tongue>().deflected == false)
         {
             playerMovement();
-            if (spawnProtection == false)
-            {
-                BallisticTongueProjection();
-            }
+            BallisticTongueProjection();
         }
 
         if(magicTongue && colorSet == false)
@@ -137,12 +134,14 @@ public class PlayerController : MonoBehaviour
 
     public void death()
     {
-        this.gameObject.transform.position = new Vector3(0f, -6.69f, -2f);
+        Vector3 deadPosition = this.gameObject.transform.position;
+        deadPosition.y -= 0.25f;
+        transform.position = deadPosition;
     }
 
     public void hit()
     {
-        if(!spawnProtection)
+        if(alive && !spawnProtection)
         {
             alive = false;
             death();
@@ -173,7 +172,9 @@ public class PlayerController : MonoBehaviour
     respawnTimer += Time.deltaTime;
     if(respawnTimer >= respawnTime && alive == false)
     {
-        transform.position = new Vector3(0f, -4.69f, -2f);
+        Vector3 newPosition = transform.position;
+        newPosition.y += 0.25f;
+        transform.position = newPosition;
         spawnProtection = true;
         alive = true;
         StartCoroutine(BlinkSprite());
