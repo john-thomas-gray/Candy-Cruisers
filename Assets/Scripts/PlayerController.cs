@@ -155,7 +155,6 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator BlinkSprite()
     {
-        Debug.Log("Blinking");
         int count = 0;
         while (count < 6)
         {

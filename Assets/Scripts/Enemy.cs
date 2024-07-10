@@ -70,8 +70,9 @@ public class Enemy : MonoBehaviour
 
     // YELLOW ABILITIES
     private float[] imitateCoolDownRange = {15, 50};
-    bool isImitation = false;
+    public bool isImitation = true;
     bool inMiddle = false;
+    public bool imitationColor;
 
 
     private void OnEnable()
@@ -138,14 +139,12 @@ public class Enemy : MonoBehaviour
 
     void Abilities()
     {
-        // Check color
         if(color == "Red")
         {
             ability(fireMissile, shotCoolDownRange);
         }
         else if(color == "Green")
         {
-            // Special ability
             if (special)
             {
                 if(specialGreenCounted == false)
@@ -402,6 +401,45 @@ public class Enemy : MonoBehaviour
             alive = false;
             checkNeighbors();
         }
+    }
+
+    public IEnumerator reveal()
+    {
+        int count = 0;
+        bool revealed = false;
+        Color imitationColor = Color.red;
+        while (count < 12)
+        {
+            yield return new WaitForSeconds(0.05f);
+            if (revealed == false)
+            {
+                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+                revealed = true;
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().color = imitationColor;
+                revealed = false;
+            }
+            count ++;
+        }
+
+        // Color ColorExtension(string colorName)
+        // {
+        //     switch(colorName)
+        //     {
+        //         case "Green":
+        //             return Color.green;
+        //         case "Purple":
+        //             return new Color(0.5f, 0f, 0.5f, 1f);
+        //         case "Red":
+        //             return Color.red;
+        //         case "Blue":
+        //         return Color.blue;
+        //         default:
+        //             return Color.white;
+        //     }
+        // }
     }
 
     public void death()

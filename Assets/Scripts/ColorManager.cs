@@ -128,16 +128,17 @@ public class ColorManager : MonoBehaviour
             // Set color string to a random "color"
             int randomIndex = random.Next(colors.Length);
             color = colors[randomIndex];
+            // DEVTOOL
+            color = "Yellow";
         }
 
         targetObject.tag = color;
         // Get index of item in list
         int colorInx = Array.IndexOf(colors, color);
-
         // Set the target sprite's color
         Color spriteColor = skins[colorInx];
-        spriteRenderer.color = spriteColor;
-
+        spriteRenderer.color = Color.red;
+        color = "Yellow";
         // Set color property
         if(targetObject.GetComponent<Enemy>())
         {
