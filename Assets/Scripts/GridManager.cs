@@ -8,6 +8,7 @@ public class GridManager : MonoBehaviour
 
     // Enemy prefab
     public GameObject enemyPrefab;
+    public int neighborsChecked = 0;
 
     // Enemy specials
     public int specialGreenCount = 0;

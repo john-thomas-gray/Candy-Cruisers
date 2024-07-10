@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -67,6 +68,10 @@ public class Enemy : MonoBehaviour
     public bool warpedIn = false;
     private bool colorReset = false;
 
+    // YELLOW ABILITIES
+    private float[] imitateCoolDownRange = {5, 5};
+
+
     private void OnEnable()
     {
         updateGlobalLevelChannel.OnEventRaised += updateGlobalLevel;
@@ -116,13 +121,13 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Abilities();
-        //BANDAID - the problem is that this adds to the color dictionary without subtracting the changed color from the dictionary
+        // BANDAID - the problem is that this adds to the color dictionary without subtracting the changed color from the dictionary
         if(warpedIn && !colorReset)
         {
             colorManager.SetEnemyColor(this.gameObject, color);
             colorReset = true;
         }
-        //TEST
+        // DEVTOOL FIRE MISSILES
         if(Input.GetKeyDown(KeyCode.Q) &&  color == "Red")
         {
             Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
@@ -134,7 +139,7 @@ public class Enemy : MonoBehaviour
         // Check color
         if(color == "Red")
         {
-            fireMissile();
+            ability(fireMissile, shotCoolDownRange);
         }
         else if(color == "Green")
         {
@@ -150,20 +155,18 @@ public class Enemy : MonoBehaviour
         }
         else if(color == "Purple")
         {
-            beamIn();
+            ability(beamIn, warpCoolDownRange);
         }
-
-        // for each
-        // Base abilities
-
-        // Special abilities
-
-        // Super abilities
+        else if(color == "Yellow")
+        {
+            ability(imitate, imitateCoolDownRange);
+        }
     }
     public void checkNeighbors()
     {
         if(kill == false)
         {
+            gridManagerScript.neighborsChecked++;
             // Get instance of current grid
             GameObject[] fleetGrid = gridManagerScript.fleetGrid;
             // Get instance of cell holding this enemy
@@ -258,17 +261,11 @@ public class Enemy : MonoBehaviour
 
 
     // ||| ABILITIES |||
-
-    // RED
-
-    // BASIC
-    void fireMissile()
+    void ability(Action function, float[] cooldownRange)
     {
         if(!onCoolDown)
         {
-            // Set a random cooldown in the cooldown range.
-            abilityCoolDown = random.NextDouble() * (shotCoolDownRange[1] - shotCoolDownRange[0]) + shotCoolDownRange[0];
-            // Decrease cooldown based on globalLevel
+            abilityCoolDown = random.NextDouble() * (cooldownRange[1] - cooldownRange[0]) + cooldownRange[0];
             abilityCoolDown -= (0.5f * (globalLevel) - 1);
             if (abilityCoolDown < 0)
             {
@@ -281,27 +278,26 @@ public class Enemy : MonoBehaviour
 
         if(timeSinceLastActivation >= abilityCoolDown)
         {
-
-            // Spawn missile in front of enemy
-            if (special == false)
-            {
-                Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
-            }
-            else
-            {
-                Instantiate(homingMissilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
-            }
-
-            // Reset cooldown
+            function();
             timeSinceLastActivation = 0.0f;
             onCoolDown = false;
+        }
+    }
 
+    // RED
+    void fireMissile()
+    {
+        if (special == false)
+        {
+            Instantiate(missilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
+        }
+        else
+        {
+            Instantiate(homingMissilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
         }
     }
 
     // BLUE
-
-    // BASIC
     void activateShield()
     {
         // Spawn a shield object around enemy
@@ -310,34 +306,71 @@ public class Enemy : MonoBehaviour
     }
 
     // PURPLE
-
-    // BASIC
-
     void beamIn()
     {
-        // Reset cooldown to a random value
-        if(!onCoolDown)
+        gridManagerScript.beamIn(gameObject);
+    }
+
+    // YELLOW
+    public void imitate()
+    {
+        GameObject[] fleetGrid = gridManagerScript.fleetGrid;
+        Transform cellTransform = transform.parent;
+        cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
+        GameObject[] neighboringCells = new GameObject[4];
+
+        void addNeighbor(int index, int neighborIndex)
         {
-            abilityCoolDown = random.NextDouble() * (warpCoolDownRange[1] - warpCoolDownRange[0]) + warpCoolDownRange[0];
-            // Decrease cooldown based on globalLevel
-            abilityCoolDown -= (0.5f * (globalLevel) - 1);
-            if (abilityCoolDown < 0)
+            if (neighborIndex >= 0 && neighborIndex < fleetGrid.Length)
             {
-                abilityCoolDown = 1;
+                neighboringCells[index] = fleetGrid[neighborIndex];
             }
-            onCoolDown = true;
+            else
+            {
+                neighboringCells[index] = null;
+            }
         }
 
-        timeSinceLastActivation += Time.deltaTime;
+        addNeighbor(0, cellNumber > 5 ? cellNumber - 6 : -1); // up
+        addNeighbor(1, cellNumber % 6 != 0 ? cellNumber - 1 : -1); // left
+        addNeighbor(2, (cellNumber + 1) % 6 != 0 ? cellNumber + 1 : -1); // right
+        addNeighbor(3, cellNumber < 66 ? cellNumber + 6 : -1); // down
 
-        if(timeSinceLastActivation >= abilityCoolDown)
+        up = neighboringCells[0];
+        left = neighboringCells[1];
+        right = neighboringCells[2];
+        down = neighboringCells[3];
+
+        for (int i = neighboringCells.Length - 1; i >= 0; i--)
         {
-            // Beam in an enemy
-            gridManagerScript.beamIn(gameObject);
-            // Debug.Log("Cell " + cellNumber + " beaming in");
-            // Reset cooldown
-            timeSinceLastActivation = 0.0f;
-            onCoolDown = false;
+            int j = random.Next(i + 1);
+            GameObject temp = neighboringCells[i];
+            neighboringCells[i] = neighboringCells[j];
+            neighboringCells[j] = temp;
+        }
+        foreach (var cell in neighboringCells)
+        {
+            if (cell != null && cell.GetComponent<Cell>().enemy)
+            {
+                GameObject neighbor = cell.GetComponent<Cell>().enemy;
+                string neighborColor = neighbor.GetComponent<Enemy>().color;
+                if (neighborColor != "Yellow")
+                {
+                    color = neighborColor;
+                    colorManager.SetEnemyColor(this.gameObject, color, true);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public void hit(string tongueColor, bool isMagic)
+    {
+        if(isMagic || tongueColor == color)
+        {
+            alive = false;
+            checkNeighbors();
         }
     }
 
@@ -373,14 +406,4 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    public void hit(string tongueColor, bool isMagic)
-    {
-        if(isMagic || tongueColor == color)
-        {
-            alive = false;
-            checkNeighbors();
-        }
-    }
-
 }

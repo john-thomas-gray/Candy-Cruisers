@@ -101,10 +101,9 @@ public class ColorManager : MonoBehaviour
         {
             targetObject.GetComponent<Tongue>().color = inputColor;
         }
-
     }
 
-    public void SetEnemyColor(GameObject targetObject, string color = null)
+    public void SetEnemyColor(GameObject targetObject, string color = null, bool imitation = false)
     {
         Color purple = new Color(1f, 0f, 1f, 1f);
         Color[] skins = new Color[5] {
@@ -148,6 +147,10 @@ public class ColorManager : MonoBehaviour
         else
         {
             Debug.LogWarning("ColorManager: No enemy found.");
+        }
+        if (imitation)
+        {
+            colorCounts["Yellow"] -= 1;
         }
 
     }
