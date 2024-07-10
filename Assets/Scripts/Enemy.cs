@@ -69,7 +69,9 @@ public class Enemy : MonoBehaviour
     private bool colorReset = false;
 
     // YELLOW ABILITIES
-    private float[] imitateCoolDownRange = {5, 5};
+    private float[] imitateCoolDownRange = {15, 50};
+    bool isImitation = false;
+    bool inMiddle = false;
 
 
     private void OnEnable()
@@ -314,51 +316,79 @@ public class Enemy : MonoBehaviour
     // YELLOW
     public void imitate()
     {
-        GameObject[] fleetGrid = gridManagerScript.fleetGrid;
-        Transform cellTransform = transform.parent;
-        cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
-        GameObject[] neighboringCells = new GameObject[4];
-
-        void addNeighbor(int index, int neighborIndex)
+        if(!inMiddle)
         {
-            if (neighborIndex >= 0 && neighborIndex < fleetGrid.Length)
-            {
-                neighboringCells[index] = fleetGrid[neighborIndex];
-            }
-            else
-            {
-                neighboringCells[index] = null;
-            }
-        }
+            GameObject[] fleetGrid = gridManagerScript.fleetGrid;
+            Transform cellTransform = transform.parent;
+            cellNumber = cellTransform.gameObject.GetComponent<Cell>().number;
+            GameObject[] neighboringCells = new GameObject[4];
 
-        addNeighbor(0, cellNumber > 5 ? cellNumber - 6 : -1); // up
-        addNeighbor(1, cellNumber % 6 != 0 ? cellNumber - 1 : -1); // left
-        addNeighbor(2, (cellNumber + 1) % 6 != 0 ? cellNumber + 1 : -1); // right
-        addNeighbor(3, cellNumber < 66 ? cellNumber + 6 : -1); // down
-
-        up = neighboringCells[0];
-        left = neighboringCells[1];
-        right = neighboringCells[2];
-        down = neighboringCells[3];
-
-        for (int i = neighboringCells.Length - 1; i >= 0; i--)
-        {
-            int j = random.Next(i + 1);
-            GameObject temp = neighboringCells[i];
-            neighboringCells[i] = neighboringCells[j];
-            neighboringCells[j] = temp;
-        }
-        foreach (var cell in neighboringCells)
-        {
-            if (cell != null && cell.GetComponent<Cell>().enemy)
+            void addNeighbor(int index, int neighborIndex)
             {
-                GameObject neighbor = cell.GetComponent<Cell>().enemy;
-                string neighborColor = neighbor.GetComponent<Enemy>().color;
-                if (neighborColor != "Yellow")
+                if (neighborIndex >= 0 && neighborIndex < fleetGrid.Length)
                 {
-                    color = neighborColor;
-                    colorManager.SetEnemyColor(this.gameObject, color, true);
-                    break;
+                    neighboringCells[index] = fleetGrid[neighborIndex];
+                }
+                else
+                {
+                    neighboringCells[index] = null;
+                }
+            }
+
+            addNeighbor(0, cellNumber > 5 ? cellNumber - 6 : -1); // up
+            addNeighbor(1, cellNumber % 6 != 0 ? cellNumber - 1 : -1); // left
+            addNeighbor(2, (cellNumber + 1) % 6 != 0 ? cellNumber + 1 : -1); // right
+            addNeighbor(3, cellNumber < 66 ? cellNumber + 6 : -1); // down
+
+            up = neighboringCells[0];
+            left = neighboringCells[1];
+            right = neighboringCells[2];
+            down = neighboringCells[3];
+
+            for (int i = neighboringCells.Length - 1; i >= 0; i--)
+            {
+                int j = random.Next(i + 1);
+                GameObject temp = neighboringCells[i];
+                neighboringCells[i] = neighboringCells[j];
+                neighboringCells[j] = temp;
+            }
+
+            int yellowCounter = 0;
+
+            foreach (var cell in neighboringCells)
+            {
+                if (cell != null && cell.GetComponent<Cell>().enemy)
+                {
+                    GameObject neighbor = cell.GetComponent<Cell>().enemy;
+                    string neighborColor = neighbor.GetComponent<Enemy>().color;
+                    if (neighborColor != "Yellow")
+                    {
+                        if (!special)
+                        {
+                            color = neighborColor;
+                            colorManager.SetEnemyColor(this.gameObject, color, true);
+                            break;
+                        }
+                        else // If special...
+                        {
+                            // Look like the neighbor and use its abilities,
+                            // but remain yellow (with tag, maybe)
+                            // isImitation == true
+
+                            // If one of the true neighbors dies,
+                            // return to yellow color, restart imitate ability
+                            // timer, set inMiddle to false, set isImitation to false
+                        }
+                    }
+                    else
+                    {
+                        yellowCounter++;
+
+                        if(yellowCounter == 4)
+                        {
+                            inMiddle = true;
+                        }
+                    }
                 }
             }
         }
