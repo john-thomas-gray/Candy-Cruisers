@@ -86,13 +86,14 @@ public class Tongue : MonoBehaviour
                     if(enemyScript != null)
                     {
                         enemyScript.hit(color, magicTongue);
-                        if(color != "Yellow" && enemyScript.isImitation)
-                        {
-                            StartCoroutine(enemyScript.reveal());
-                        }
-                        else if(color == enemyColor && !unstoppable)
+
+                        if(color == enemyColor && !unstoppable)
                         {
                             Retract();
+                        }
+                        else if(color != "Yellow" && enemyScript.isImitation)
+                        {
+                            StartCoroutine(enemyScript.reveal());
                         }
                     }
                 }

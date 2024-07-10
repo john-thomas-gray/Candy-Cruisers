@@ -119,6 +119,8 @@ MonoBehaviour:
   shieldPrefab: {fileID: 8527978347457853173, guid: 71a0370f48fcb4166a7ed30a4b83eecb, type: 3}
   specialMultiplier: 0
   warpedIn: 0
+  isImitation: 0
+  imitationColor: 0
 --- !u!58 &-665881645409245413
 CircleCollider2D:
   m_ObjectHideFlags: 0

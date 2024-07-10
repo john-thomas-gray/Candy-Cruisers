@@ -69,8 +69,9 @@ public class Enemy : MonoBehaviour
     private bool colorReset = false;
 
     // YELLOW ABILITIES
-    private float[] imitateCoolDownRange = {15, 50};
-    public bool isImitation = true;
+    private float[] imitateCoolDownRange = {3, 3};
+    // Cooldown becomes shorter for special yellow
+    public bool isImitation = false;
     bool inMiddle = false;
     public bool imitationColor;
 
@@ -372,7 +373,7 @@ public class Enemy : MonoBehaviour
                         {
                             // Look like the neighbor and use its abilities,
                             // but remain yellow (with tag, maybe)
-                            // isImitation == true
+                            isImitation = true;
 
                             // If one of the true neighbors dies,
                             // return to yellow color, restart imitate ability
