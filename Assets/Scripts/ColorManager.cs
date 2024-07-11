@@ -103,7 +103,7 @@ public class ColorManager : MonoBehaviour
         }
     }
 
-    public void SetEnemyColor(GameObject targetObject, string color = null, bool imitation = false)
+    public void SetEnemyColor(GameObject targetObject, string color = null, bool imitation = false, bool specialImitation = false)
     {
         Color purple = new Color(1f, 0f, 1f, 1f);
         Color[] skins = new Color[5] {
@@ -132,17 +132,11 @@ public class ColorManager : MonoBehaviour
             // color = "Yellow";
         }
 
-        targetObject.tag = color;
-        // Get index of item in list
-        int colorInx = Array.IndexOf(colors, color);
-
-        // Set the target sprite's color
-        Color spriteColor = skins[colorInx];
-        spriteRenderer.color = spriteColor;
 
         // Set color property
-        if(targetObject.GetComponent<Enemy>())
+        if(targetObject.GetComponent<Enemy>() && !specialImitation)
         {
+            targetObject.tag = color;
             targetObject.GetComponent<Enemy>().color = color;
             colorCounts[color] += 1;
         }
@@ -154,6 +148,11 @@ public class ColorManager : MonoBehaviour
         {
             colorCounts["Yellow"] -= 1;
         }
+        // Get index of item in list
+        int colorInx = Array.IndexOf(colors, color);
+        // Set the target sprite's color
+        Color spriteColor = skins[colorInx];
+        spriteRenderer.color = spriteColor;
 
     }
 

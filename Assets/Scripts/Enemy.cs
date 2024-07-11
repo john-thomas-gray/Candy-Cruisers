@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
     // Cooldown becomes shorter for special yellow
     public bool isImitation = false;
     bool inMiddle = false;
-    public bool imitationColor;
+    public string imitationColor;
 
 
     private void OnEnable()
@@ -316,7 +316,7 @@ public class Enemy : MonoBehaviour
     // YELLOW
     public void imitate()
     {
-        if(!inMiddle)
+        if(!inMiddle && !isImitation)
         {
             GameObject[] fleetGrid = gridManagerScript.fleetGrid;
             Transform cellTransform = transform.parent;
@@ -373,6 +373,8 @@ public class Enemy : MonoBehaviour
                         {
                             // Look like the neighbor and use its abilities,
                             // but remain yellow (with tag, maybe)
+                            imitationColor = neighborColor;
+                            colorManager.SetEnemyColor(this.gameObject, imitationColor, false, true);
                             isImitation = true;
 
                             // If one of the true neighbors dies,
@@ -408,10 +410,15 @@ public class Enemy : MonoBehaviour
     {
         int count = 0;
         bool revealed = false;
-        Color imitationColor = Color.red;
-        while (count < 12)
+        Color falseColor = ColorExtension(imitationColor);
+        while (count < 11)
         {
             yield return new WaitForSeconds(0.05f);
+
+            if (this == null || gameObject == null || gameObject.GetComponent<SpriteRenderer>() == null)
+            {
+                yield break;
+            }
             if (revealed == false)
             {
                 gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -419,28 +426,33 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                gameObject.GetComponent<SpriteRenderer>().color = imitationColor;
+                gameObject.GetComponent<SpriteRenderer>().color = falseColor;
                 revealed = false;
             }
             count ++;
+            if (count == 10)
+            {
+                isImitation = false;
+                timeSinceLastActivation = 0;
+            }
         }
 
-        // Color ColorExtension(string colorName)
-        // {
-        //     switch(colorName)
-        //     {
-        //         case "Green":
-        //             return Color.green;
-        //         case "Purple":
-        //             return new Color(0.5f, 0f, 0.5f, 1f);
-        //         case "Red":
-        //             return Color.red;
-        //         case "Blue":
-        //         return Color.blue;
-        //         default:
-        //             return Color.white;
-        //     }
-        // }
+        Color ColorExtension(string colorName)
+        {
+            switch(colorName)
+            {
+                case "Green":
+                    return Color.green;
+                case "Purple":
+                    return new Color(1f, 0f, 1f, 1f);
+                case "Red":
+                    return Color.red;
+                case "Blue":
+                return Color.blue;
+                default:
+                    return Color.white;
+            }
+        }
     }
 
     public void death()

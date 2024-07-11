@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
 
-    public GameObject[] fleetGrid = new GameObject[72];
+    public GameObject[] fleetGrid = new GameObject[60];
     public GameObject cellPrefab;
 
     // Variable for when fleet changes directions
@@ -96,8 +96,8 @@ public class GridManager : MonoBehaviour
     void initializeFleetGrid()
     {
         int cellInx = 0;
-        int rows = 12;
         int columns = 6;
+        int rows = fleetGrid.Length / columns;
         float cellOffset = 0.75f;
         float gridOffsetX = 1.875f;
         float gridOffsetY = 3.75f;
@@ -127,10 +127,7 @@ public class GridManager : MonoBehaviour
                 // Location
                 cell.transform.localPosition = cellLocation;
 
-                // 3. Create list containing every cell
-                // grid.Insert(cellInx, cell);
-                // cellInx++;
-                // // 3. Add cells to fleetGrid list
+                // // 3. Add cells to fleetGrid array
                 fleetGrid[cellInx] = cell;
                 cellInx++;
 
@@ -222,7 +219,7 @@ public class GridManager : MonoBehaviour
 
     public void descend()
     {
-        for (int i = 66; i < 72; i++)
+        for (int i = 66; i < fleetGrid.Length; i++)
                 {
                     GameObject currentCell = fleetGrid[i];
                     if (currentCell.GetComponent<Cell>().enemy)
