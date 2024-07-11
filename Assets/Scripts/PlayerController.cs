@@ -137,13 +137,7 @@ public class PlayerController : MonoBehaviour
                 moveToTarget = true;
             }
 
-            if (touch.phase == TouchPhase.Ended)
-            {
-                if (transform.position == targetPosition)
-                {
-                    // BallisticTongueProjection();
-                }
-            }
+
         }
 
         if (moveToTarget)
