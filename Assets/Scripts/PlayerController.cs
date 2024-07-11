@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 startTouchPosition;
     private bool swipeReady = true;
 
+
     void Awake()
     {
         alive = true;
@@ -142,8 +143,48 @@ public class PlayerController : MonoBehaviour
 
         if (moveToTarget)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            // Calculate distances
+            float distToLeftEdge = Mathf.Abs(-screenBound - transform.position.x);
+            float distToRightEdge = Mathf.Abs(screenBound - transform.position.x);
+            float distFromLeftEdgeToTarget = Mathf.Abs(-screenBound - targetPosition.x);
+            float distFromRightEdgeToTarget = Mathf.Abs(screenBound - targetPosition.x);
+            float directDistToTarget = Mathf.Abs(targetPosition.x - transform.position.x);
 
+            // Determine if warping is shorter from the left side
+            bool warpFromLeft = (distToLeftEdge + distFromRightEdgeToTarget) < directDistToTarget;
+
+            // Determine if warping is shorter from the right side
+            bool warpFromRight = (distToRightEdge + distFromLeftEdgeToTarget) < directDistToTarget;
+
+            if (warpFromLeft || warpFromRight)
+            {
+                // Move towards the closest edge first
+                if (warpFromLeft && transform.position.x < 0)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(-screenBound, transform.position.y, transform.position.z), moveSpeed * Time.deltaTime);
+                }
+                else if (warpFromRight && transform.position.x > 0)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(screenBound, transform.position.y, transform.position.z), moveSpeed * Time.deltaTime);
+                }
+
+                // Check if reached the edge to warp
+                if (Mathf.Abs(transform.position.x - (-screenBound)) < 0.1f)
+                {
+                    transform.position = new Vector3(screenBound, transform.position.y, transform.position.z);
+                }
+                else if (Mathf.Abs(transform.position.x - screenBound) < 0.1f)
+                {
+                    transform.position = new Vector3(-screenBound, transform.position.y, transform.position.z);
+                }
+            }
+            else
+            {
+                // Directly move towards the target
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            }
+
+            // Check if reached the target position
             if (transform.position == targetPosition)
             {
                 moveToTarget = false;
@@ -202,6 +243,7 @@ public class PlayerController : MonoBehaviour
         Vector3 deadPosition = this.gameObject.transform.position;
         deadPosition.y -= 0.25f;
         transform.position = deadPosition;
+        moveToTarget = false;
     }
 
     public void hit()
