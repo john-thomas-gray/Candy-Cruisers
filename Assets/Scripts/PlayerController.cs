@@ -37,17 +37,24 @@ public class PlayerController : MonoBehaviour
     public VoidEventChannelSO fleetWipeEC;
     public BoolEventChannelSO SetMagicTongueChannel;
 
+    // Touch Controls
+    public Touch theTouch;
+    private Vector3 targetPosition;
+    private bool moveToTarget = false;
+    private Vector2 startTouchPosition;
+    private bool swipeReady = true;
+
     void Awake()
     {
         alive = true;
         moveSpeed = 5f;
         // Get ColorManager instance
         colorManager = ColorManager.Instance;
-
     }
 
     void Start()
     {
+        targetPosition = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
         setColor();
     }
@@ -69,7 +76,11 @@ public class PlayerController : MonoBehaviour
         if(alive && !gameOver && Tongue.GetComponent<Tongue>().deflected == false)
         {
             playerMovement();
-            BallisticTongueProjection();
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                BallisticTongueProjection();
+            }
+            DetectSwipe();
         }
 
         if(magicTongue && colorSet == false)
@@ -91,12 +102,11 @@ public class PlayerController : MonoBehaviour
 
     void playerMovement()
     {
-        // Move Left
+        // Keyboard
         if(Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position = transform.position + Vector3.left * moveSpeed * Time.deltaTime;
         }
-        // Move Right
         else if(Input.GetKey(KeyCode.RightArrow))
         {
             transform.position = transform.position + Vector3.right * moveSpeed * Time.deltaTime;
@@ -109,14 +119,75 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = transform.position + Vector3.right * 2 * screenBound;
         }
+        // Touch Controls
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                startTouchPosition = touch.position;
+            }
+            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+            {
+                Vector3 touchPosition = new Vector3(touch.position.x, touch.position.y, Camera.main.nearClipPlane);
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(touchPosition);
+                worldPosition.y = transform.position.y;
+                targetPosition = new Vector3(worldPosition.x, transform.position.y, transform.position.z);
+                moveToTarget = true;
+            }
+
+            if (touch.phase == TouchPhase.Ended)
+            {
+                if (transform.position == targetPosition)
+                {
+                    // BallisticTongueProjection();
+                }
+            }
+        }
+
+        if (moveToTarget)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+            if (transform.position == targetPosition)
+            {
+                moveToTarget = false;
+            }
+        }
+    }
+    void DetectSwipe()
+    {
+        if (Input.touchCount > 0)
+        {
+            Debug.Log("Swiping");
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                Vector2 currentTouchPosition = touch.position;
+                Vector2 swipeLength = currentTouchPosition - startTouchPosition;
+                if (swipeReady && swipeLength.y > 400)
+                {
+                    BallisticTongueProjection();
+                    swipeReady = false;
+                }
+                Vector2 playerScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+
+                if (currentTouchPosition.y <= playerScreenPosition.y + 50)
+                {
+                    startTouchPosition = currentTouchPosition;
+                    swipeLength = Vector2.zero;
+                    swipeReady = true;
+                }
+                Debug.Log("Swipe length: " + swipeLength.y);
+            }
+        }
     }
     void BallisticTongueProjection()
     {
         colorSet = false;
 
-        if( Input.GetKeyDown(KeyCode.Space) &&
-            tongueReady == true
-        )
+        if(tongueReady == true)
         {
             Tongue.GetComponent<Tongue>().Project();
         }
@@ -165,26 +236,27 @@ public class PlayerController : MonoBehaviour
     }
 
     public void respawnPlayer()
-   {
-    float respawnTime = 1.5f;
-    float iFrames = 3f;
-    respawnTimer += Time.deltaTime;
-    if(respawnTimer >= respawnTime && alive == false)
     {
-        Vector3 newPosition = transform.position;
-        newPosition.y += 0.25f;
-        transform.position = newPosition;
-        spawnProtection = true;
-        alive = true;
-        StartCoroutine(BlinkSprite());
-    } else if (respawnTimer >= iFrames)
-    {
-        spawnProtection = false;
+        float respawnTime = 1.5f;
+        float iFrames = 3f;
+        respawnTimer += Time.deltaTime;
+        if(respawnTimer >= respawnTime && alive == false)
+        {
+            Vector3 newPosition = transform.position;
+            newPosition.y += 0.25f;
+            transform.position = newPosition;
+            spawnProtection = true;
+            alive = true;
+            StartCoroutine(BlinkSprite());
+        } else if (respawnTimer >= iFrames)
+        {
+            spawnProtection = false;
+        }
     }
-   }
 
-   private void SetMagicTongue(bool b)
+    private void SetMagicTongue(bool b)
     {
         magicTongue = b;
     }
+
 }
