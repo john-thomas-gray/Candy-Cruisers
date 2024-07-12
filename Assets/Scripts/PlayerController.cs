@@ -198,6 +198,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Swiping");
             Touch touch = Input.GetTouch(0);
             Vector2 lastTouchPosition = touch.position;
+            Vector2 playerScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
             if (touch.phase == TouchPhase.Moved)
             {
                 // Vector2 swipeLength = lastTouchPosition - startTouchPosition;
@@ -206,7 +207,6 @@ public class PlayerController : MonoBehaviour
                 //     BallisticTongueProjection();
                 //     swipeReady = false;
                 // }
-                Vector2 playerScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
 
                 // if (lastTouchPosition.y <= playerScreenPosition.y + 50)
                 // {
@@ -216,14 +216,13 @@ public class PlayerController : MonoBehaviour
                 // }
                 // Debug.Log("Swipe length: " + swipeLength.y);
             }
-            if (touch.phase == TouchPhase.Ended)
+
+            if(lastTouchPosition.y >= 400 && lastTouchPosition.x == playerScreenPosition.x)
             {
-                if(lastTouchPosition.y >= 400)
-                {
-                    BallisticTongueProjection();
-                    lastTouchPosition = Vector2.zero;
-                }
+                BallisticTongueProjection();
+                lastTouchPosition = Vector2.zero;
             }
+
         }
     }
     void BallisticTongueProjection()
