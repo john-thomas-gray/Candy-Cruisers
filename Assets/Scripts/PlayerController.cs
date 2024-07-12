@@ -197,24 +197,32 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Swiping");
             Touch touch = Input.GetTouch(0);
+            Vector2 lastTouchPosition = touch.position;
             if (touch.phase == TouchPhase.Moved)
             {
-                Vector2 currentTouchPosition = touch.position;
-                Vector2 swipeLength = currentTouchPosition - startTouchPosition;
-                if (swipeReady && swipeLength.y > 400)
-                {
-                    BallisticTongueProjection();
-                    swipeReady = false;
-                }
+                // Vector2 swipeLength = lastTouchPosition - startTouchPosition;
+                // if (swipeReady && swipeLength.y > 400)
+                // {
+                //     BallisticTongueProjection();
+                //     swipeReady = false;
+                // }
                 Vector2 playerScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
 
-                if (currentTouchPosition.y <= playerScreenPosition.y + 50)
+                // if (lastTouchPosition.y <= playerScreenPosition.y + 50)
+                // {
+                //     startTouchPosition = lastTouchPosition;
+                //     swipeLength = Vector2.zero;
+                //     swipeReady = true;
+                // }
+                // Debug.Log("Swipe length: " + swipeLength.y);
+            }
+            if (touch.phase == TouchPhase.Ended)
+            {
+                if(lastTouchPosition.y >= 400)
                 {
-                    startTouchPosition = currentTouchPosition;
-                    swipeLength = Vector2.zero;
-                    swipeReady = true;
+                    BallisticTongueProjection();
+                    lastTouchPosition = Vector2.zero;
                 }
-                Debug.Log("Swipe length: " + swipeLength.y);
             }
         }
     }

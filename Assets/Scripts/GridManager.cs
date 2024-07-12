@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
 
-    public GameObject[] fleetGrid = new GameObject[60];
+    public GameObject[] fleetGrid = new GameObject[72];
     public GameObject cellPrefab;
 
     // Variable for when fleet changes directions

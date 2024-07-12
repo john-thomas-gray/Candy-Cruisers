@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
     private bool colorReset = false;
 
     // YELLOW ABILITIES
-    private float[] imitateCoolDownRange = {3, 3};
+    private float[] imitateCoolDownRange = {10, 30};
     // Cooldown becomes shorter for special yellow
     public bool isImitation = false;
     bool inMiddle = false;
