@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         if(magicTongue && colorSet == false)
         {
             colorManager.Multicolor(this.gameObject);
-            colorSet = true;
+            colorManager.Multicolor(Tongue);
         }
 
         if(!alive && respawnTimer >= 5)

@@ -32,6 +32,7 @@ public class ColorManager : MonoBehaviour
     Color purple = new Color(1f, 0f, 1f, 1f);
     Color[] skins = null;
     string[] colors = null;
+    string multicolorColor = "Green";
 
     void Awake()
     {
@@ -187,9 +188,6 @@ public class ColorManager : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
 
-        // Set initial color value so IndexOf doesn't throw error
-        string color = "Green";
-
         // Check if the object is not the player
         if (targetObject.tag != "Player")
         {
@@ -198,21 +196,21 @@ public class ColorManager : MonoBehaviour
             {
                 // Set color string to a random "color"
                 int randomIndex = random.Next(colors.Length);
-                color = colors[randomIndex];
+                multicolorColor = colors[randomIndex];
                 multicolorTimer = 0.0f;
             }
 
             // targetObject.tag = 'Multicolor';
 
             // Get index of item in list
-            int colorInx = Array.IndexOf(colors,color);
+            int colorInx = Array.IndexOf(colors,multicolorColor);
 
             // Set the target sprite's color
             Color spriteColor = skins[colorInx];
             spriteRenderer.color = spriteColor;
 
             // Set color property
-            targetObject.GetComponent<Tongue>().color = "Multicolor";
+            targetObject.GetComponent<Tongue>().color= "Multicolor";
 
         }
         else
@@ -223,10 +221,10 @@ public class ColorManager : MonoBehaviour
             {
                 // Set color string to a random "color"
                 int randomIndex = random.Next(colors.Length);
-                color = colors[randomIndex];
+                multicolorColor = colors[randomIndex];
                 Color skin = skins[randomIndex];
                 multicolorTimer = 0.0f;
-                spriteRenderer.color = skin;
+                spriteRenderer.color= skin;
             }
 
         }
