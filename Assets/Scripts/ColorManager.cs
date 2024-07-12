@@ -184,51 +184,32 @@ public class ColorManager : MonoBehaviour
         return enemyTotal;
     }
 
+
     public void Multicolor(GameObject targetObject)
     {
+        // SOME OF THIS IS LIKELY UNNECESSARY. REVISIT.
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
+        multicolorTimer += Time.deltaTime;
 
-        // Check if the object is not the player
+        int colorInx = Array.IndexOf(colors,multicolorColor);
+
+        Color spriteColor = skins[colorInx];
+        spriteRenderer.color = spriteColor;
+
         if (targetObject.tag != "Player")
         {
-            multicolorTimer += Time.deltaTime;
-            if (multicolorTimer >= multicolorCooldown)
-            {
-                // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Length);
-                multicolorColor = colors[randomIndex];
-                multicolorTimer = 0.0f;
-            }
-
-            // targetObject.tag = 'Multicolor';
-
-            // Get index of item in list
-            int colorInx = Array.IndexOf(colors,multicolorColor);
-
-            // Set the target sprite's color
-            Color spriteColor = skins[colorInx];
-            spriteRenderer.color = spriteColor;
-
-            // Set color property
             targetObject.GetComponent<Tongue>().color= "Multicolor";
-
         }
-        else
+        multicolorTimer += Time.deltaTime;
+        if (multicolorTimer >= multicolorCooldown)
         {
-
-            multicolorTimer += Time.deltaTime;
-            if (multicolorTimer >= multicolorCooldown)
-            {
-                // Set color string to a random "color"
-                int randomIndex = random.Next(colors.Length);
-                multicolorColor = colors[randomIndex];
-                Color skin = skins[randomIndex];
-                multicolorTimer = 0.0f;
-                spriteRenderer.color= skin;
-            }
-
+            // Set color string to a random "color"
+            int randomIndex = random.Next(colors.Length);
+            multicolorColor = colors[randomIndex];
+            Color skin = skins[randomIndex];
+            multicolorTimer = 0.0f;
+            spriteRenderer.color= skin;
         }
-
     }
 
     public void turnWhite(GameObject targetObject)
