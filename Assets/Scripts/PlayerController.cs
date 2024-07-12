@@ -254,6 +254,7 @@ public class PlayerController : MonoBehaviour
         {
             alive = false;
             death();
+            Tongue.GetComponent<Tongue>().Retract();
         }
     }
 
