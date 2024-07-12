@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
             if (touch.phase == TouchPhase.Began)
             {
                 startTouchPosition = touch.position;
-                if (touch.position.y > 200)
+                if (touch.position.y > 350)
                 {
                     shouldFire = true;
                 }
