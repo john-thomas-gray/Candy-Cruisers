@@ -81,10 +81,9 @@ public class PlayerController : MonoBehaviour
             {
                 BallisticTongueProjection();
             }
-            // DetectSwipe();
         }
 
-        if(magicValue > 0 && colorSet == false)
+        if(magicValue > 0)
         {
             colorManager.Multicolor(this.gameObject);
         }
@@ -192,35 +191,13 @@ public class PlayerController : MonoBehaviour
             if (transform.position == targetPosition && shouldFire)
             {
                 moveToTarget = false;
-                // DetectSwipe();
                 BallisticTongueProjection();
                 shouldFire = false;
             }
         }
     }
-    void DetectSwipe()
-    {
-        // if (Input.touchCount > 0)
-        // {
-        //     Debug.Log("Swiping");
-        //     Touch touch = Input.GetTouch(0);
-        //     Vector2 lastTouchPosition = touch.position;
-        //     Vector2 playerScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
-        //     Debug.Log("lTP.y " + lastTouchPosition.y);
-        //     Debug.Log("lTP.x " + lastTouchPosition.x);
-
-
-        //     if(lastTouchPosition.y >= 400)
-        //     {
-        //         BallisticTongueProjection();
-        //         lastTouchPosition = Vector2.zero;
-        //     }
-
-        // }
-    }
     void BallisticTongueProjection()
     {
-        colorSet = false;
 
         if(tongueReady == true)
         {
@@ -236,11 +213,15 @@ public class PlayerController : MonoBehaviour
         Tongue.GetComponent<Tongue>().SetColor(color);
 
         colorManager.SetColor(Body, color);
+        colorSet = true;
     }
 
     public void death()
     {
+        Debug.Log("Death");
         SetMagicValueChannel.RaiseEvent(-10);
+        colorManager.turnWhite(this.gameObject);
+        colorSet = false;
         Vector3 deadPosition = this.gameObject.transform.position;
         deadPosition.y -= 0.25f;
         transform.position = deadPosition;
@@ -249,12 +230,14 @@ public class PlayerController : MonoBehaviour
 
     public void hit()
     {
-        if(alive && !spawnProtection)
+        if(alive && spawnProtection == false)
         {
             alive = false;
             death();
             Tongue.GetComponent<Tongue>().Retract();
+            Debug.Log("Not working");
         }
+        Debug.Log("Hit");
     }
 
     void GameOver()
@@ -275,11 +258,17 @@ public class PlayerController : MonoBehaviour
 
     public void respawnPlayer()
     {
+        // Make most of this into a coroutine alla BlinkSprite
         float respawnTime = 1.5f;
         float iFrames = 3f;
         respawnTimer += Time.deltaTime;
         if(respawnTimer >= respawnTime && alive == false)
         {
+            if (colorSet == false)
+            {
+                setColor();
+
+            }
             Vector3 newPosition = transform.position;
             newPosition.y += 0.25f;
             transform.position = newPosition;

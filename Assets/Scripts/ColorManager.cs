@@ -7,7 +7,6 @@ public class ColorManager : MonoBehaviour
 {
     static System.Random random = new System.Random();
     private static ColorManager colorManager;
-    public bool colorSet;
 
     // Multicolor
 
@@ -73,7 +72,6 @@ public class ColorManager : MonoBehaviour
             fallback++;
         }
 
-        Debug.Log("Fallback");
         randomIndex = random.Next(colors.Length);
         return colors[randomIndex];
 
@@ -215,7 +213,7 @@ public class ColorManager : MonoBehaviour
     public void turnWhite(GameObject targetObject)
     {
         SpriteRenderer spriteRenderer = targetObject.GetComponent<SpriteRenderer>();
-        targetObject.GetComponent<Tongue>().color = "White";
+        targetObject.GetComponent<PlayerController>().color = "White";
         spriteRenderer.color = Color.white;
     }
 

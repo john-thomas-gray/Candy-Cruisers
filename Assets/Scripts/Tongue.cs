@@ -142,7 +142,6 @@ public class Tongue : MonoBehaviour
         speedFactor = 1.0f;
         player.GetComponent<PlayerController>().tongueReady = false;
         colorSet = false;
-
     }
 
     public void Retract()
@@ -167,7 +166,7 @@ public class Tongue : MonoBehaviour
             magicReset = false;
         }
 
-        if(magicValue == 0 && colorSet == false)
+        if(magicValue == 0 && colorSet == false && player.GetComponent<PlayerController>().alive)
         {
             player.GetComponent<PlayerController>().setColor();
             colorSet = true;
