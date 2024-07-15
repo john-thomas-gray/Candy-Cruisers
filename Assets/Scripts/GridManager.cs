@@ -47,7 +47,6 @@ public class GridManager : MonoBehaviour
     public VoidEventChannelSO checkRetreatChannel;
     public VoidEventChannelSO gameOverEventChannel;
     public VoidEventChannelSO fleetWipeEC;
-    public BoolEventChannelSO setMagicTongueChannel;
 
     private void OnEnable()
     {
@@ -62,6 +61,7 @@ public class GridManager : MonoBehaviour
         checkRetreatChannel.OnEventRaised -= StartCheckRetreat;
         fleetWipeEC.OnEventRaised -= FleetWipe;
 
+
     }
 
     void setGlobalLevel(int level)
@@ -74,7 +74,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(18);
+        populateFleet(6);
         initialGridPos = transform.position;
     }
 
@@ -166,7 +166,6 @@ public class GridManager : MonoBehaviour
 
     public void FleetWipe()
     {
-        resetMagicTongue(false);
         StartCoroutine(PopulateFleetAfterDelay());
     }
 
@@ -209,13 +208,6 @@ public class GridManager : MonoBehaviour
         enemyCount += (end - start);
         fleetStatus();
     }
-
-    void resetMagicTongue(bool b)
-    {
-        colorManager.magicTongue = b;
-        setMagicTongueChannel.RaiseEvent(b);
-    }
-
 
     public void descend()
     {

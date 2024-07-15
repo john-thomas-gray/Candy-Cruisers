@@ -906,7 +906,7 @@ MonoBehaviour:
   checkRetreatChannel: {fileID: 11400000, guid: 77507d2768ebf4e99889dac78f3c5ba2, type: 2}
   gameOverEventChannel: {fileID: 11400000, guid: 4d47b232a7c934396a679ce4ba24b4cc, type: 2}
   fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
-  setMagicTongueChannel: {fileID: 11400000, guid: 72cbf64ff73dd422582cb99b730d499f, type: 2}
+  setMagicValueChannel: {fileID: 11400000, guid: d3a232f35667d451fbe911337402fadc, type: 2}
 --- !u!4 &343026342
 Transform:
   m_ObjectHideFlags: 0

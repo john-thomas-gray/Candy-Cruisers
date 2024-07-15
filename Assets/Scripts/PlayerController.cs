@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject Tongue;
     public bool tongueReady = true;
-    private bool magicTongue;
+    private int magicValue;
 
     // Death and Respawn
     public bool spawnProtection = false;
@@ -35,14 +35,13 @@ public class PlayerController : MonoBehaviour
     [Header("Event Channels")]
     public VoidEventChannelSO gameOverEventChannel;
     public VoidEventChannelSO fleetWipeEC;
-    public BoolEventChannelSO SetMagicTongueChannel;
+    public IntEventChannelSO SetMagicValueChannel;
 
     // Touch Controls
     public Touch theTouch;
     private Vector3 targetPosition;
     private bool moveToTarget = false;
     private Vector2 startTouchPosition;
-    private bool swipeReady = true;
     private bool shouldFire = false;
 
 
@@ -64,13 +63,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         gameOverEventChannel.OnEventRaised+= GameOver;
-        SetMagicTongueChannel.OnEventRaised += SetMagicTongue;
+        SetMagicValueChannel.OnEventRaised += SetMagicValue;
     }
 
     private void OnDisable()
     {
         gameOverEventChannel.OnEventRaised -= GameOver;
-        SetMagicTongueChannel.OnEventRaised -= SetMagicTongue;
+        SetMagicValueChannel.OnEventRaised -= SetMagicValue;
     }
 
     void Update()
@@ -85,10 +84,9 @@ public class PlayerController : MonoBehaviour
             // DetectSwipe();
         }
 
-        if(magicTongue && colorSet == false)
+        if(magicValue > 0 && colorSet == false)
         {
             colorManager.Multicolor(this.gameObject);
-            // colorManager.Multicolor(Tongue);
         }
 
         if(!alive && respawnTimer >= 5)
@@ -242,6 +240,7 @@ public class PlayerController : MonoBehaviour
 
     public void death()
     {
+        SetMagicValueChannel.RaiseEvent(-10);
         Vector3 deadPosition = this.gameObject.transform.position;
         deadPosition.y -= 0.25f;
         transform.position = deadPosition;
@@ -293,9 +292,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetMagicTongue(bool b)
+    private void SetMagicValue(int i)
     {
-        magicTongue = b;
+        magicValue += i;
+        magicValue = magicValue > 2 ? 2 : magicValue;
+        magicValue = magicValue < 0 ? 0 : magicValue;
     }
 
 }

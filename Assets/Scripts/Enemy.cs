@@ -397,9 +397,9 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void hit(string tongueColor, bool isMagic)
+    public void hit(string tongueColor, int magicValue)
     {
-        if(isMagic || tongueColor == color)
+        if(magicValue > 0 || tongueColor == color)
         {
             alive = false;
             checkNeighbors();

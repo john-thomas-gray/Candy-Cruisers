@@ -12,7 +12,8 @@ public class Tongue : MonoBehaviour
     public bool retracting = false;
     private float originY;
     private bool magicTongue = false;
-    private bool unstoppable = false;
+    private int magicValue = 0;
+    private bool magicReset = false;
     private float maxLength = 4.95f;
     public int maxSpeed = 20;
     private float speedFactor = 0f;
@@ -25,13 +26,19 @@ public class Tongue : MonoBehaviour
     private LayerMask layersToHit = (1 << 8 | 1 << 10); // Combine enemy and shield layers
 
     public BoolEventChannelSO SetMagicTongueChannel;
+    public IntEventChannelSO SetMagicValueChannel;
+    public VoidEventChannelSO fleetWipeEC;
     private void OnEnable()
     {
         SetMagicTongueChannel.OnEventRaised += SetMagicTongue;
+        SetMagicValueChannel.OnEventRaised += SetMagicValue;
+        fleetWipeEC.OnEventRaised += FleetWipeMagicReset;
     }
     private void OnDisable()
     {
         SetMagicTongueChannel.OnEventRaised -= SetMagicTongue;
+        SetMagicValueChannel.OnEventRaised -= SetMagicValue;
+        fleetWipeEC.OnEventRaised -= FleetWipeMagicReset;
     }
     void Awake()
     {
@@ -53,7 +60,7 @@ public class Tongue : MonoBehaviour
             Retract();
         }
 
-        if (player.GetComponent<PlayerController>().alive && transform.position.y < originY)
+        if (player.GetComponent<PlayerController>().alive && transform.position.y <= originY)
         {
             transform.position = new Vector3(transform.position.x, originY, transform.position.z);
             if(retracting == true)
@@ -62,9 +69,13 @@ public class Tongue : MonoBehaviour
                 retracting = false;
             }
         }
-        if (magicTongue)
+        if (magicValue > 0)
         {
             colorManager.Multicolor(this.gameObject);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("magic Value: " + magicValue);
         }
     }
 
@@ -85,9 +96,9 @@ public class Tongue : MonoBehaviour
                     string enemyColor = enemyScript.color;
                     if(enemyScript != null)
                     {
-                        enemyScript.hit(color, magicTongue);
+                        enemyScript.hit(color, magicValue);
 
-                        if(color == enemyColor && !unstoppable)
+                        if(color == enemyColor && magicValue == 0)
                         {
                             Retract();
                         }
@@ -97,7 +108,7 @@ public class Tongue : MonoBehaviour
                         }
                     }
                 }
-                else if(hit.collider.gameObject.layer == 10 && !magicTongue)
+                else if(hit.collider.gameObject.layer == 10 && magicValue == 0)
                 {
                     Shield shieldScript = hitGameObject.GetComponent<Shield>();
 
@@ -138,31 +149,31 @@ public class Tongue : MonoBehaviour
     {
         retracting = true;
         speedFactor = -1.5f;
-        if (magicTongue)
-        {
-            colorManager.magicTongue = true;
-        }
-        if (unstoppable)
-        {
-            unstoppable = false;
-            SetMagicTongueChannel.RaiseEvent(false);
-            colorManager.magicTongue = false;
-        }
     }
     public void TongueReset()
     {
-        if(colorSet == false)
+        if (magicValue > 0)
+        {
+            SetMagicValueChannel.RaiseEvent(-1);
+        }
+        if (magicTongue)
+        {
+            SetMagicValueChannel.RaiseEvent(1);
+            SetMagicTongueChannel.RaiseEvent(false);
+        }
+        if (magicReset)
+        {
+            SetMagicValueChannel.RaiseEvent(-10);
+            magicReset = false;
+        }
+
+        if(magicValue == 0 && colorSet == false)
         {
             player.GetComponent<PlayerController>().setColor();
             colorSet = true;
         }
         player.GetComponent<PlayerController>().tongueReady = true;
-        if (unstoppable == false && magicTongue)
-        {
-            unstoppable = true;
-        }
         deflected = false;
-
     }
 
     public void SetColor(string inputColor)
@@ -173,5 +184,17 @@ public class Tongue : MonoBehaviour
     private void SetMagicTongue(bool b)
     {
         magicTongue = b;
+    }
+
+    private void SetMagicValue(int i)
+    {
+        magicValue += i;
+        magicValue = magicValue > 2 ? 2 : magicValue;
+        magicValue = magicValue < 0 ? 0 : magicValue;
+    }
+
+    private void FleetWipeMagicReset()
+    {
+        magicReset = true;
     }
 }

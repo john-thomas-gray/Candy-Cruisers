@@ -10,7 +10,7 @@ public class ColorManager : MonoBehaviour
     public bool colorSet;
 
     // Multicolor
-    public bool magicTongue = false;
+
     private float multicolorTimer = 0.0f;
     private float multicolorCooldown = 0.1f;
     public static ColorManager Instance
