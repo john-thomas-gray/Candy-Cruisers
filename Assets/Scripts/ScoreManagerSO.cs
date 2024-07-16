@@ -9,6 +9,8 @@ public class ScoreManagerSO : ScriptableObject
     public int startingScore = 0;
     public int enemies_destroyed = 0;
 
+    public LevelManagerSO LevelManager;
+
     [System.NonSerialized]
     public UnityEvent<int> scoreChangeEvent;
     public IntEventChannelSO enemyDestroyedECSO;
@@ -29,7 +31,7 @@ public class ScoreManagerSO : ScriptableObject
         fleetWipeEC.OnEventRaised -= FleetWipe;
     }
     public void IncreaseScore(int amount) {
-        score += amount;
+        score += amount * LevelManager.level;
         enemies_destroyed += 1;
         enemyDestroyedECSO.RaiseEvent(enemies_destroyed);
         scoreChangeEvent.Invoke(score);
@@ -37,7 +39,7 @@ public class ScoreManagerSO : ScriptableObject
 
     public void FleetWipe()
     {
-        score += 10000;
+        score += 5000 * LevelManager.level;
         scoreChangeEvent.Invoke(score);
     }
 }
