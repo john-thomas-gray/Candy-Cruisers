@@ -88,14 +88,8 @@ public class PlayerController : MonoBehaviour
             colorManager.Multicolor(this.gameObject);
         }
 
-        if(!alive && respawnTimer >= 5)
-        {
-            respawnTimer = 0;
-        }
-        if(respawnTimer < 5)
-        {
-            respawnPlayer();
-        }
+        respawnPlayer();
+
 
     }
 
@@ -218,7 +212,6 @@ public class PlayerController : MonoBehaviour
 
     public void death()
     {
-        Debug.Log("Death");
         SetMagicValueChannel.RaiseEvent(-10);
         colorManager.turnWhite(this.gameObject);
         colorSet = false;
@@ -235,9 +228,7 @@ public class PlayerController : MonoBehaviour
             alive = false;
             death();
             Tongue.GetComponent<Tongue>().Retract();
-            Debug.Log("Not working");
         }
-        Debug.Log("Hit");
     }
 
     void GameOver()
@@ -258,26 +249,34 @@ public class PlayerController : MonoBehaviour
 
     public void respawnPlayer()
     {
-        // Make most of this into a coroutine alla BlinkSprite
-        float respawnTime = 1.5f;
-        float iFrames = 3f;
-        respawnTimer += Time.deltaTime;
-        if(respawnTimer >= respawnTime && alive == false)
-        {
-            if (colorSet == false)
-            {
-                setColor();
 
-            }
-            Vector3 newPosition = transform.position;
-            newPosition.y += 0.25f;
-            transform.position = newPosition;
-            spawnProtection = true;
-            alive = true;
-            StartCoroutine(BlinkSprite());
-        } else if (respawnTimer >= iFrames)
+        if(!alive && respawnTimer >= 3)
         {
-            spawnProtection = false;
+            respawnTimer = 0;
+        }
+        if(respawnTimer < 3)
+        {
+            // Make most of this into a coroutine alla BlinkSprite
+            float respawnTime = 1.5f;
+            float iFrames = 3f;
+            respawnTimer += Time.deltaTime;
+            if(respawnTimer >= respawnTime && alive == false)
+            {
+                if (colorSet == false)
+                {
+                    setColor();
+
+                }
+                Vector3 newPosition = transform.position;
+                newPosition.y += 0.25f;
+                transform.position = newPosition;
+                spawnProtection = true;
+                alive = true;
+                StartCoroutine(BlinkSprite());
+            } else if (respawnTimer >= iFrames)
+            {
+                spawnProtection = false;
+            }
         }
     }
 
