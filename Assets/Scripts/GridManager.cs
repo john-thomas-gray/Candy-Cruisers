@@ -15,8 +15,7 @@ public class GridManager : MonoBehaviour
 
     // List of all cell objects in the grid & cellPrefab gameobject
     public List<GameObject> grid = new List<GameObject>();
-
-    public GameObject[] fleetGrid = new GameObject[72];
+    public GameObject[] fleetGrid = new GameObject[60];
     public GameObject cellPrefab;
 
     // Variable for when fleet changes directions
@@ -211,7 +210,7 @@ public class GridManager : MonoBehaviour
 
     public void descend()
     {
-        for (int i = 66; i < fleetGrid.Length; i++)
+        for (int i = fleetGrid.Length - 6; i < fleetGrid.Length; i++)
                 {
                     GameObject currentCell = fleetGrid[i];
                     if (currentCell.GetComponent<Cell>().enemy)
@@ -362,7 +361,7 @@ public class GridManager : MonoBehaviour
                     warpZones["right"] = (i + 1);
                 }
                 // Check down if not bot row
-                if (i < 66 && fleetGrid[i + 6].GetComponent<Cell>().enemy == null)
+                if (i < fleetGrid.Length - 6 && fleetGrid[i + 6].GetComponent<Cell>().enemy == null)
                 {
                     warpZones["down"] = (i + 6);
                 }
@@ -603,7 +602,7 @@ public class GridManager : MonoBehaviour
             }
             return null;
         }
-
+        fleetStatus();
     }
     public void checkNeighborRetreat(int cellNumber, int group)
     {
@@ -635,7 +634,7 @@ public class GridManager : MonoBehaviour
                 checkNeighborRetreat(cellNumber + 1, group);
             }
         }
-        if(cellNumber < 66)
+        if(cellNumber < fleetGrid.Length - 6)
         {
             if(fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy != null && fleetGrid[cellNumber + 6].GetComponent<Cell>().enemy.GetComponent<Enemy>().group == 0)
             {

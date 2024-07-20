@@ -200,7 +200,7 @@ public class Enemy : MonoBehaviour
                 neighbors.Add(right);
             }
             // Check down if not bot row
-            if (cellNumber < 66)
+            if (cellNumber < fleetGrid.Length - 6)
             {
                 down = fleetGrid[cellNumber + 6];
                 neighbors.Add(down);
@@ -338,7 +338,7 @@ public class Enemy : MonoBehaviour
             addNeighbor(0, cellNumber > 5 ? cellNumber - 6 : -1); // up
             addNeighbor(1, cellNumber % 6 != 0 ? cellNumber - 1 : -1); // left
             addNeighbor(2, (cellNumber + 1) % 6 != 0 ? cellNumber + 1 : -1); // right
-            addNeighbor(3, cellNumber < 66 ? cellNumber + 6 : -1); // down
+            addNeighbor(3, cellNumber < fleetGrid.Length - 6 ? cellNumber + 6 : -1); // down
 
             up = neighboringCells[0];
             left = neighboringCells[1];

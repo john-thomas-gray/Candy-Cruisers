@@ -886,18 +886,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   cellPrefab: {fileID: 1219203507519098383, guid: ccf021b8f01394f9bb252db76f693f1b, type: 3}
   gameOver: 0
   enemyCount: 0
@@ -915,7 +903,7 @@ Transform:
   m_GameObject: {fileID: 343026340}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -0.52, y: 0.45, z: 0}
+  m_LocalPosition: {x: -0.52, y: -0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
