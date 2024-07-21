@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -46,6 +46,17 @@ public class GridManager : MonoBehaviour
     public VoidEventChannelSO checkRetreatChannel;
     public VoidEventChannelSO gameOverEventChannel;
     public VoidEventChannelSO fleetWipeEC;
+
+    [Header("Scoring")]
+    [SerializeField]
+    private ScoreManagerSO scoreManager;
+    public GameObject scoreDisplay;
+
+    private static readonly int[] dx = { -1, 1, 0, 0 }; // Horizontal shifts (left, right)
+    private static readonly int[] dy = { 0, 0, -1, 1 }; // Vertical shifts (up, down)
+    private const int width = 6;
+    private const int height = 10;
+    public Canvas canvas;
 
     private void OnEnable()
     {
@@ -95,7 +106,7 @@ public class GridManager : MonoBehaviour
     void initializeFleetGrid()
     {
         int cellInx = 0;
-        int columns = 6;
+        int columns = width;
         int rows = fleetGrid.Length / columns;
         float cellOffset = 0.75f;
         float gridOffsetX = 1.875f;
@@ -197,8 +208,6 @@ public class GridManager : MonoBehaviour
             // Instantiate enemy at the cell's transform
             GameObject cell = fleetGrid[i];
             GameObject enemy = Instantiate(enemyPrefab, cell.transform);
-            // // Set the cellNum property on the enemy NECESSARY?
-            // enemy.GetComponent<Enemy>().cellNum = i;
             // Assign enemy object to the cell
             cell.GetComponent<Cell>().enemy = enemy;
             // Assign cell's color
@@ -701,6 +710,102 @@ public class GridManager : MonoBehaviour
         gameOverEventChannel.RaiseEvent();
     }
 
+    private static bool InBounds(int x, int y)
+    {
+        return x >= 0 && x < height && y >= 0 && y < width;
+    }
+
+    // Breadth-First Search to explore all connected cells with the same color
+    private void Bfs(GameObject[] grid, bool[] visited, int x, int y, string color)
+    {
+        Queue<(int, int)> queue = new Queue<(int, int)>();
+        queue.Enqueue((x, y));
+        visited[x * width + y] = true;
+        int multiplier = 1;
+
+        while (queue.Count > 0)
+        {
+            int levelCount = queue.Count;
+
+            for (int i = 0; i < levelCount; i++)
+            {
+                var (cx, cy) = queue.Dequeue();
+                GameObject thisCell = grid[cx * width + cy];
+                GameObject thisEnemy = thisCell.GetComponent<Cell>().enemy;
+                Enemy thisEnemyScript = thisEnemy.GetComponent<Enemy>();
+                int score = 100;
+                scoreManager.IncreaseScore(score);
+                // Call method to display score at defeated enemy's location
+                Debug.Log($"Visiting cell {cx * width + cy} (Color: {thisEnemyScript.color}) (Score: {score * multiplier})");
+                // Explore neighbors
+                for (int d = 0; d < 4; d++)
+                {
+                    int nx = cx + dx[d];
+                    int ny = cy + dy[d];
+                    if (InBounds(nx, ny))
+                    {
+                        int neighborIndex = nx * width + ny;
+                        GameObject cell = grid[neighborIndex];
+                        if (cell.GetComponent<Cell>().enemy)
+                        {
+                            GameObject neighbor = cell.GetComponent<Cell>().enemy;
+                            Enemy neighborScript = neighbor.GetComponent<Enemy>();
+                            if (!visited[neighborIndex] && neighborScript.color == color)
+                            {
+                                visited[neighborIndex] = true;
+                                scoreManager.IncreaseScore(score * multiplier);
+                                queue.Enqueue((nx, ny));
+                            }
+                        }
+                    }
+                }
+            }
+            multiplier++;
+        }
+    }
+
+    public void TallyScore(GameObject[] grid, GameObject enemy)
+    {
+        Enemy enemyScript = enemy.GetComponent<Enemy>();
+
+        if (enemyScript.cellNumber < 0 || enemyScript.cellNumber >= grid.Length)
+        {
+            Debug.LogWarning("Cell index is out of the grid's bounds.");
+            return;
+        }
 
 
+        int x = enemyScript.cellNumber / width;
+        int y = enemyScript.cellNumber % width;
+        bool[] visited = new bool[grid.Length];
+
+        Debug.Log($"Starting BFS from cell {enemyScript.cellNumber}, which has color {enemyScript.color}.");
+        Bfs(grid, visited, x, y, enemyScript.color);
+    }
+    public void CreateTextAtLocation(Vector3 worldPosition, string text) {
+        GameObject scoreText = Instantiate(scoreDisplay, Vector3.zero, Quaternion.identity, canvas.transform);
+        scoreText.transform.localScale = Vector3.one; // Ensure scale is reset to 1
+
+        TextMeshProUGUI textMeshPro = scoreText.GetComponent<TextMeshProUGUI>();
+        if (textMeshPro == null) {
+            Debug.LogError("TextMeshProUGUI component not found.");
+            return;
+        }
+
+        textMeshPro.text = text;
+        textMeshPro.color = Color.white;
+
+        // Convert world position to a screen point
+        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(worldPosition);
+        Vector2 canvasSize = canvas.GetComponent<RectTransform>().sizeDelta;
+
+        // Convert viewport position to canvas position
+        Vector2 positionOnCanvas = new Vector2(
+            (viewportPosition.x * canvasSize.x) - (canvasSize.x * 0.5f),
+            (viewportPosition.y * canvasSize.y) - (canvasSize.y * 0.5f)
+        );
+
+        RectTransform rectTransform = scoreText.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = positionOnCanvas;
+    }
 }

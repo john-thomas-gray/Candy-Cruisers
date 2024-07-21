@@ -396,13 +396,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     public void hit(string tongueColor, int magicValue)
     {
         if(magicValue > 0 || tongueColor == color)
         {
             alive = false;
             checkNeighbors();
+            gridManagerScript.TallyScore(gridManagerScript.fleetGrid, this.gameObject);
+
         }
     }
 
@@ -482,7 +483,7 @@ public class Enemy : MonoBehaviour
                 specialGreenCounted = false;
             }
             checkRetreatEventChannel.RaiseEvent();
-            scoreManager.IncreaseScore(100);
+            // scoreManager.IncreaseScore(100);
             gridManagerScript.DecrementEnemyCount();
             Destroy(this.gameObject);
         }
