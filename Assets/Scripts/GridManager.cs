@@ -736,6 +736,7 @@ public class GridManager : MonoBehaviour
                 int score = 100;
                 scoreManager.IncreaseScore(score);
                 // Call method to display score at defeated enemy's location
+                // Make sure to look at score manager
                 Debug.Log($"Visiting cell {cx * width + cy} (Color: {thisEnemyScript.color}) (Score: {score * multiplier})");
                 // Explore neighbors
                 for (int d = 0; d < 4; d++)
@@ -753,7 +754,7 @@ public class GridManager : MonoBehaviour
                             if (!visited[neighborIndex] && neighborScript.color == color)
                             {
                                 visited[neighborIndex] = true;
-                                scoreManager.IncreaseScore(score * multiplier);
+                                scoreManager.IncreaseScore(score, multiplier);
                                 queue.Enqueue((nx, ny));
                             }
                         }
