@@ -716,6 +716,8 @@ public class GridManager : MonoBehaviour
     }
 
     // Breadth-First Search to explore all connected cells with the same color
+    // FIX: Add a counter to keep track of how many enemies have been checked and
+    // use this to set specials
     private void Bfs(GameObject[] grid, bool[] visited, int x, int y, string color)
     {
         Queue<(int, int)> queue = new Queue<(int, int)>();
@@ -736,8 +738,10 @@ public class GridManager : MonoBehaviour
                 int score = 100;
                 scoreManager.IncreaseScore(score);
                 // Call method to display score at defeated enemy's location
+                // Fix color part so that it has a color converter
+                VisualizeMultiplier(thisEnemy.transform.position, thisEnemy.GetComponent<SpriteRenderer>().color, multiplier);
                 // Make sure to look at score manager
-                Debug.Log($"Visiting cell {cx * width + cy} (Color: {thisEnemyScript.color}) (Score: {score * multiplier})");
+                // Debug.Log($"Visiting cell {cx * width + cy} (Color: {thisEnemyScript.color}) (Score: {score * multiplier})");
                 // Explore neighbors
                 for (int d = 0; d < 4; d++)
                 {
@@ -780,33 +784,13 @@ public class GridManager : MonoBehaviour
         int y = enemyScript.cellNumber % width;
         bool[] visited = new bool[grid.Length];
 
-        Debug.Log($"Starting BFS from cell {enemyScript.cellNumber}, which has color {enemyScript.color}.");
+        // Debug.Log($"Starting BFS from cell {enemyScript.cellNumber}, which has color {enemyScript.color}.");
         Bfs(grid, visited, x, y, enemyScript.color);
     }
-    public void CreateTextAtLocation(Vector3 worldPosition, string text) {
-        GameObject scoreText = Instantiate(scoreDisplay, Vector3.zero, Quaternion.identity, canvas.transform);
-        scoreText.transform.localScale = Vector3.one; // Ensure scale is reset to 1
-
-        TextMeshProUGUI textMeshPro = scoreText.GetComponent<TextMeshProUGUI>();
-        if (textMeshPro == null) {
-            Debug.LogError("TextMeshProUGUI component not found.");
-            return;
-        }
-
-        textMeshPro.text = text;
-        textMeshPro.color = Color.white;
-
-        // Convert world position to a screen point
-        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(worldPosition);
-        Vector2 canvasSize = canvas.GetComponent<RectTransform>().sizeDelta;
-
-        // Convert viewport position to canvas position
-        Vector2 positionOnCanvas = new Vector2(
-            (viewportPosition.x * canvasSize.x) - (canvasSize.x * 0.5f),
-            (viewportPosition.y * canvasSize.y) - (canvasSize.y * 0.5f)
-        );
-
-        RectTransform rectTransform = scoreText.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = positionOnCanvas;
+    public void VisualizeMultiplier(Vector3 location, Color color, int multiplier)
+    {
+        GameObject instance = Instantiate(scoreDisplay, location, Quaternion.identity);
+        TextOnSpot textOnSpot = instance.GetComponent<TextOnSpot>();
+        textOnSpot.SetMultiplier(multiplier, color);
     }
 }

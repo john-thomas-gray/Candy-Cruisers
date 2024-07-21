@@ -895,7 +895,7 @@ MonoBehaviour:
   gameOverEventChannel: {fileID: 11400000, guid: 4d47b232a7c934396a679ce4ba24b4cc, type: 2}
   fleetWipeEC: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
-  scoreDisplay: {fileID: 5258050762106356692, guid: cd1d51a7773cc473b802ad063b380921, type: 3}
+  scoreDisplay: {fileID: 506552586337269592, guid: cd1d51a7773cc473b802ad063b380921, type: 3}
   canvas: {fileID: 782355448}
 --- !u!4 &343026342
 Transform:
