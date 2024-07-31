@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tongue : MonoBehaviour
 {
     public GameObject player;
+    public LevelManagerSO LevelManager;
     public string color;
     private bool colorSet;
     ColorManager colorManager;
@@ -126,8 +127,8 @@ public class Tongue : MonoBehaviour
                         {
                             Retract();
                             deflected = true;
-                            // colorManager.turnWhite(this.gameObject);
-                            speedFactor = -0.25f;
+                            // deflected retract speed scales inversely with level
+                            speedFactor = -0.25f + (.01f * LevelManager.level);
                         }
 
                     }
