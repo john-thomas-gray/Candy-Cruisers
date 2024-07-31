@@ -3601,6 +3601,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 6c1275d45ab3c46a3a84ce188040086d, type: 2}
     - target: {fileID: 7788548955302002427, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
+      propertyPath: LevelManager
+      value: 
+      objectReference: {fileID: 11400000, guid: a7d185af62d4f48fe96e30e04d40fda3, type: 2}
+    - target: {fileID: 7788548955302002427, guid: 27fa3772efec345cb80c244454cd75a5, type: 3}
       propertyPath: SetMagicTongueChannel
       value: 
       objectReference: {fileID: 11400000, guid: 72cbf64ff73dd422582cb99b730d499f, type: 2}
