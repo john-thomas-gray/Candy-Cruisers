@@ -59,6 +59,7 @@ public class Enemy : MonoBehaviour
 
     // BLUE ABILITIES
     public GameObject shieldPrefab;
+    public bool shieldInitiated = false;
 
     // GREEN ABILITIES
     public float specialMultiplier;
@@ -113,15 +114,6 @@ public class Enemy : MonoBehaviour
 
     }
 
-    void Start()
-    {
-        if (color == "Blue")
-        {
-            activateShield();
-        }
-
-    }
-
     void Update()
     {
         Abilities();
@@ -162,6 +154,11 @@ public class Enemy : MonoBehaviour
         else if(color == "Yellow")
         {
             ability(imitate, imitateCoolDownRange);
+        }
+        else if(shieldInitiated == false && color == "Blue")
+        {
+            shieldInitiated = true;
+            activateShield();
         }
     }
     public void checkNeighbors()
