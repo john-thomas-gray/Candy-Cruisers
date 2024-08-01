@@ -8,7 +8,7 @@ To play, fire up the demo in the main repo folder. The rules are simple: blast a
 they reach the bottom of the screen. 
 
 ## Controls
-Left and right arrow keys move your triangle and spacebar shoots.
+Left and right arrow keys move your triangle and spacebar shoots. P to pause.
 Beyond that, it's up to you to figure it out. I believe in you!
 
 ## Requirements
