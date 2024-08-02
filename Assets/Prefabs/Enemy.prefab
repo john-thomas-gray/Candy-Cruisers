@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7651907833786731898}
   - component: {fileID: 4577741112024003502}
   - component: {fileID: -665881645409245413}
+  - component: {fileID: 2431892492832811324}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -117,6 +118,7 @@ MonoBehaviour:
   missilePrefab: {fileID: 434374807148448463, guid: 3f78ebf9b30224d63bc70182d4235b85, type: 3}
   homingMissilePrefab: {fileID: 434374807148448463, guid: 37f69f1b9da144976a19844d9fab3914, type: 3}
   shieldPrefab: {fileID: 8527978347457853173, guid: 71a0370f48fcb4166a7ed30a4b83eecb, type: 3}
+  shieldInitiated: 0
   specialMultiplier: 0
   warpedIn: 0
   isImitation: 0
@@ -156,3 +158,62 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.6
+--- !u!114 &2431892492832811324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377057956046256033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ade93532233034998b4147a59a26e35e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes: 
+  transformToAffect: {fileID: 9170669034468434452}
+  axisToAffect: 2
+  animationDuration: 0.244
+  canBeOverwritten: 0
+  playOnStart: 1
+  playsEveryTime: 1
+  chanceToPlay: 100
+  initialScale: 1
+  maximumScale: 7
+  resetToInitialScaleAfterAnimation: 1
+  reverseAnimationCurveAfterPlaying: 0
+  squashAndStretchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  looping: 0
+  loopingDelay: 0.5
