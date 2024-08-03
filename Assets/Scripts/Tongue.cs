@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Tongue : MonoBehaviour
 {
     public GameObject player;
     public LevelManagerSO LevelManager;
+    public ScoreManagerSO ScoreManager;
+    public TMP_Text comboText;
+    Color actualEnemyColor;
     public string color;
     private bool colorSet;
     ColorManager colorManager;
+    private bool enemyHit = false;
     public bool deflected = false;
     public bool retracting = false;
     private float originY;
@@ -94,13 +99,19 @@ public class Tongue : MonoBehaviour
                 if(hit.collider.gameObject.layer == 8)
                 {
                     Enemy enemyScript = hitGameObject.GetComponent<Enemy>();
+                    actualEnemyColor = hitGameObject.GetComponent<SpriteRenderer>().color;
                     string enemyColor = enemyScript.color;
                     if(enemyScript != null)
                     {
                         enemyScript.hit(color, magicValue);
 
-                        if(color == enemyColor && magicValue == 0)
+                        if (magicValue > 0)
                         {
+                            enemyHit = true;
+                        }
+                        else if(color == enemyColor)
+                        {
+                            enemyHit = true;
                             Retract();
                         }
                         else if(color != "Yellow" && enemyScript.isImitation)
@@ -169,11 +180,30 @@ public class Tongue : MonoBehaviour
 
         if(magicValue == 0 && colorSet == false && player.GetComponent<PlayerController>().alive)
         {
+            ScoreManager.magicMultiplier = 1;
             player.GetComponent<PlayerController>().setColor();
             colorSet = true;
         }
-        player.GetComponent<PlayerController>().tongueReady = true;
+
+        if (magicValue > 0)
+        {
+            ScoreManager.magicMultiplier += 1;
+        }
+
+        if (enemyHit)
+        {
+            ScoreManager.comboMultiplier += 1;
+            comboText.color = actualEnemyColor;
+        }
+        else
+        {
+            ScoreManager.comboMultiplier = 1;
+        }
+        enemyHit = false;
+
         deflected = false;
+
+        player.GetComponent<PlayerController>().tongueReady = true;
     }
 
     public void SetColor(string inputColor)

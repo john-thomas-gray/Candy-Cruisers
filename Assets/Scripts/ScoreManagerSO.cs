@@ -10,7 +10,9 @@ public class ScoreManagerSO : ScriptableObject
     // Change score to a long
     public int score = 0;
     public int startingScore = 0;
-    public int enemies_destroyed = 0;
+    public int enemiesDestroyed = 0;
+    public int comboMultiplier = 1;
+    public int magicMultiplier = 1;
 
     public LevelManagerSO LevelManager;
 
@@ -19,9 +21,10 @@ public class ScoreManagerSO : ScriptableObject
     public IntEventChannelSO enemyDestroyedECSO;
     public VoidEventChannelSO fleetWipeEC;
 
+
     private void OnEnable() {
         score = startingScore;
-        enemies_destroyed = 0;
+        enemiesDestroyed = 0;
         if (scoreChangeEvent == null)
         {
             scoreChangeEvent = new UnityEvent<int>();
@@ -33,10 +36,10 @@ public class ScoreManagerSO : ScriptableObject
     {
         fleetWipeEC.OnEventRaised -= FleetWipe;
     }
-    public void IncreaseScore(int amount, int multiplier = 1) {
-        score += (amount + (10 * (LevelManager.level - 1))) * multiplier;
-        enemies_destroyed += 1;
-        enemyDestroyedECSO.RaiseEvent(enemies_destroyed);
+    public void IncreaseScore(int amount, int chainMultiplier = 1) {
+        score += (amount + (10 * (LevelManager.level - 1))) * chainMultiplier * comboMultiplier * magicMultiplier;
+        enemiesDestroyed += 1;
+        enemyDestroyedECSO.RaiseEvent(enemiesDestroyed);
         scoreChangeEvent.Invoke(score);
     }
 

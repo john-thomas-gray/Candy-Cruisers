@@ -14,6 +14,8 @@ public class InGameMenues : MonoBehaviour
     [SerializeField] LevelManagerSO levelManager;
     public TMP_Text scoreGameOver;
     public TMP_Text scoreInGame;
+    public TMP_Text combo;
+    public TMP_Text magicCombo;
 
     public TMP_Text levelCounterInGame;
 
@@ -41,6 +43,23 @@ public class InGameMenues : MonoBehaviour
         // Change so Score Change event sets this
         scoreInGame.SetText(scoreManager.score.ToString());
         levelCounterInGame.SetText("L: " + levelManager.level);
+        if (scoreManager.comboMultiplier > 1)
+        {
+            combo.SetText("x" + scoreManager.comboMultiplier.ToString());
+        }
+        else
+        {
+            combo.SetText("");
+        }
+
+        if (scoreManager.magicMultiplier > 1)
+        {
+            magicCombo.SetText("x" + scoreManager.magicMultiplier.ToString());
+        }
+        else
+        {
+            magicCombo.SetText("");
+        }
 
         if (eventSystem.currentSelectedGameObject == null)
         {
@@ -77,7 +96,9 @@ public class InGameMenues : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         scoreManager.score = 0;
-        scoreManager.enemies_destroyed = 0;
+        scoreManager.enemiesDestroyed = 0;
+        scoreManager.comboMultiplier = 1;
+        scoreManager.magicMultiplier = 1;
         levelManager.level = 1;
         Time.timeScale = 1;
         eventSystem.firstSelectedGameObject = playButton.gameObject;
@@ -87,12 +108,16 @@ public class InGameMenues : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
         scoreManager.score = 0;
-        scoreManager.enemies_destroyed = 0;
+        scoreManager.enemiesDestroyed = 0;
+        scoreManager.comboMultiplier = 1;
+        scoreManager.magicMultiplier = 1;
         levelManager.level = 1;
         Time.timeScale = 1;
     }
     private void GameOver()
     {
+        scoreManager.comboMultiplier = 1;
+        scoreManager.magicMultiplier = 1;
         eventSystem.SetSelectedGameObject(null);
         scoreGameOver.text = scoreManager.score.ToString();
         gameOverMenu.SetActive(true);

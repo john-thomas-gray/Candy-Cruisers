@@ -480,7 +480,6 @@ public class Enemy : MonoBehaviour
                 specialGreenCounted = false;
             }
             checkRetreatEventChannel.RaiseEvent();
-            // scoreManager.IncreaseScore(100);
             gridManagerScript.DecrementEnemyCount();
             Destroy(this.gameObject);
         }
