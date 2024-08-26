@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public string color;
     public GameObject Body;
 
+    // Animation
+    private SquashAndStretch squashAndStretch;
+
 
     // Tongue
 
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
         moveSpeed = 5f;
         // Get ColorManager instance
         colorManager = ColorManager.Instance;
+        squashAndStretch = GetComponent<SquashAndStretch>();
     }
 
     void Start()
@@ -88,9 +92,10 @@ public class PlayerController : MonoBehaviour
             colorManager.Multicolor(this.gameObject);
         }
 
+    }
+    void FixedUpdate()
+    {
         respawnPlayer();
-
-
     }
 
     void playerMovement()
@@ -195,6 +200,7 @@ public class PlayerController : MonoBehaviour
 
         if(tongueReady == true)
         {
+            squashAndStretch.CheckForAndStartCoroutine();
             Tongue.GetComponent<Tongue>().Project();
         }
     }

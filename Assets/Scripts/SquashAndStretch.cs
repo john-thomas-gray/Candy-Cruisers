@@ -103,7 +103,7 @@ public class SquashAndStretch : MonoBehaviour
         CheckForAndStartCoroutine();
     }
 
-    private void CheckForAndStartCoroutine()
+    public void CheckForAndStartCoroutine()
     {
         if (axisToAffect == SquashStretchAxis.None)
         {

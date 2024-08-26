@@ -21,6 +21,9 @@ public class Enemy : MonoBehaviour
     public VoidEventChannelSO checkRetreatEventChannel;
     public BoolEventChannelSO SetMagicTongueChannel;
 
+    // Animation
+    private SquashAndStretch squashAndStretch;
+
     // GridManager
     private Transform cellTransform;
     private Transform fleetTransform;
@@ -100,6 +103,7 @@ public class Enemy : MonoBehaviour
         colorCounts = colorManager.colorCounts;
         colorManager.SetEnemyColor(this.gameObject);
 
+        squashAndStretch = GetComponent<SquashAndStretch>();
 
         special = false;
         super = false;
@@ -114,7 +118,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Abilities();
         // BANDAID - the problem is that this adds to the color dictionary without subtracting the changed color from the dictionary
@@ -271,6 +275,7 @@ public class Enemy : MonoBehaviour
                 abilityCoolDown = 1;
             }
             onCoolDown = true;
+            squashAndStretch.CheckForAndStartCoroutine();
         }
 
         timeSinceLastActivation += Time.deltaTime;

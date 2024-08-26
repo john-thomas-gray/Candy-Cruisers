@@ -88,9 +88,14 @@ public class GridManager : MonoBehaviour
         initialGridPos = transform.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         FleetMovement();
+
+    }
+
+    void Update()
+    {
         // Debug
         if(Input.GetKeyDown(KeyCode.C))
         {
@@ -100,7 +105,6 @@ public class GridManager : MonoBehaviour
         {
             descend();
         }
-
     }
 
     void initializeFleetGrid()
