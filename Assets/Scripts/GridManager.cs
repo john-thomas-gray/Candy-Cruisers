@@ -775,7 +775,7 @@ public class GridManager : MonoBehaviour
                 scoreManager.IncreaseScore(score);
                 // Call method to display score at defeated enemy's location
                 // Fix color part so that it has a color converter
-                VisualizeMultiplier(thisEnemy.transform.position, thisEnemy.GetComponent<SpriteRenderer>().color, multiplier);
+                VisualizeMultiplier(thisEnemy.transform.position, thisEnemy.GetComponent<Enemy>().color, multiplier);
                 // Make sure to look at score manager
                 // Debug.Log($"Visiting cell {cx * width + cy} (Color: {thisEnemyScript.color}) (Score: {score * multiplier})");
                 // Explore neighbors
@@ -823,7 +823,7 @@ public class GridManager : MonoBehaviour
         // Debug.Log($"Starting BFS from cell {enemyScript.cellNumber}, which has color {enemyScript.color}.");
         Bfs(grid, visited, x, y, enemyScript.color);
     }
-    public void VisualizeMultiplier(Vector3 location, Color color, int multiplier)
+    public void VisualizeMultiplier(Vector3 location, string color, int multiplier)
     {
         GameObject instance = Instantiate(scoreDisplay, location, Quaternion.identity);
         TextOnSpot textOnSpot = instance.GetComponent<TextOnSpot>();
