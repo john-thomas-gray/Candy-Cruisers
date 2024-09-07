@@ -96,15 +96,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        // Debug
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            colorManager.totalEnemyCount();
-        }
-        if(Input.GetKeyDown(KeyCode.D))
-        {
-            descend();
-        }
+        Cheats();
     }
 
     void initializeFleetGrid()
@@ -203,7 +195,7 @@ public class GridManager : MonoBehaviour
         timer = 0;
     }
 
-    void populateFleet(int end, int start = 0)
+    void populateFleet(int end, int start = 0, string forcedColor = null)
     {
 
         // Iterate through the selected number of rows
@@ -215,13 +207,53 @@ public class GridManager : MonoBehaviour
             // Assign enemy object to the cell
             cell.GetComponent<Cell>().enemy = enemy;
             // Assign cell's color
+                Debug.Log(forcedColor);
+            if (forcedColor != null)
+            {
+                colorManager.SetEnemyColor(enemy, forcedColor);
+            }
             cell.GetComponent<Cell>().color = enemy.GetComponent<Enemy>().color;
         }
         enemyCount += (end - start);
         fleetStatus();
     }
 
-    public void descend()
+    void Cheats()
+    {
+        // Enemy Counts
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            colorManager.totalEnemyCount();
+        }
+        // Forced Spawns
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            descend();
+        }
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            descend("Red");
+        }
+        if(Input.GetKeyDown(KeyCode.Y))
+        {
+            descend( "Yellow");
+        }
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            descend( "Blue");
+        }
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            descend( "Green");
+        }
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            descend( "Purple");
+        }
+    }
+
+
+    public void descend(string forcedColor = null)
     {
         for (int i = fleetGrid.Length - 6; i < fleetGrid.Length; i++)
                 {
@@ -265,7 +297,7 @@ public class GridManager : MonoBehaviour
                     receivingCell.GetComponent<Cell>().enemy = null;
                 }
             }
-            populateFleet(6);
+            populateFleet(6, 0, forcedColor);
         }
 
     }

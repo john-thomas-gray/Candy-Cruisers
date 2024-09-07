@@ -48,6 +48,7 @@ public class ColorManager : MonoBehaviour
             };
     }
 
+    //WEIGHT COLORS BASED UPON ONSCREEN ENEMIES
     public string RandomOnscreenColor()
     {
         string[] colors = new string[5] {

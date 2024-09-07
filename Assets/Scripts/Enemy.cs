@@ -40,6 +40,10 @@ public class Enemy : MonoBehaviour
     private Dictionary<string, int> colorCounts;
 
     public Sprite specialSkin;
+    public Sprite yellowSkin;
+    public Sprite greenSkin;
+    public Sprite blueSkin;
+    public Sprite purpleSkin;
 
     // Neighbors
     private GameObject up = null;
@@ -102,6 +106,22 @@ public class Enemy : MonoBehaviour
         colorManager = ColorManager.Instance;
         colorCounts = colorManager.colorCounts;
         colorManager.SetEnemyColor(this.gameObject);
+        if(color == "Yellow")
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = yellowSkin;
+        }
+        if(color == "Green")
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = greenSkin;
+        }
+        if(color == "Purple")
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = purpleSkin;
+        }
+        if(color == "Blue")
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = blueSkin;
+        }
 
         squashAndStretch = GetComponent<SquashAndStretch>();
 

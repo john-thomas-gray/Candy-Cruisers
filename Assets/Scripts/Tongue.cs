@@ -57,7 +57,7 @@ public class Tongue : MonoBehaviour
         originY = transform.position.y;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         transform.Translate(Vector3.up * speed() * Time.deltaTime);
 
@@ -83,10 +83,7 @@ public class Tongue : MonoBehaviour
         {
             Debug.Log("magic Value: " + magicValue);
         }
-    }
 
-    void FixedUpdate()
-    {
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position,
                                                     Vector2.up,
                                                     rayLength,
