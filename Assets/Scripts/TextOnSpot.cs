@@ -27,6 +27,9 @@ public class TextOnSpot : MonoBehaviour
                 { "Green", Color.green },
                 { "Purple", purple }
             };
+
+        textMesh.outlineColor = Color.white;
+        textMesh.outlineWidth = 0.1f;
     }
 
     void Update() {
@@ -46,8 +49,6 @@ public class TextOnSpot : MonoBehaviour
         {
             textMesh.text = "x" + multiplier;
             textMesh.color = colors[color];
-            textMesh.outlineColor = Color.white;
-            textMesh.outlineWidth = 2f;
         }
     }
 

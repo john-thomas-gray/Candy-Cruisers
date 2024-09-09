@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public bool colorSet;
     public string color;
     public GameObject Body;
+    public GameObject EyeL;
+    public GameObject EyeR;
 
     // Animation
     private SquashAndStretch squashAndStretch;
@@ -55,6 +57,7 @@ public class PlayerController : MonoBehaviour
         // Get ColorManager instance
         colorManager = ColorManager.Instance;
         squashAndStretch = GetComponent<SquashAndStretch>();
+
     }
 
     void Start()
@@ -122,11 +125,11 @@ public class PlayerController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-
+            Debug.Log("touch position.y " + touch.position.y);
             if (touch.phase == TouchPhase.Began)
             {
                 startTouchPosition = touch.position;
-                if (touch.position.y > 350)
+                if (touch.position.y > 350 && touch.position.y < 2150)
                 {
                     shouldFire = true;
                 }
@@ -249,6 +252,10 @@ public class PlayerController : MonoBehaviour
         {
             yield return new WaitForSeconds(0.25f);
             spriteRenderer.enabled = !spriteRenderer.enabled;
+            Tongue.GetComponent<SpriteRenderer>().enabled = !Tongue.GetComponent<SpriteRenderer>().enabled;
+            Body.SetActive(!Body.activeSelf);
+            // EyeL.SetActive(!EyeL.activeSelf);
+            // EyeR.SetActive(!EyeR.activeSelf);
             count ++;
         }
     }
