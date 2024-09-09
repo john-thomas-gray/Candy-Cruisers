@@ -8,7 +8,16 @@ public class BackgroundController : MonoBehaviour
     public List<Sprite> backgroundImages;
     private SpriteRenderer spriteRenderer;
     public IntEventChannelSO updateGlobalLevelChannel;
+    public int count = 0;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            SetActiveImage(count);
+            count++;
+        }
+    }
     private void OnEnable()
     {
         updateGlobalLevelChannel.OnEventRaised += SetActiveImage;
