@@ -207,7 +207,7 @@ public class Tongue : MonoBehaviour
         if (enemyHit)
         {
             ScoreManager.comboMultiplier += 1;
-            comboText.color = actualEnemyColor;
+            // comboText.color = actualEnemyColor;
         }
         else
         {
