@@ -6,6 +6,7 @@ using TMPro;
 public class Tongue : MonoBehaviour
 {
     public GameObject player;
+    public GameObject colorWheel;
     public LevelManagerSO LevelManager;
     public ScoreManagerSO ScoreManager;
     public TMP_Text comboText;
@@ -55,6 +56,14 @@ public class Tongue : MonoBehaviour
         rayLength = transform.localScale.y * .25f;
         speedFactor = 0f;
         originY = transform.position.y;
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            colorWheel.GetComponent<ColorWheel>().Bonus();
+        }
     }
 
     void FixedUpdate()
@@ -168,6 +177,10 @@ public class Tongue : MonoBehaviour
         {
             SetMagicValueChannel.RaiseEvent(1);
             SetMagicTongueChannel.RaiseEvent(false);
+            if (ScoreManager.magicMultiplier >= 5)
+            {
+                colorWheel.GetComponent<ColorWheel>().Spin();
+            }
         }
         if (magicReset)
         {
@@ -177,6 +190,10 @@ public class Tongue : MonoBehaviour
 
         if(magicValue == 0 && colorSet == false && player.GetComponent<PlayerController>().alive)
         {
+            if (ScoreManager.magicMultiplier < 5)
+            {
+                colorWheel.GetComponent<ColorWheel>().Deactivate();
+            }
             ScoreManager.magicMultiplier = 1;
             player.GetComponent<PlayerController>().setColor();
             colorSet = true;

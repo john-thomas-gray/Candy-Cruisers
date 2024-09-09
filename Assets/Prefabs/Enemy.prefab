@@ -110,6 +110,7 @@ MonoBehaviour:
   updateGlobalLevelChannel: {fileID: 11400000, guid: da0c6d4e80862419fbba9233299ea38a, type: 2}
   checkRetreatEventChannel: {fileID: 11400000, guid: 77507d2768ebf4e99889dac78f3c5ba2, type: 2}
   SetMagicTongueChannel: {fileID: 11400000, guid: 72cbf64ff73dd422582cb99b730d499f, type: 2}
+  SetColorWheelWedge: {fileID: 11400000, guid: d003efba5fad34338aa257420158ee7e, type: 2}
   scoreManager: {fileID: 11400000, guid: 29a5250b2367748ddacc5d0ac28bc460, type: 2}
   globalLevel: 1
   specialSkin: {fileID: 21300000, guid: 0378067f3146847b98f2c924d93a61f9, type: 3}

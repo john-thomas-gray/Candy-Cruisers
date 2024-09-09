@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     // Broadcasting
     public VoidEventChannelSO checkRetreatEventChannel;
     public BoolEventChannelSO SetMagicTongueChannel;
+    public StringEventChannelSO SetColorWheelWedge;
 
     // Animation
     private SquashAndStretch squashAndStretch;
@@ -495,6 +496,7 @@ public class Enemy : MonoBehaviour
                 if (gridManagerScript.enemyCount != 0)
                 {
                     SetMagicTongueChannel.RaiseEvent(true);
+                    SetColorWheelWedge.RaiseEvent(color);
                 }
             }
 
