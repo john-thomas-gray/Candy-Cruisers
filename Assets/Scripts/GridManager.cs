@@ -84,7 +84,7 @@ public class GridManager : MonoBehaviour
         gameOver = false;
         colorManager = ColorManager.Instance;
         initializeFleetGrid();
-        populateFleet(18);
+        populateFleet(12);
         initialGridPos = transform.position;
     }
 
@@ -179,17 +179,21 @@ public class GridManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         transform.position = initialGridPos;
-        if (globalLevel < 4)
+        if (globalLevel < 2)
         {
-            populateFleet(24);
+            populateFleet(12);
+        }
+        else if (globalLevel < 4)
+        {
+            populateFleet(18);
         }
         else if (globalLevel < 7)
         {
-            populateFleet(30);
+            populateFleet(24);
         }
         else
         {
-            populateFleet(36);
+            populateFleet(30);
         }
         turnInterval = 0;
         timer = 0;
