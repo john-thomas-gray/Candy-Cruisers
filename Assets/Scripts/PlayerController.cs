@@ -131,37 +131,41 @@ public class PlayerController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
+            Debug.Log("Touch.y " + touch.position.y);
 
-            if (touch.phase == TouchPhase.Began)
+            if(touch.position.y < 2050)
             {
-                outOfRange = false;
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                startTouchPosition = touch.position;
-                if (touch.position.x >= lastTouch - touchFireRange && touch.position.x <= lastTouch + touchFireRange && !outOfRange)
+                if (touch.phase == TouchPhase.Began)
                 {
-                    shouldFire = true;
+                    outOfRange = false;
                 }
 
-                lastTouch = touch.position.x;
-
-
-            }
-            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
-            {
-                Vector3 touchPosition = new Vector3(touch.position.x, touch.position.y, Camera.main.nearClipPlane);
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(touchPosition);
-                worldPosition.y = transform.position.y;
-                targetPosition = new Vector3(worldPosition.x, transform.position.y, transform.position.z);
-                moveToTarget = true;
-                if (touch.position.x <= lastTouch - touchFireRange || touch.position.x >= lastTouch + touchFireRange)
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    outOfRange = true;
-                    Debug.Log("Out of range: " + outOfRange);
-                }
+                    startTouchPosition = touch.position;
+                    if (touch.position.x >= lastTouch - touchFireRange && touch.position.x <= lastTouch + touchFireRange && !outOfRange)
+                    {
+                        shouldFire = true;
+                    }
 
+                    lastTouch = touch.position.x;
+
+
+                }
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+                {
+                    Vector3 touchPosition = new Vector3(touch.position.x, touch.position.y, Camera.main.nearClipPlane);
+                    Vector3 worldPosition = Camera.main.ScreenToWorldPoint(touchPosition);
+                    worldPosition.y = transform.position.y;
+                    targetPosition = new Vector3(worldPosition.x, transform.position.y, transform.position.z);
+                    moveToTarget = true;
+                    if (touch.position.x <= lastTouch - touchFireRange || touch.position.x >= lastTouch + touchFireRange)
+                    {
+                        outOfRange = true;
+                        Debug.Log("Out of range: " + outOfRange);
+                    }
+
+                }
             }
         }
 
