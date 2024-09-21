@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
     public bool alive;
     // Movement
     private float moveSpeed;
+    private float touchMoveSpeed;
     private float screenBound = 3f;
+
 
     // ColorManager
     ColorManager colorManager;
@@ -23,15 +25,17 @@ public class PlayerController : MonoBehaviour
 
 
     // Tongue
-
     public GameObject Tongue;
     public bool tongueReady = true;
     private int magicValue;
+    private float touchFireRange = 100f;
+    private bool outOfRange = false;
 
     // Death and Respawn
     public bool spawnProtection = false;
     private SpriteRenderer spriteRenderer;
     private float respawnTimer = 5;
+    private float lastTouch;
 
 
     // GameOver
@@ -54,8 +58,10 @@ public class PlayerController : MonoBehaviour
     {
         alive = true;
         moveSpeed = 5f;
+        touchMoveSpeed = 20f;
         // Get ColorManager instance
         colorManager = ColorManager.Instance;
+        lastTouch = Body.transform.position.x;
         squashAndStretch = GetComponent<SquashAndStretch>();
 
     }
@@ -125,14 +131,23 @@ public class PlayerController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Debug.Log("touch position.y " + touch.position.y);
+
             if (touch.phase == TouchPhase.Began)
             {
+                outOfRange = false;
+            }
+
+            if (touch.phase == TouchPhase.Ended)
+            {
                 startTouchPosition = touch.position;
-                if (touch.position.y > 350 && touch.position.y < 2150)
+                if (touch.position.x >= lastTouch - touchFireRange && touch.position.x <= lastTouch + touchFireRange && !outOfRange)
                 {
                     shouldFire = true;
                 }
+
+                lastTouch = touch.position.x;
+
+
             }
             if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
             {
@@ -141,9 +156,13 @@ public class PlayerController : MonoBehaviour
                 worldPosition.y = transform.position.y;
                 targetPosition = new Vector3(worldPosition.x, transform.position.y, transform.position.z);
                 moveToTarget = true;
+                if (touch.position.x <= lastTouch - touchFireRange || touch.position.x >= lastTouch + touchFireRange)
+                {
+                    outOfRange = true;
+                    Debug.Log("Out of range: " + outOfRange);
+                }
+
             }
-
-
         }
 
         if (moveToTarget)
@@ -166,11 +185,11 @@ public class PlayerController : MonoBehaviour
                 // Move towards the closest edge first
                 if (warpFromLeft && transform.position.x < 0)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(-screenBound, transform.position.y, transform.position.z), moveSpeed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(-screenBound, transform.position.y, transform.position.z), touchMoveSpeed * Time.deltaTime);
                 }
                 else if (warpFromRight && transform.position.x > 0)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(screenBound, transform.position.y, transform.position.z), moveSpeed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(screenBound, transform.position.y, transform.position.z), touchMoveSpeed * Time.deltaTime);
                 }
 
                 // Check if reached the edge to warp
@@ -186,11 +205,11 @@ public class PlayerController : MonoBehaviour
             else
             {
                 // Directly move towards the target
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, touchMoveSpeed * Time.deltaTime);
             }
 
             // Check if reached the target position
-            if (transform.position == targetPosition && shouldFire)
+            if (shouldFire)
             {
                 moveToTarget = false;
                 BallisticTongueProjection();
