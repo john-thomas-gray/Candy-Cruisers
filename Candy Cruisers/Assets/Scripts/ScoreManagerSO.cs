@@ -20,6 +20,7 @@ public class ScoreManagerSO : ScriptableObject
     public UnityEvent<int> scoreChangeEvent;
     public IntEventChannelSO enemyDestroyedECSO;
     public VoidEventChannelSO fleetWipeEC;
+    public VoidEventChannelSO gameOverEventChannel;
 
 
     private void OnEnable() {
@@ -48,4 +49,5 @@ public class ScoreManagerSO : ScriptableObject
         score += 10000 * LevelManager.level;
         scoreChangeEvent.Invoke(score);
     }
+
 }

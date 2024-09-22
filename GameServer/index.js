@@ -1,19 +1,46 @@
 const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-let leaderboard = [];
+let db = new sqlite3.Database('./leaderboard.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Connected to the SQLite database.');
+    console.log('Database file location:', __dirname + '/leaderboard.db');
+});
+
+db.run(`CREATE TABLE IF NOT EXISTS leaderboard (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    playerName TEXT,
+    score INTEGER
+    )`);
 
 app.get('/scores', (req, res) => {
-    res.json(leaderboard);
+    db.all(`SELECT * FROM leaderboard ORDER BY score DESC`, [], (err, rows) => {
+        if (err) {
+            throw err
+        }
+        res.json(rows);
+    });
 });
 
 app.post('/scores', (req, res) => {
-    const newScore = req.body;
-    leaderboard.push(newScore);
-    res.json({ message: "Score added successfuly" });
+    const { playerName, score } = req.body;
+
+    if (!playerName || !score) {
+        return res.status(400).json({ error: 'Missing playerName or score' });
+    }
+
+    db.run(`INSERT INTO leaderboard (playerName, score) VALUES (?, ?)`, [playerName, score], function(err) {
+        if (err) {
+            return console.error(err.message);
+        }
+        res.json({ message: "Score added successfully", id: this.lastID });
+    });
 });
 
 app.listen(port, () => {

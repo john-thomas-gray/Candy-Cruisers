@@ -19,7 +19,7 @@ public class GridManager : MonoBehaviour
     public GameObject cellPrefab;
 
     // Variable for when fleet changes directions
-    int turnInterval = 0;
+    int fleetMoveCount = 0;
     private float timer;
     private bool hasDescended = false;
 
@@ -70,8 +70,6 @@ public class GridManager : MonoBehaviour
         updateGlobalLevelChannel.OnEventRaised -= setGlobalLevel;
         checkRetreatChannel.OnEventRaised -= StartCheckRetreat;
         fleetWipeEC.OnEventRaised -= FleetWipe;
-
-
     }
 
     void setGlobalLevel(int level)
@@ -195,7 +193,7 @@ public class GridManager : MonoBehaviour
         {
             populateFleet(30);
         }
-        turnInterval = 0;
+        fleetMoveCount = 0;
         timer = 0;
     }
 
@@ -309,12 +307,12 @@ public class GridManager : MonoBehaviour
     public void FleetMovement()
     {
         float moveIncrement = 0.10f;
-        int turnLimitOne = 20;
-        int turnLimitTwo = turnLimitOne * 2;
+        int rightTurnCount = 10;
+        int leftTurnCount = rightTurnCount * 2;
 
         if (!gameOver)
         {
-            if (turnInterval < turnLimitOne)
+            if (fleetMoveCount < rightTurnCount)
             {
                 if (timer < moveTimeByLevel(globalLevel))
                 {
@@ -324,9 +322,9 @@ public class GridManager : MonoBehaviour
                 {
                     transform.position += Vector3.right * moveIncrement;
                     timer = 0;
-                    turnInterval++;
+                    fleetMoveCount++;
                     // Check if the descent should occur
-                    if (turnInterval == turnLimitOne && !hasDescended)
+                    if (fleetMoveCount == rightTurnCount && !hasDescended)
                     {
                         descend();
                         hasDescended = true;
@@ -343,24 +341,24 @@ public class GridManager : MonoBehaviour
                 {
                     transform.position += Vector3.left * moveIncrement;
                     timer = 0;
-                    turnInterval++;
+                    fleetMoveCount++;
 
                     // Check if the descent should occur
-                    if (turnInterval == turnLimitTwo && !hasDescended)
+                    if (fleetMoveCount == leftTurnCount && !hasDescended)
                     {
                         descend();
                         hasDescended = true;
                     }
                 }
 
-                if (turnInterval == turnLimitTwo)
+                if (fleetMoveCount == leftTurnCount)
                 {
-                    turnInterval = 0;
+                    fleetMoveCount = 0;
                 }
             }
 
-            // Reset the descent flag if the turnInterval is not 10 or turnLimitTwo
-            if (turnInterval != turnLimitOne && turnInterval != turnLimitTwo)
+            // Reset the descent flag if the fleetMoveCount is not 10 or leftTurnCount
+            if (fleetMoveCount != rightTurnCount && fleetMoveCount != leftTurnCount)
             {
                 hasDescended = false;
             }
@@ -368,7 +366,7 @@ public class GridManager : MonoBehaviour
 
         float moveTimeByLevel(int level)
         {
-            float baseMoveTime = 10.0f;
+            float baseMoveTime = 7.0f;
             float factor = 0.10f;
             float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
             // Debug.Log("moveTime: " + calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2));
@@ -748,8 +746,11 @@ public class GridManager : MonoBehaviour
     }
     public void GameOver()
     {
-        gameOver = true;
-        gameOverEventChannel.RaiseEvent();
+        if (gameOver == false)
+        {
+            gameOverEventChannel.RaiseEvent();
+            gameOver = true;
+        }
     }
 
     private static bool InBounds(int x, int y)

@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        gameOverEventChannel.OnEventRaised+= GameOver;
+        gameOverEventChannel.OnEventRaised += GameOver;
         SetMagicValueChannel.OnEventRaised += SetMagicValue;
     }
 
