@@ -91,7 +91,6 @@ public class InGameMenues : MonoBehaviour
         }
     }
 
-    // make restart event channel
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -107,6 +106,16 @@ public class InGameMenues : MonoBehaviour
     public void ExitToMainMenu()
     {
         SceneManager.LoadSceneAsync(0);
+        scoreManager.score = 0;
+        scoreManager.enemiesDestroyed = 0;
+        scoreManager.comboMultiplier = 1;
+        scoreManager.magicMultiplier = 1;
+        levelManager.level = 1;
+        Time.timeScale = 1;
+    }
+    public void ExitToLeaderboard()
+    {
+        SceneManager.LoadSceneAsync(2);
         scoreManager.score = 0;
         scoreManager.enemiesDestroyed = 0;
         scoreManager.comboMultiplier = 1;
