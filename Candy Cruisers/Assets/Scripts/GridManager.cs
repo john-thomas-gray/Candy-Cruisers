@@ -177,11 +177,7 @@ public class GridManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         transform.position = initialGridPos;
-        if (globalLevel < 2)
-        {
-            populateFleet(12);
-        }
-        else if (globalLevel < 4)
+        if (globalLevel < 4)
         {
             populateFleet(18);
         }

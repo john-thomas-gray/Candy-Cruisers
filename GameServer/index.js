@@ -22,11 +22,12 @@ db.run(`CREATE TABLE IF NOT EXISTS leaderboard (
 app.get('/scores', (req, res) => {
     db.all(`SELECT * FROM leaderboard ORDER BY score DESC`, [], (err, rows) => {
         if (err) {
-            throw err
+            throw err;
         }
-        res.json(rows);
+        res.json({ scores: rows });
     });
 });
+
 
 app.post('/scores', (req, res) => {
     const { playerName, score } = req.body;
