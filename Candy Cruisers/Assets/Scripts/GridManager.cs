@@ -369,10 +369,8 @@ public class GridManager : MonoBehaviour
             float baseMoveTime = 7.0f;
             float factor = 0.10f;
             float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
-            // Debug.Log("moveTime: " + calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2));
 
             return calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
-
         }
     }
 
