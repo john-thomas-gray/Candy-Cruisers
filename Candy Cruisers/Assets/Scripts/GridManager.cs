@@ -632,11 +632,19 @@ public class GridManager : MonoBehaviour
 
         IEnumerator RetreatWithDelay(int cellNumber)
         {
-            // Get the enemy to retreat
+            // Get the enemy by cell number
             GameObject enemy = GetEnemyByCellNumber(cellNumber);
-            // Retreat after a delay
-            yield return new WaitForSeconds(.1f);
-            retreat(cellNumber);
+            if (enemy != null)
+            {
+                yield return new WaitForSeconds(.1f);
+                if (enemy != null)
+                {
+                    enemy.GetComponent<Enemy>().alive = false;
+                    enemy.GetComponent<Enemy>().death();
+                }
+            }
+            // yield return new WaitForSeconds(.1f);
+            // retreat(cellNumber);
         }
 
         GameObject GetEnemyByCellNumber(int cellNumber)
