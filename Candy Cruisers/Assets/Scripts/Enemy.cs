@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
     // RED ABILITIES
     private float timeSinceLastActivation = 0;
     private double abilityCoolDown;
-    private float[] shotCoolDownRange = {5, 12};
+    private float[] shotCoolDownRange = {4, 8};
     private bool onCoolDown = false;
     public GameObject missilePrefab;
     public GameObject homingMissilePrefab;
@@ -73,12 +73,12 @@ public class Enemy : MonoBehaviour
     public float specialMultiplier;
 
     // PURPLE ABILITIES
-    private float[] warpCoolDownRange = {15, 60};
+    private float[] warpCoolDownRange = {10, 30};
     public bool warpedIn = false;
     private bool colorReset = false;
 
     // YELLOW ABILITIES
-    private float[] imitateCoolDownRange = {10, 30};
+    private float[] imitateCoolDownRange = {10, 18};
     // Cooldown becomes shorter for special yellow
     public bool isImitation = false;
     bool inMiddle = false;

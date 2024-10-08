@@ -179,19 +179,19 @@ public class GridManager : MonoBehaviour
         transform.position = initialGridPos;
         if (globalLevel < 2)
         {
-            populateFleet(12);
+            populateFleet(18);
         }
         else if (globalLevel < 4)
         {
-            populateFleet(18);
+            populateFleet(24);
         }
         else if (globalLevel < 7)
         {
-            populateFleet(24);
+            populateFleet(30);
         }
         else
         {
-            populateFleet(30);
+            populateFleet(36);
         }
         fleetMoveCount = 0;
         timer = 0;
@@ -252,6 +252,10 @@ public class GridManager : MonoBehaviour
         {
             descend( "Purple");
         }
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            ForceUpLevel();
+        }
     }
 
 
@@ -306,8 +310,8 @@ public class GridManager : MonoBehaviour
 
     public void FleetMovement()
     {
-        float moveIncrement = 0.10f;
-        int rightTurnCount = 10;
+        float moveIncrement = 0.06f;
+        int rightTurnCount = 12;
         int leftTurnCount = rightTurnCount * 2;
 
         if (!gameOver)
@@ -366,11 +370,21 @@ public class GridManager : MonoBehaviour
 
         float moveTimeByLevel(int level)
         {
-            float baseMoveTime = 7.0f;
+            float baseMoveTime = 3.0f;
             float factor = 0.10f;
-            float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
+            float levelAdjustedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
 
-            return calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
+            if (colorManager.colorCounts["Green"] > 0)
+            {
+                Debug.Log("moveTime: " + levelAdjustedTime / (colorManager.colorCounts["Green"] / 2 + specialGreenCount/2));
+                return levelAdjustedTime / (colorManager.colorCounts["Green"] / 2 + specialGreenCount/2);
+            }
+            else
+            {
+                Debug.Log("moveTime: " + levelAdjustedTime);
+                return levelAdjustedTime;
+            }
+
         }
     }
 
@@ -634,7 +648,7 @@ public class GridManager : MonoBehaviour
             GameObject enemy = GetEnemyByCellNumber(cellNumber);
             if (enemy != null)
             {
-                yield return new WaitForSeconds(.1f);
+                yield return new WaitForSeconds(.01f);
                 if (enemy != null)
                 {
                     enemy.GetComponent<Enemy>().alive = false;
@@ -747,7 +761,7 @@ public class GridManager : MonoBehaviour
 
     private IEnumerator DelayedInvoke()
     {
-        yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
+        yield return new WaitForSeconds(0.25f);
         checkRetreat();
     }
     public void GameOver()
@@ -841,5 +855,15 @@ public class GridManager : MonoBehaviour
         GameObject instance = Instantiate(scoreDisplay, location, Quaternion.identity);
         TextOnSpot textOnSpot = instance.GetComponent<TextOnSpot>();
         textOnSpot.SetMultiplier(multiplier, color);
+    }
+
+    public void ForceUpLevel()
+    {
+        globalLevel += 1;
+
+            if (updateGlobalLevelChannel != null)
+            {
+                updateGlobalLevelChannel.RaiseEvent(globalLevel);
+            }
     }
 }
