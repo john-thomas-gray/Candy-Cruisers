@@ -362,12 +362,22 @@ public class GridManager : MonoBehaviour
 
         float moveTimeByLevel(int level)
         {
-            float baseMoveTime = 7.0f;
+            float baseMoveTime = 3.0f;
             float factor = 0.10f;
-            float calculatedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
-            // Debug.Log("moveTime: " + calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2));
+            float levelAdjustedTime = Mathf.Max(baseMoveTime * (1 - (level - 1) * factor));
 
-            return calculatedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
+            if (colorManager.colorCounts["Green"] > 0)
+            {
+                Debug.Log("moveTime: " + levelAdjustedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2));
+                return levelAdjustedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
+            }
+            else
+            {
+                Debug.Log("moveTime: " + levelAdjustedTime);
+                return levelAdjustedTime;
+            }
+
+            return levelAdjustedTime / (colorManager.colorCounts["Green"] + specialGreenCount/2);
 
         }
     }
