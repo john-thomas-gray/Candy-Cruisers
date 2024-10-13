@@ -94,7 +94,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        Cheats();
+        // Cheats();
     }
 
     void initializeFleetGrid()
@@ -228,7 +228,7 @@ public class GridManager : MonoBehaviour
             colorManager.totalEnemyCount();
         }
         // Forced Spawns
-        if(Input.GetKeyDown(KeyCode.D))
+        if(Input.GetKeyDown(KeyCode.U))
         {
             descend();
         }

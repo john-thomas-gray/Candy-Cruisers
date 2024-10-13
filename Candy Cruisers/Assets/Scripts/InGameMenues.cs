@@ -36,7 +36,7 @@ public class InGameMenues : MonoBehaviour
     private void Update()
     {
         // This should be called from somewhere else
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             Pause();
         }

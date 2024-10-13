@@ -111,11 +111,11 @@ public class PlayerController : MonoBehaviour
     {
 
         // Keyboard
-        if(Input.GetKey(KeyCode.LeftArrow))
+        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             transform.position = transform.position + Vector3.left * moveSpeed * Time.deltaTime;
         }
-        else if(Input.GetKey(KeyCode.RightArrow))
+        else if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             transform.position = transform.position + Vector3.right * moveSpeed * Time.deltaTime;
         }
